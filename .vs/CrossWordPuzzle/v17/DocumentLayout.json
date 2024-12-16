@@ -1,0 +1,245 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\CrossWordPuzzle\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|D:\\CrossWordPuzzle\\assets\\resources\\levels.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\resources\\levels.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|D:\\CrossWordPuzzle\\assets\\scripts\\generatepattern.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\generatepattern.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|D:\\CrossWordPuzzle\\assets\\scripts\\levels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\levels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|d:\\crosswordpuzzle\\assets\\scripts\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|D:\\CrossWordPuzzle\\assets\\scripts\\changetext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\changetext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|D:\\CrossWordPuzzle\\assets\\scripts\\cell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\cell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|D:\\CrossWordPuzzle\\assets\\scripts\\lineword.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\lineword.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|D:\\CrossWordPuzzle\\assets\\scripts\\saveextrawords\\saveextrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\saveextrawords\\saveextrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|D:\\CrossWordPuzzle\\assets\\scripts\\extrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\extrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|D:\\CrossWordPuzzle\\assets\\mylevels.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\mylevels.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|D:\\CrossWordPuzzle\\assets\\ccc.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\ccc.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MOKSHA\\AppData\\LocalLow\\cupGames\\WordPuzzle\\PlayerFoundedExtraWords.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|D:\\CrossWordPuzzle\\assets\\scripts\\saveextrawords\\playerdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1688A618-02AD-944A-0CEB-BCF14CF24699}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\saveextrawords\\playerdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\CrossWordPuzzle\\CrossWordPuzzle\\Assets\\Levels.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CrossWordPuzzle\\Assets\\Levels.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Levels.txt",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\Resources\\Levels.txt",
+              "RelativeDocumentMoniker": "Assets\\Resources\\Levels.txt",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\Resources\\Levels.txt",
+              "RelativeToolTip": "Assets\\Resources\\Levels.txt",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAAAHwAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-12-03T10:30:50.059Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "CCC.txt",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\CCC.txt",
+              "RelativeDocumentMoniker": "Assets\\CCC.txt",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\CCC.txt",
+              "RelativeToolTip": "Assets\\CCC.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-12-03T09:13:01.851Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Levels.cs",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\Scripts\\Levels.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Levels.cs",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\Scripts\\Levels.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Levels.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAAAF0AAABkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-03T09:06:44.619Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "MyLevels.txt",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\MyLevels.txt",
+              "RelativeDocumentMoniker": "Assets\\MyLevels.txt",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\MyLevels.txt",
+              "RelativeToolTip": "Assets\\MyLevels.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-12-03T09:02:07.872Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Levels.txt",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\CrossWordPuzzle\\Assets\\Levels.txt",
+              "RelativeDocumentMoniker": "CrossWordPuzzle\\Assets\\Levels.txt",
+              "ToolTip": "D:\\CrossWordPuzzle\\CrossWordPuzzle\\Assets\\Levels.txt",
+              "RelativeToolTip": "CrossWordPuzzle\\Assets\\Levels.txt",
+              "ViewState": "AgIAAHkAAAAAAAAAAAAqwI4AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-12-02T06:55:54.646Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "PlayerFoundedExtraWords.json",
+              "DocumentMoniker": "C:\\Users\\MOKSHA\\AppData\\LocalLow\\cupGames\\WordPuzzle\\PlayerFoundedExtraWords.json",
+              "ToolTip": "C:\\Users\\MOKSHA\\AppData\\LocalLow\\cupGames\\WordPuzzle\\PlayerFoundedExtraWords.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-12-02T05:34:14.353Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ExtraWords.cs",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\Scripts\\ExtraWords.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\ExtraWords.cs",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\Scripts\\ExtraWords.cs",
+              "RelativeToolTip": "Assets\\Scripts\\ExtraWords.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABQAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-21T10:18:51.543Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "SaveExtraWords.cs",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\Scripts\\SaveExtraWords\\SaveExtraWords.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\SaveExtraWords\\SaveExtraWords.cs",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\Scripts\\SaveExtraWords\\SaveExtraWords.cs",
+              "RelativeToolTip": "Assets\\Scripts\\SaveExtraWords\\SaveExtraWords.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAowEIAAABtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-21T09:54:47.698Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "PlayerData.cs",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
+              "RelativeToolTip": "Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-21T09:54:41.014Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ChangeText.cs",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\Scripts\\ChangeText.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\ChangeText.cs",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\Scripts\\ChangeText.cs",
+              "RelativeToolTip": "Assets\\Scripts\\ChangeText.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAsAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-12T10:18:02.998Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GeneratePattern.cs",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\Scripts\\GeneratePattern.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\GeneratePattern.cs",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\Scripts\\GeneratePattern.cs",
+              "RelativeToolTip": "Assets\\Scripts\\GeneratePattern.cs",
+              "ViewState": "AgIAABUBAAAAAAAAAAAcwFwAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-06T13:39:35.666Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Cell.cs",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\Scripts\\Cell.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Cell.cs",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\Scripts\\Cell.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Cell.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAApwFMAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-04T12:35:36.645Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Game.cs",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\Scripts\\Game.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Game.cs",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\Scripts\\Game.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Game.cs",
+              "ViewState": "AgIAAG8AAAAAAAAAAABRwHIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-04T12:07:10.237Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "LineWord.cs",
+              "DocumentMoniker": "D:\\CrossWordPuzzle\\Assets\\Scripts\\LineWord.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\LineWord.cs",
+              "ToolTip": "D:\\CrossWordPuzzle\\Assets\\Scripts\\LineWord.cs",
+              "RelativeToolTip": "Assets\\Scripts\\LineWord.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAcwCYAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-04T05:36:47.8Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

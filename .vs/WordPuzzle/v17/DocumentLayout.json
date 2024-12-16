@@ -1,0 +1,200 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|a:\\tarun\\unitypackages\\wordpuzzle\\wordpuzzle\\assets\\scripts\\crosswordpuzzlegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\crosswordpuzzlegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\assets\\scripts\\wordalignment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\wordalignment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\assets\\scripts\\lineword.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\lineword.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\assets\\scripts\\cell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\cell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\assets\\scripts\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\assets\\scripts\\extrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\extrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\assets\\scripts\\letter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\letter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\assets\\scripts\\saveextrawords\\playerdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\saveextrawords\\playerdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\assets\\scripts\\saveextrawords\\saveextrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\saveextrawords\\saveextrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\assets\\scripts\\changetext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\changetext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\assets\\scripts\\gamelevelwords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{768E74D0-654A-669A-1997-6918D5F3F546}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gamelevelwords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CrossWordPuzzleGenerator.cs",
+              "DocumentMoniker": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\CrossWordPuzzleGenerator.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\CrossWordPuzzleGenerator.cs",
+              "ToolTip": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\CrossWordPuzzleGenerator.cs",
+              "RelativeToolTip": "Assets\\Scripts\\CrossWordPuzzleGenerator.cs",
+              "ViewState": "AQIAALAAAAAAAAAAAADwv7cAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-29T11:04:22.746Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "WordAlignment.cs",
+              "DocumentMoniker": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\WordAlignment.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\WordAlignment.cs",
+              "ToolTip": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\WordAlignment.cs",
+              "RelativeToolTip": "Assets\\Scripts\\WordAlignment.cs",
+              "ViewState": "AQIAAIQBAAAAAAAAAADgv4oBAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-25T08:53:57.142Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ChangeText.cs",
+              "DocumentMoniker": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\ChangeText.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\ChangeText.cs",
+              "ToolTip": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\ChangeText.cs",
+              "RelativeToolTip": "Assets\\Scripts\\ChangeText.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-24T08:51:06.867Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SaveExtraWords.cs",
+              "DocumentMoniker": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\SaveExtraWords\\SaveExtraWords.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\SaveExtraWords\\SaveExtraWords.cs",
+              "ToolTip": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\SaveExtraWords\\SaveExtraWords.cs",
+              "RelativeToolTip": "Assets\\Scripts\\SaveExtraWords\\SaveExtraWords.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwB4AAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-17T10:16:07.618Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PlayerData.cs",
+              "DocumentMoniker": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
+              "ToolTip": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
+              "RelativeToolTip": "Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-17T10:06:29.044Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Letter.cs",
+              "DocumentMoniker": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\Letter.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Letter.cs",
+              "ToolTip": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\Letter.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Letter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-11T08:10:20.135Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ExtraWords.cs",
+              "DocumentMoniker": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\ExtraWords.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\ExtraWords.cs",
+              "ToolTip": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\ExtraWords.cs",
+              "RelativeToolTip": "Assets\\Scripts\\ExtraWords.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-10T15:45:48.266Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Cell.cs",
+              "DocumentMoniker": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\Cell.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Cell.cs",
+              "ToolTip": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\Cell.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Cell.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAQwBsAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-09T10:35:45.644Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LineWord.cs",
+              "DocumentMoniker": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\LineWord.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\LineWord.cs",
+              "ToolTip": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\LineWord.cs",
+              "RelativeToolTip": "Assets\\Scripts\\LineWord.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-09T10:23:41.638Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "GameLevelWords.cs",
+              "DocumentMoniker": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\GameLevelWords.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\GameLevelWords.cs",
+              "ToolTip": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\GameLevelWords.cs",
+              "RelativeToolTip": "Assets\\Scripts\\GameLevelWords.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-24T10:31:43.107Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Game.cs",
+              "DocumentMoniker": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\Game.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Game.cs",
+              "ToolTip": "A:\\Tarun\\UnityPackages\\WordPuzzle\\WordPuzzle\\Assets\\Scripts\\Game.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Game.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAEBUwEUAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-03T05:52:06.812Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

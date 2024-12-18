@@ -89,6 +89,15 @@ public class Game : MonoBehaviour
     [Tooltip("ColorCode")]
     [SerializeField] internal string colorCode;
 
+    [SerializeField] ParticleSystem SnowEffect;
+    [SerializeField] Transform levelComplete_Screen;
+    [SerializeField] Transform[] stars;
+
+    [SerializeField] Image bg;
+    [SerializeField] Sprite bg1, bg2;
+
+    [SerializeField] Image TextImage;
+
     #endregion
 
 
@@ -112,18 +121,47 @@ public class Game : MonoBehaviour
         GameObject lineRe = Instantiate(linePrefab, Vector3.zero, Quaternion.identity, LineParent);
         lineRenderer = lineRe.GetComponent<LineRenderer>();
         lineRenderer.gameObject.SetActive(false);
+        //SetLineColor(colorCode);
+        //ChangeDotColor(colorCode);
 
         if (NewFontAsset != null)
         {
             TextPreview.font = Incircle;
             coinsText.font = NewFontAsset;
         }
+        
+    }
 
+    
+
+    public void ThemeSelection(bool effect)
+    {
+        if (!effect)
+        {
+            colorCode = "#39b54a";
+            bg.sprite = bg1;
+        }
+        else
+        {
+            bg.sprite = bg2;
+            colorCode = "#0038bb";
+            SnowEffect.gameObject.SetActive(true);
+            SnowEffect.Play();
+        }
+        GeneratePattern.Instance.Chooselevel(PlayerPrefs.GetInt("SelectedLevel", 1));
+        SetLineColor(colorCode);
+        ChangeDotColor(colorCode);
     }
 
     public void CurrentLevelButton(int Level,List<char> characters)
     {
         //Debug.Log(HighestWord + "-" + currentWordsCount);
+
+        Debug.Log(characters.Count.ToString());
+        for (int i = 0; i < characters.Count; i++)
+        {
+            Debug.Log(characters[i].ToString());
+        }
 
         CurrentLevelCircle = Circle.Find(characters.Count.ToString());
         CurrentLevelCircle.gameObject.SetActive(true);
@@ -294,6 +332,55 @@ public class Game : MonoBehaviour
     #endregion
 
     #region DotsScript
+
+
+    public void ChangeDotColor(string hexColorCode)
+    {
+        for (int i = 0;i<DotParent.childCount;i++)
+        {
+            Image dot = DotParent.GetChild(i).transform.GetComponent<Image>();
+
+            if (dot.GetComponent<Image>() != null)
+            {
+                // Convert hex color to Unity's Color
+                if (ColorUtility.TryParseHtmlString(hexColorCode, out Color newColor))
+                {
+                    // Apply the new color to the material
+                    dot.GetComponent<Image>().color = newColor;
+                }
+                else
+                {
+                    Debug.LogError("Invalid hex color code");
+                }
+            }
+            else
+            {
+                Debug.LogError("Image not found!");
+            }
+
+        }
+
+        if (TextImage.GetComponent<Image>() != null)
+        {
+            // Convert hex color to Unity's Color
+            if (ColorUtility.TryParseHtmlString(hexColorCode, out Color newColor))
+            {
+                // Apply the new color to the material
+                TextImage.GetComponent<Image>().color = newColor;
+            }
+            else
+            {
+                Debug.LogError("Invalid hex color code");
+            }
+        }
+        else
+        {
+            Debug.LogError("Image not found!");
+        }
+
+
+    }
+
     private void InstiateDots()
     {
         for (int i = 0; i < LettersUsedInLevel.Count; i++)
@@ -321,6 +408,23 @@ public class Game : MonoBehaviour
     #endregion
 
     #region LineDraw
+
+    public void SetLineColor(string hexColor)
+    {
+        if (ColorUtility.TryParseHtmlString(hexColor, out Color color))
+        {
+            // Assign the parsed color to the LineRenderer
+            lineRenderer.startColor = color;
+            lineRenderer.endColor = color;
+
+            Debug.Log($"Successfully changed LineRenderer color to {hexColor}");
+        }
+        else
+        {
+            Debug.LogError($"Invalid hex color: {hexColor}");
+        }
+    }
+
     public Vector2 GetMousePositionInWorld2D()
     {
         Vector3 mousePosition = Input.mousePosition;
@@ -359,12 +463,34 @@ public class Game : MonoBehaviour
     }
     #endregion
 
+    #region LEVEL COMPLETE
+
     public void LevelCompleted()
     {
+        SnowEffect.gameObject.SetActive(false);
         CompletedWords = 0;
         CurrentLevelCircle.gameObject.SetActive(false);
-        SceneManager.LoadScene(0);
+        levelComplete_Screen.gameObject.SetActive(true);
+
+        Sequence sequence = DOTween.Sequence();
+
+        for (int i = 0; i < stars.Length; i++)
+        {
+            int currentIndex = i; // Capture the current index in a local variable
+            sequence.AppendCallback(() =>
+            {
+                stars[currentIndex].GetChild(0).transform.DOScale(Vector3.one, 0.25f);
+            });
+            sequence.AppendInterval(0.35f);
+        }
     }
+
+    public void NextButton()
+    {
+       SceneManager.LoadScene(0);
+    }
+
+    #endregion
 
     #endregion
 

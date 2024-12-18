@@ -86,13 +86,14 @@ public class GeneratePattern : MonoBehaviour
         }
         getAllCellIntoRows();
         lineWordsParent = GridLayout.parent;
-        SetLevels();
-        levelSelectionScreen.gameObject.SetActive(true);
+       
+        //SetLevels();
+        //levelSelectionScreen.gameObject.SetActive(true);
     }
 
     #region LevelSelectionScreen
 
-    void SetLevels()
+    public void SetLevels()
     {
         //Transform levelsParent = levelSelectionScreen.GetChild(0);
 
@@ -105,8 +106,12 @@ public class GeneratePattern : MonoBehaviour
         }
     }
 
+    [SerializeField] GameObject themeSelection;
+
     public void Chooselevel(int selectedLevel)
     {
+        themeSelection.SetActive(false);
+
         List<char> characters = new List<char>();
 
         CurrentLevel = selectedLevel;
@@ -120,11 +125,13 @@ public class GeneratePattern : MonoBehaviour
         }
 
         words.Clear();
+        characters.Clear();
         foreach (var word in gameLevels)
         {
             words.Add(word.ToUpper());
         }
         string highestword = FindHighestWord();
+        //Debug.Log(highestword);
         for (int i=0;i<highestword.Length;i++)
         {
             characters.Add(highestword[i]);
@@ -148,7 +155,7 @@ public class GeneratePattern : MonoBehaviour
         {
             case 3:
                 Debug.Log(FindHighestWord().Length + "3" + FindHighestWord());
-                GridLayout.transform.localPosition = new Vector3(-200, -70, 0);
+                GridLayout.transform.localPosition = new Vector3(-190, -70, 0);
                 break;
 
             case 4:
@@ -158,17 +165,17 @@ public class GeneratePattern : MonoBehaviour
 
             case 5:
                 Debug.Log(FindHighestWord().Length + "5" + FindHighestWord());
-                GridLayout.transform.localPosition = new Vector3(0, 10, 0);
+                GridLayout.transform.localPosition = new Vector3(-50, 10, 0);
                 break;
 
             case 6:
                 Debug.Log(FindHighestWord().Length + "6" + FindHighestWord());
-                GridLayout.transform.localPosition = new Vector3(0, -50, 0);
+                GridLayout.transform.localPosition = new Vector3(-25, -50, 0);
                 break;
 
             case 7:
                 Debug.Log(FindHighestWord().Length + "7" + FindHighestWord());
-                GridLayout.transform.localPosition = new Vector3(-80, 300, 0);
+                GridLayout.transform.localPosition = new Vector3(-90, 100, 0);
                 break;
 
             default:

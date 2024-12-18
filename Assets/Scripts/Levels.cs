@@ -18,54 +18,8 @@ public class Levels : MonoBehaviour
 
     #endregion
 
-    public List<GameLevels> stringListDataList; // List of GameLevels ScriptableObjects
-
-    void WriteDataToFile()
-    {
-        if (stringListDataList == null || stringListDataList.Count == 0)
-        {
-            Debug.LogWarning("The GameLevels list is null or empty!");
-            return;
-        }
-
-        // Define the file path
-        string path = Application.dataPath + "/MyLevels.txt";
-
-        // Prepare the content
-        using (StreamWriter writer = new StreamWriter(path))
-        {
-            for (int i = 0; i < stringListDataList.Count; i++)
-            {
-                var gameLevel = stringListDataList[i];
-
-                // Check for null or empty words in the current GameLevels object
-                if (gameLevel == null || gameLevel.Words.Count == 0)
-                {
-                    Debug.LogWarning($"GameLevel at index {i} is null or has no words!");
-                    continue;
-                }
-
-                // Get the ScriptableObject name and combine its words into a single line
-                string scriptableObjectName = gameLevel.name;
-                string data = string.Join(",", gameLevel.Words);
-
-                // Write to file
-                writer.WriteLine("Level-"+(301+i)); // Write the name of the ScriptableObject
-                writer.WriteLine(data); // Write the words separated by commas
-                writer.WriteLine(); // Add a blank line for better readability
-            }
-        }
-
-        Debug.Log($"Data written to file: {path}");
-    }
-
     public string fileName = "Levels"; // File name without extension
     public List<string> levelWords = new List<string>(); // List to store the words
-
-    void Start()
-    {
-      
-    }
 
     public void LoadLevelData(string fileName, string levelName)
     {

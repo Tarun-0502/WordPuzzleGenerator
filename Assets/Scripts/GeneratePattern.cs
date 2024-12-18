@@ -59,7 +59,7 @@ public class GeneratePattern : MonoBehaviour
     [SerializeField] List<string> words = new List<string>();
     [SerializeField] Transform GridLayout;
     [SerializeField] List<Row> Allrows = new List<Row>();
-    [SerializeField] List<string> AssignedWords = new List<string>();
+    [SerializeField] internal List<string> AssignedWords = new List<string>();
     [SerializeField] List<LineWord> CurrentUsedLineWords = new List<LineWord>();
 
     [SerializeField] GameObject lineWord_Prefab;
@@ -360,7 +360,7 @@ public class GeneratePattern : MonoBehaviour
             Game.Instance.CompletedWords = CurrentUsedLineWords.Count;
             Game.Instance.LineWords.Add(lineWord.transform);
             AssignedWords.Add(word);
-            Debug.LogWarning("AssignedWords " + " :: " + word);
+            //Debug.LogWarning("AssignedWords " + " :: " + word);
 
             cell_ = null;
             index_ = -1;

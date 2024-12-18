@@ -41,6 +41,7 @@ public class LineWord : MonoBehaviour
                 }
                 AnswerChecked = true;
                 PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins")+5);
+                Game.Instance.PlaySound(Game.Instance.WordComplete);
                 Game.Instance.CompletedWords--;
                 if (Game.Instance.CompletedWords==0)
                 {
@@ -87,6 +88,7 @@ public class LineWord : MonoBehaviour
                         var cell = t.GetComponent<Cell>();
                         cell.showText = true;
                         cell.Hint(hintCoins);
+                        cell.ChangeColor(Game.Instance.colorCode);
                     });
                     if (index==Cells.Count-1)
                     {

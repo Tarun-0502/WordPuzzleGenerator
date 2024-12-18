@@ -103,6 +103,7 @@ public class Cell : MonoBehaviour
                 DOVirtual.DelayedCall(0.2f,() =>
                 {
                     coin.transform.SetParent(coinHead);
+                    Game.Instance.PlaySound(Game.Instance.CoinCollect);
                     coin.transform.DOLocalMove(Vector3.zero, 0.25f);
                 });
             });

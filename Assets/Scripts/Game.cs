@@ -89,7 +89,7 @@ public class Game : MonoBehaviour
     [Tooltip("ColorCode")]
     [SerializeField] internal string colorCode;
 
-    [SerializeField] ParticleSystem SnowEffect;
+    [SerializeField] ParticleSystem SnowEffect,Dust;
     [SerializeField] Transform levelComplete_Screen;
     [SerializeField] Transform[] stars;
 
@@ -97,6 +97,9 @@ public class Game : MonoBehaviour
     [SerializeField] Sprite bg1, bg2;
 
     [SerializeField] Image TextImage;
+
+    [SerializeField] AudioSource AudioSource;
+    [SerializeField] internal AudioClip LevelComplete, CoinCollect, WordComplete, Hint,tap;
 
     #endregion
 
@@ -132,14 +135,14 @@ public class Game : MonoBehaviour
         
     }
 
-    
-
     public void ThemeSelection(bool effect)
     {
         if (!effect)
         {
             colorCode = "#39b54a";
             bg.sprite = bg1;
+            Dust.gameObject.SetActive(true);
+            Dust.Play();
         }
         else
         {
@@ -157,11 +160,11 @@ public class Game : MonoBehaviour
     {
         //Debug.Log(HighestWord + "-" + currentWordsCount);
 
-        Debug.Log(characters.Count.ToString());
-        for (int i = 0; i < characters.Count; i++)
-        {
-            Debug.Log(characters[i].ToString());
-        }
+        //Debug.Log(characters.Count.ToString());
+        //for (int i = 0; i < characters.Count; i++)
+        //{
+        //    Debug.Log(characters[i].ToString());
+        //}
 
         CurrentLevelCircle = Circle.Find(characters.Count.ToString());
         CurrentLevelCircle.gameObject.SetActive(true);
@@ -221,6 +224,7 @@ public class Game : MonoBehaviour
                 isDrawing = true;
                 dotId = 0;
                 Letters.Add(hit.transform.gameObject);
+                PlaySound(tap);
                 ActiveDot(dotId, hit.transform.localPosition);
                 lineRenderer.gameObject.SetActive(true);
                 CurrentWord += hit.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
@@ -237,6 +241,7 @@ public class Game : MonoBehaviour
                 var targetObject = hit.transform.gameObject;
                 if (!Letters.Contains(targetObject))
                 {
+                    PlaySound(tap);
                     ActiveDot(dotId, targetObject.transform.localPosition);
                     Letters.Add(targetObject);
                     CurrentWord += targetObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
@@ -259,10 +264,22 @@ public class Game : MonoBehaviour
             word.GetComponent<LineWord>().CheckAnswer(currentWord);
         }
 
-        if (!gameLevelWords.Words.Contains(currentWord) && extraWords.extraWords.Words.Contains(currentWord))
+        //if (!gameLevelWords.Words.Contains(currentWord) && extraWords.extraWordsFromFile.Contains(currentWord))
+        //{
+        //    Debug.Log(currentWord);
+        //    extraWords.CheckExtraWord(currentWord);
+        //}
+
+        if (!GeneratePattern.Instance.AssignedWords.Contains(currentWord))
         {
-            extraWords.CheckExtraWord(currentWord);
+            extraWords.CheckWord(currentWord);
         }
+
+        //if (extraWords.CheckWord(currentWord))
+        //{
+        //    Debug.Log(currentWord);
+        //    extraWords.CheckExtraWord(currentWord);
+        //}
     }
 
     #region PAUSE SCREEN
@@ -332,7 +349,6 @@ public class Game : MonoBehaviour
     #endregion
 
     #region DotsScript
-
 
     public void ChangeDotColor(string hexColorCode)
     {
@@ -468,6 +484,7 @@ public class Game : MonoBehaviour
     public void LevelCompleted()
     {
         SnowEffect.gameObject.SetActive(false);
+        Dust.gameObject.SetActive(false);
         CompletedWords = 0;
         CurrentLevelCircle.gameObject.SetActive(false);
         levelComplete_Screen.gameObject.SetActive(true);
@@ -479,15 +496,26 @@ public class Game : MonoBehaviour
             int currentIndex = i; // Capture the current index in a local variable
             sequence.AppendCallback(() =>
             {
-                stars[currentIndex].GetChild(0).transform.DOScale(Vector3.one, 0.25f);
+                stars[currentIndex].GetChild(0).gameObject.SetActive(true);
             });
             sequence.AppendInterval(0.35f);
         }
+        PlaySound(LevelComplete);
     }
 
     public void NextButton()
     {
        SceneManager.LoadScene(0);
+    }
+
+    #endregion
+
+    #region SOUNDS
+
+    public void PlaySound(AudioClip clip)
+    {
+        AudioSource.clip = clip;
+        AudioSource.Play();
     }
 
     #endregion

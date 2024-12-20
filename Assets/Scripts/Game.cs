@@ -97,9 +97,16 @@ public class Game : MonoBehaviour
     [SerializeField] Sprite bg1, bg2;
 
     [SerializeField] Image TextImage;
+    [SerializeField] TextMeshProUGUI LevelComplete_Level_No;
 
     [SerializeField] AudioSource AudioSource;
     [SerializeField] internal AudioClip LevelComplete, CoinCollect, WordComplete, Hint,tap;
+
+    [SerializeField] Sprite[] Paris_Theme; // Sprites for Paris Theme
+    [SerializeField] Sprite[] NewYork_Theme; // Sprites for New York Theme
+    [SerializeField] Sprite[] Tokyo_Theme; // Sprites for Tokyo Theme
+    [SerializeField] Sprite[] Egypt_Theme; // Sprites for Egypt Theme
+    [SerializeField] Sprite[] Sydney_Theme; // Sprites for Sydney Theme
 
     #endregion
 
@@ -132,28 +139,58 @@ public class Game : MonoBehaviour
             TextPreview.font = Incircle;
             coinsText.font = NewFontAsset;
         }
-        
+
+        SetLineColor(colorCode);
+        ChangeDotColor(colorCode);
+        ThemeSelection();
     }
 
-    public void ThemeSelection(bool effect)
+    public void ThemeSelection()
     {
-        if (!effect)
+        int level_No = PlayerPrefs.GetInt("SelectedLevel", 1);
+
+        // Define all themes and their corresponding sprites
+        List<Sprite[]> themes = new List<Sprite[]>
         {
-            colorCode = "#39b54a";
-            bg.sprite = bg1;
-            Dust.gameObject.SetActive(true);
-            Dust.Play();
+            Paris_Theme,  // Levels 1–20
+            NewYork_Theme, // Levels 21–40
+            Tokyo_Theme,  // Levels 41–60
+            Egypt_Theme, // Levels 61–80
+            Sydney_Theme  // Levels 81–100
+        };
+
+        // Determine the theme index based on the 20-level blocks
+        int themeIndex = (level_No - 1) / 20;
+
+        // Ensure the theme index does not exceed the number of available themes
+        if (themeIndex >= themes.Count)
+        {
+            themeIndex = themes.Count - 1; // Default to the last theme if out of range
+        }
+
+        // Get the active theme
+        Sprite[] activeTheme = themes[themeIndex];
+
+        // Calculate the relative level within the 20-level block
+        int relativeLevel = (level_No - 1) % 20 + 1;
+
+        // Determine which sprite to use based on 5-level sub-blocks
+        if (relativeLevel >= 1 && relativeLevel <= 5)
+        {
+            bg.sprite = activeTheme[0];
+        }
+        else if (relativeLevel >= 6 && relativeLevel <= 10)
+        {
+            bg.sprite = activeTheme[1];
+        }
+        else if (relativeLevel >= 11 && relativeLevel <= 15)
+        {
+            bg.sprite = activeTheme[2];
         }
         else
         {
-            bg.sprite = bg2;
-            colorCode = "#0038bb";
-            SnowEffect.gameObject.SetActive(true);
-            SnowEffect.Play();
+            bg.sprite = activeTheme[3];
         }
-        GeneratePattern.Instance.Chooselevel(PlayerPrefs.GetInt("SelectedLevel", 1));
-        SetLineColor(colorCode);
-        ChangeDotColor(colorCode);
     }
 
     public void CurrentLevelButton(int Level,List<char> characters)
@@ -340,9 +377,11 @@ public class Game : MonoBehaviour
             // Use DOVirtual.DelayedCall to delay each iteration
             DOVirtual.DelayedCall(index * delay, () =>
             {
-                text.transform.localPosition = Vector2.zero;
+                // Smooth movement to the new position
+                text.transform
+                    .DOLocalMove(Vector2.zero, 0.5f) // Move to localPosition (0, 0) over 0.5 seconds
+                    .SetEase(Ease.InOutQuad); // Use an easing function for smooth animation
             });
-            //text.transform.localPosition = Vector2.zero;
         }
     }
 
@@ -488,6 +527,7 @@ public class Game : MonoBehaviour
         CompletedWords = 0;
         CurrentLevelCircle.gameObject.SetActive(false);
         levelComplete_Screen.gameObject.SetActive(true);
+        LevelComplete_Level_No.text = PlayerPrefs.GetInt("SelectedLevel", 1).ToString();
 
         Sequence sequence = DOTween.Sequence();
 

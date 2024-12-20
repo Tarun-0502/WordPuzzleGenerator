@@ -86,31 +86,16 @@ public class GeneratePattern : MonoBehaviour
         }
         getAllCellIntoRows();
         lineWordsParent = GridLayout.parent;
-       
+
         //SetLevels();
         //levelSelectionScreen.gameObject.SetActive(true);
+        Chooselevel(PlayerPrefs.GetInt("SelectedLevel", 1));
     }
 
     #region LevelSelectionScreen
 
-    public void SetLevels()
-    {
-        //Transform levelsParent = levelSelectionScreen.GetChild(0);
-
-        for (int i = 0; i < levelsParent.childCount; i++)
-        {
-            int currentLevel1 = i + 1;
-            levelsParent.GetChild(i).gameObject.name = "Level" + currentLevel1;
-            levelsParent.GetChild(i).transform.GetComponent<Button>().onClick.AddListener(() => Chooselevel(currentLevel1));
-            levelsParent.GetChild(i).GetChild(0).GetComponent<TextMeshProUGUI>().text = currentLevel1.ToString();
-        }
-    }
-
-    [SerializeField] GameObject themeSelection;
-
     public void Chooselevel(int selectedLevel)
     {
-        themeSelection.SetActive(false);
 
         List<char> characters = new List<char>();
 

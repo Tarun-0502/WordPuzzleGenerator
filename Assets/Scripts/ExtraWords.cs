@@ -213,7 +213,7 @@ public class ExtraWords : MonoBehaviour
 
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
-                Debug.LogError("Error: " + request.error);
+                Debug.Log("Error: " + request.error);
                 callback?.Invoke(false); // Return false for errors
                 yield break;
             }

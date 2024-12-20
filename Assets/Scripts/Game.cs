@@ -108,6 +108,12 @@ public class Game : MonoBehaviour
     [SerializeField] Sprite[] Egypt_Theme; // Sprites for Egypt Theme
     [SerializeField] Sprite[] Sydney_Theme; // Sprites for Sydney Theme
 
+    [SerializeField] int ExtraWordsCount;
+
+    [SerializeField] Transform Sound_, Music_, Notification_;
+
+    [SerializeField] AudioSource Music_Source;
+
     #endregion
 
 
@@ -307,9 +313,13 @@ public class Game : MonoBehaviour
         //    extraWords.CheckExtraWord(currentWord);
         //}
 
-        if (!GeneratePattern.Instance.AssignedWords.Contains(currentWord))
+        if (!GeneratePattern.Instance.AssignedWords.Contains(currentWord) && currentWord.Length>2)
         {
-            extraWords.CheckWord(currentWord);
+            if (ExtraWordsCount<4)
+            {
+                extraWords.CheckWord(currentWord);
+                ExtraWordsCount++;
+            }
         }
 
         //if (extraWords.CheckWord(currentWord))
@@ -556,6 +566,73 @@ public class Game : MonoBehaviour
     {
         AudioSource.clip = clip;
         AudioSource.Play();
+    }
+
+    public void Sound_On_Off()
+    {
+        Transform OnOff = Sound_.GetChild(0);
+        Transform Onn = OnOff.GetChild(0);
+        Transform Off = OnOff.GetChild(1);
+
+        if (OnOff!=null && Onn!=null && Onn.gameObject.activeInHierarchy)
+        {
+            Off.gameObject.SetActive(true);
+            Onn.gameObject.SetActive(false);
+            AudioSource.volume = 0;
+        }
+        else
+        {
+            if (OnOff != null && Off != null && !Onn.gameObject.activeInHierarchy)
+            {
+                Off.gameObject.SetActive(false);
+                Onn.gameObject.SetActive(true);
+                AudioSource.volume = 1;
+            }
+        }
+    }
+
+    public void Music_On_Off()
+    {
+        Transform OnOff = Music_.GetChild(0);
+        Transform Onn = OnOff.GetChild(0);
+        Transform Off = OnOff.GetChild(1);
+
+        if (OnOff != null && Onn != null && Onn.gameObject.activeInHierarchy)
+        {
+            Off.gameObject.SetActive(true);
+            Onn.gameObject.SetActive(false);
+            Music_Source.volume = 0;
+        }
+        else
+        {
+            if (OnOff != null && Off != null && !Onn.gameObject.activeInHierarchy)
+            {
+                Off.gameObject.SetActive(false);
+                Onn.gameObject.SetActive(true);
+                Music_Source.volume = 1;
+            }
+        }
+    }
+
+    public void Notification_On_Off()
+    {
+        Transform OnOff = Notification_.GetChild(0);
+        Transform Onn = OnOff.GetChild(0);
+        Transform Off = OnOff.GetChild(1);
+
+        if (OnOff != null && Onn != null && Onn.gameObject.activeInHierarchy)
+        {
+            Off.gameObject.SetActive(true);
+            Onn.gameObject.SetActive(false);
+        }
+        else
+        {
+            if (OnOff != null && Off != null && !Onn.gameObject.activeInHierarchy)
+            {
+                Off.gameObject.SetActive(false);
+                Onn.gameObject.SetActive(true);
+            }
+        }
     }
 
     #endregion

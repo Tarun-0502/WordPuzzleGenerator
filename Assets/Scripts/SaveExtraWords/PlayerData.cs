@@ -1,17 +1,20 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
-[System.Serializable]
-public class PlayerData 
+[Serializable]
+public class PlayerData
 {
-   public List<string> wordsCollected = new List<string>();
+    public List<string> wordsCollected = new List<string>();
+    public int LevelToPlay;
 
-    public PlayerData(ExtraWords words)
+    public PlayerData(ExtraWords words, int levelToPlay = 0)
     {
-       foreach (var word in words.FoundedExtraWords)
-       {
-            wordsCollected.Add(word);
-       }
+        if (words != null && words.FoundedExtraWords != null)
+        {
+            wordsCollected.AddRange(words.FoundedExtraWords);
+        }
+
+        LevelToPlay = levelToPlay;
     }
+
 }

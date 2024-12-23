@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,17 +12,31 @@ public class UIManager : MonoBehaviour
     [SerializeField] Transform Content;
     [SerializeField] GameObject LoadingScreen;
     [SerializeField] Image Bar;
+    [SerializeField] List<Transform> levels;
+
+    [SerializeField] int Highestlevel;
+    [SerializeField] int position = 0;
 
     // Start is called before the first frame update
     void Start()
     {
+        if (!PlayerPrefs.HasKey("HighestLevel"))
+        {
+            SaveExtraWords.ClearData();
+        }
         SetLevels(Content);
+        Highestlevel = PlayerPrefs.GetInt("HighestLevel");
+        //LevelsUnlocked(Highestlevel);
+        //LevelsUnlocked(levels.Count-1);
+    }
+
+    public void Play()
+    {
+        LevelsUnlocked(Highestlevel+1);
     }
 
     public void SetLevels(Transform levelsParent)
     {
-        //Transform levelsParent = levelSelectionScreen.GetChild(0);
-
         int levelIndex = 1;
         for (int i = 0; i < levelsParent.childCount; i++)
         {
@@ -41,6 +56,8 @@ public class UIManager : MonoBehaviour
                                 for (int l = 0; l < Line.childCount; l++)
                                 {
                                     Transform child = Line.GetChild(l);
+                                    child.localScale = Vector3.zero;
+                                    levels.Add(child);
                                     if (child != null)
                                     {
                                         // Set the name of the GameObject
@@ -75,6 +92,7 @@ public class UIManager : MonoBehaviour
         }
 
     }
+
     void Chooselevel(int current)
         {
             PlayerPrefs.SetInt("SelectedLevel", current);
@@ -110,5 +128,53 @@ public class UIManager : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    private void LevelsUnlocked(int Levels)
+    {
+        position = 0;
+        for (int i = 0; i < Levels; i++)
+        {
+            Transform Level = levels[i];
+
+            // Add to position after every 5 iterations
+            if ((i + 1) % 5 == 0)
+            {
+                position += 3020;
+                Debug.Log(i + " POsition ");
+            }
+
+            if (i == Levels - 1)
+            {
+                RectTransform rectTransform = Content.GetComponent<RectTransform>();
+                if (rectTransform != null)
+                {
+                    // Use DOTween to animate anchoredPosition smoothly
+                    float y = rectTransform.anchoredPosition.y - position;
+                    rectTransform.DOAnchorPos(new Vector2(0, y), 1.2f).SetEase(Ease.OutQuad).OnComplete(() =>
+                    {
+                        // Animate the last level
+                        Level.transform.DOScale(Vector3.one, 0.35f).SetEase(Ease.OutQuad);
+                        Debug.Log(i + " - " + y);
+                        Debug.Log(rectTransform.anchoredPosition.y + position);
+                    });
+
+                    //// Animate the last level
+                    //Level.transform.DOScale(Vector3.one, 0.35f).SetEase(Ease.OutQuad).SetDelay(1.2f);
+                    //Debug.Log(i + " - " + y);
+                    //Debug.Log(rectTransform.anchoredPosition.y + position);
+                }
+                else
+                {
+                    Debug.LogError("Content does not have a RectTransform component!");
+                }
+            }
+            else
+            {
+                // No delay for other iterations
+                Level.transform.localScale = Vector3.one;
+            }
+        }
+
     }
 }

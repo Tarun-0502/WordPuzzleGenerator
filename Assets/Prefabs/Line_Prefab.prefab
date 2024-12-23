@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9164359060286488751}
   - component: {fileID: 9164359060286488750}
-  m_Layer: 0
+  - component: {fileID: -21148083733368778}
+  m_Layer: 5
   m_Name: Line_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,8 +82,8 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.06658561
-        value: 0.1285749
+        time: 0.1
+        value: 0.2
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -123,9 +124,17 @@ LineRenderer:
       m_NumAlphaKeys: 2
     numCornerVertices: 5
     numCapVertices: 5
-    alignment: 0
+    alignment: 1
     textureMode: 0
     shadowBias: 0.5
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!222 &-21148083733368778
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9164359060286488744}
+  m_CullTransparentMesh: 1

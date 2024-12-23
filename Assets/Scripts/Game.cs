@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -43,6 +44,9 @@ public class Game : MonoBehaviour
     [HideInInspector]
     [SerializeField] internal int CompletedWords;
 
+    [HideInInspector]
+    [SerializeField] int ExtraWordsCount;
+
     #endregion
 
 
@@ -66,8 +70,8 @@ public class Game : MonoBehaviour
     private List<GameObject> Dots = new List<GameObject>();
 
     // Shuffle helper
-    private List<TextMeshProUGUI> texts = new List<TextMeshProUGUI>();
     private List<Transform> letters = new List<Transform>();
+    private List<Vector3> letterPositions = new List<Vector3>();
 
     [SerializeField] internal GameObject levelSelectionScreen;
 
@@ -108,11 +112,11 @@ public class Game : MonoBehaviour
     [SerializeField] Sprite[] Egypt_Theme; // Sprites for Egypt Theme
     [SerializeField] Sprite[] Sydney_Theme; // Sprites for Sydney Theme
 
-    [SerializeField] int ExtraWordsCount;
-
     [SerializeField] Transform Sound_, Music_, Notification_;
 
     [SerializeField] AudioSource Music_Source;
+
+    [SerializeField] int HighestLevel;
 
     #endregion
 
@@ -149,6 +153,7 @@ public class Game : MonoBehaviour
         SetLineColor(colorCode);
         ChangeDotColor(colorCode);
         ThemeSelection();
+        LoadSavedData();
     }
 
     public void ThemeSelection()
@@ -251,11 +256,6 @@ public class Game : MonoBehaviour
 
     private void Controls()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SceneManager.LoadScene(0);
-        }
-
         if (Input.GetMouseButtonDown(0))
         {
             extraWords.Deactivate();
@@ -362,35 +362,37 @@ public class Game : MonoBehaviour
 
     public void Shuffle()
     {
-        texts.Clear();
         letters.Clear();
+        letterPositions.Clear();
 
+        // Collect letters and their initial positions
         foreach (var letter in LettersUsedInLevel)
         {
             letters.Add(letter);
-            texts.Add(letter.GetChild(0).GetComponent<TextMeshProUGUI>());
+            letterPositions.Add(letter.localPosition);
         }
 
-        int total_Iterations = letters.Count;
-        for (int i = 0; i < total_Iterations; i++)
+        // Shuffle positions
+        List<Vector3> shuffledPositions = new List<Vector3>(letterPositions);
+        for (int i = 0; i < shuffledPositions.Count; i++)
         {
-            int random = Random.Range(0, letters.Count);
-            texts[i].transform.SetParent(letters[random]);
-            letters.RemoveAt(random);
+            int randomIndex = Random.Range(0, shuffledPositions.Count);
+            // Swap positions in the shuffled list
+            Vector3 temp = shuffledPositions[i];
+            shuffledPositions[i] = shuffledPositions[randomIndex];
+            shuffledPositions[randomIndex] = temp;
         }
 
-        foreach (var text in texts)
+        // Assign shuffled positions back to letters with delay and smooth movement
+        float delayBetweenMoves = 0.01f; // Delay between each move
+        for (int i = 0; i < letters.Count; i++)
         {
-            float delay = 0.1f; // Adjust the delay between each iteration (e.g., 0.5 seconds)
-            int index = System.Array.IndexOf(texts.ToArray(), text); // Get the index of the current iteration
-
-            // Use DOVirtual.DelayedCall to delay each iteration
-            DOVirtual.DelayedCall(index * delay, () =>
+            int index = i; // Capture the current index for the delayed call
+            DOVirtual.DelayedCall(index * delayBetweenMoves, () =>
             {
-                // Smooth movement to the new position
-                text.transform
-                    .DOLocalMove(Vector2.zero, 0.5f) // Move to localPosition (0, 0) over 0.5 seconds
-                    .SetEase(Ease.InOutQuad); // Use an easing function for smooth animation
+                letters[index].transform
+                    .DOLocalMove(shuffledPositions[index], 0.5f) // Move to new position over 0.5 seconds
+                    .SetEase(Ease.InOutQuad); // Smooth easing
             });
         }
     }
@@ -532,25 +534,42 @@ public class Game : MonoBehaviour
 
     public void LevelCompleted()
     {
-        SnowEffect.gameObject.SetActive(false);
-        Dust.gameObject.SetActive(false);
-        CompletedWords = 0;
-        CurrentLevelCircle.gameObject.SetActive(false);
-        levelComplete_Screen.gameObject.SetActive(true);
-        LevelComplete_Level_No.text = PlayerPrefs.GetInt("SelectedLevel", 1).ToString();
-
-        Sequence sequence = DOTween.Sequence();
-
-        for (int i = 0; i < stars.Length; i++)
+        DOVirtual.DelayedCall(0.3f, () =>
         {
-            int currentIndex = i; // Capture the current index in a local variable
-            sequence.AppendCallback(() =>
+            SnowEffect.gameObject.SetActive(false);
+            Dust.gameObject.SetActive(false);
+            CompletedWords = 0;
+            CurrentLevelCircle.gameObject.SetActive(false);
+            levelComplete_Screen.gameObject.SetActive(true);
+            LevelComplete_Level_No.text = PlayerPrefs.GetInt("SelectedLevel", 1).ToString();
+
+            if (PlayerPrefs.GetInt("SelectedLevel")>=HighestLevel)
             {
-                stars[currentIndex].GetChild(0).gameObject.SetActive(true);
+                HighestLevel = PlayerPrefs.GetInt("SelectedLevel");
+            }
+            extraWords.SaveData();
+            PlayerPrefs.SetInt("HighestLevel",HighestLevel);
+
+            // Scale to Vector3.one over 0.35 seconds.. Apply the OutBack easing function
+            levelComplete_Screen.GetChild(0).transform.DOScale(Vector3.one, 0.5f).OnComplete(() =>
+            {
+                Sequence sequence = DOTween.Sequence();
+
+                DOVirtual.DelayedCall(0.3f, () =>
+                {
+                    for (int i = 0; i < stars.Length; i++)
+                    {
+                        int currentIndex = i; // Capture the current index in a local variable
+                        sequence.AppendCallback(() =>
+                        {
+                            stars[currentIndex].GetChild(0).gameObject.SetActive(true);
+                        });
+                        sequence.AppendInterval(0.35f);
+                    }
+                    PlaySound(LevelComplete);
+                });
             });
-            sequence.AppendInterval(0.35f);
-        }
-        PlaySound(LevelComplete);
+        });
     }
 
     public void NextButton()
@@ -636,6 +655,22 @@ public class Game : MonoBehaviour
     }
 
     #endregion
+
+    void LoadSavedData()
+    {
+        PlayerData data = SaveExtraWords.LoadData();
+        if (data != null)
+        {
+            if (data.wordsCollected != null)
+            {
+                extraWords.FoundedExtraWords.AddRange(data.wordsCollected);
+            }
+
+            // Set the current level to play from the saved data
+            HighestLevel = data.LevelToPlay;
+            Debug.Log($"Loaded level to play: {HighestLevel}");
+        }
+    }
 
     #endregion
 

@@ -22,7 +22,7 @@ public class Letter : MonoBehaviour
             Text.transform.SetParent(flyPosition);
             Text.text = letter;
             Text.transform.DOLocalMove(Vector3.zero, 0.25f);
-            Text.transform.DOScale(new Vector3(5, 5, 5), 0.25f);
+            //Text.transform.DOScale(new Vector3(5, 5, 5), 0.25f);
             DOVirtual.DelayedCall(0.3f, () =>
             {
                 Text.text = "";

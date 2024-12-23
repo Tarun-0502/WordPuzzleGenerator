@@ -4,74 +4,56 @@ using UnityEngine;
 
 public static class SaveExtraWords
 {
-    // Save Player Data with ExtraWords
-    public static void SavePlayerData(ExtraWords words)
+    private static readonly string FilePath = Path.Combine(Application.persistentDataPath, "PlayerFoundedExtraWords.json");
+
+    public static void SavePlayerData(PlayerData playerData)
     {
         try
         {
-            string path = Application.persistentDataPath + "/PlayerFoundedExtraWords.json"; // Change extension to .json
-
-            // Ensure directory exists
-            string directory = Path.GetDirectoryName(path);
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            // Serialize the data to JSON
-            string json = JsonUtility.ToJson(new PlayerData(words), true); // 'true' for pretty print (indentation)
-            File.WriteAllText(path, json); // Save as a JSON text file
+            string json = JsonUtility.ToJson(playerData, true);
+            File.WriteAllText(FilePath, json);
+            Debug.Log($"Player data (including level) saved successfully at: {FilePath}");
         }
         catch (Exception ex)
         {
-            Debug.LogError("Failed to save player data: " + ex.Message);
+            Debug.LogError($"Failed to save player data: {ex.Message}");
         }
     }
 
-    // Load Player Data (from JSON)
     public static PlayerData LoadData()
     {
-        string path = Application.persistentDataPath + "/PlayerFoundedExtraWords.json"; // Updated to .json
-        if (File.Exists(path))
+        if (File.Exists(FilePath))
         {
             try
             {
-                // Read the file and deserialize it back to PlayerData
-                string json = File.ReadAllText(path);
-                Debug.Log(path);
-                PlayerData data = JsonUtility.FromJson<PlayerData>(json);
-                return data;
+                string json = File.ReadAllText(FilePath);
+                Debug.Log(FilePath);
+                return JsonUtility.FromJson<PlayerData>(json);
             }
             catch (Exception ex)
             {
-                Debug.LogError("Failed to load player data: " + ex.Message);
+                Debug.LogError($"Failed to load player data: {ex.Message}");
             }
         }
         else
         {
-            Debug.LogError("File not found: " + path);
+            Debug.LogWarning($"No save file found at: {FilePath}");
         }
         return null;
     }
 
-    // Clear Player Data (without deleting file)
     public static void ClearData()
     {
-        string path = Application.persistentDataPath + "/PlayerFoundedExtraWords.json"; // Same file path used for saving/loading data
-
-        if (File.Exists(path))
+        if (File.Exists(FilePath))
         {
             try
             {
-                // Serialize empty data to JSON and overwrite the file
-                string json = JsonUtility.ToJson(new PlayerData(new ExtraWords()), true); // Empty data reset
-                File.WriteAllText(path, json); // Save as empty JSON data
-
-                Debug.Log("Player data cleared successfully (data reset).");
+                File.WriteAllText(FilePath, JsonUtility.ToJson(new PlayerData(null,1), true));
+                Debug.Log("Player data cleared successfully.");
             }
             catch (Exception ex)
             {
-                Debug.LogError("Failed to clear player data: " + ex.Message);
+                Debug.LogError($"Failed to clear player data: {ex.Message}");
             }
         }
         else
@@ -79,5 +61,4 @@ public static class SaveExtraWords
             Debug.LogWarning("No player data file found to clear.");
         }
     }
-
 }

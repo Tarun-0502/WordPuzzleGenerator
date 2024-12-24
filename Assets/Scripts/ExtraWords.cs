@@ -52,8 +52,9 @@ public class ExtraWords : MonoBehaviour
     void InstiateExtraCell()
     {
         GameObject go = Instantiate(letterPrefab, this.transform);
-        go.transform.GetComponent<Letter>().Text.text = "";
-        go.transform.GetComponent<Letter>().showText = false;
+        go.transform.GetComponent<ExtraWordCell>().Text.text = "";
+        go.transform.GetComponent<ExtraWordCell>().showText = false;
+        go.transform.localScale = Vector3.zero;
         Cells.Add(go.transform);
     }
 
@@ -84,16 +85,16 @@ public class ExtraWords : MonoBehaviour
 
             for (int i = 0; i < CurrentCells.Count; i++)
             {
-                CurrentCells[i].GetComponent<Letter>().letter = currentWord[i];
+                CurrentCells[i].GetComponent<ExtraWordCell>().letter = currentWord[i];
             }
 
-            float delay = 0.2f;
             for (int i = 0; i < CurrentCells.Count; i++)
             {
+                float delay = 0.5f;
                 Transform t = CurrentCells[i];
                 DOVirtual.DelayedCall(i * delay, () =>
                 {
-                    var cell = t.GetComponent<Letter>();
+                    var cell = t.GetComponent<ExtraWordCell>();
                     cell.showText = true;
                     cell.FlyText(this.transform);
                 });
@@ -140,7 +141,7 @@ public class ExtraWords : MonoBehaviour
 
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
-                Debug.LogError($"Error checking word '{word}': {request.error}");
+                Debug.Log($"Error checking word '{word}': {request.error}");
                 callback?.Invoke(false);
                 yield break;
             }
@@ -168,7 +169,7 @@ public class ExtraWords : MonoBehaviour
         currentWord.Clear();
         foreach (Transform t in Cells)
         {
-            t.GetComponent<Letter>().Text.text = "";
+            t.GetComponent<ExtraWordCell>().Text.text = "";
         }
     }
 

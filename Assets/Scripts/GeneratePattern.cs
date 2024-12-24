@@ -50,9 +50,6 @@ public class GeneratePattern : MonoBehaviour
     [HideInInspector]
     public List<Cell> cells_;
 
-    [HideInInspector]
-    [SerializeField] Transform levelSelectionScreen;
-
     #endregion
 
 
@@ -80,15 +77,9 @@ public class GeneratePattern : MonoBehaviour
 
     void Start()
     {
-        if (Game.Instance.levelSelectionScreen != null)
-        {
-            levelSelectionScreen = Game.Instance.levelSelectionScreen.GetComponent<Transform>();
-        }
         getAllCellIntoRows();
         lineWordsParent = GridLayout.parent;
 
-        //SetLevels();
-        //levelSelectionScreen.gameObject.SetActive(true);
         Chooselevel(PlayerPrefs.GetInt("SelectedLevel", 1));
     }
 
@@ -170,8 +161,6 @@ public class GeneratePattern : MonoBehaviour
         }
 
         WordToPlace(FindHighestWord(), true); // To place the first word
-
-        levelSelectionScreen.gameObject.SetActive(false);
     }
 
     #endregion

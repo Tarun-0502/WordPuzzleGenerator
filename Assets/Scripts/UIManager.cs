@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    #region REFERENCES
+
     [SerializeField] Transform Content;
     [SerializeField] GameObject LoadingScreen;
     [SerializeField] Image Bar;
@@ -17,7 +19,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] int Highestlevel;
     [SerializeField] int position = 0;
 
-    // Start is called before the first frame update
+    #endregion
+
+    #region METHODS
+
     void Start()
     {
         if (!PlayerPrefs.HasKey("HighestLevel"))
@@ -26,8 +31,6 @@ public class UIManager : MonoBehaviour
         }
         SetLevels(Content);
         Highestlevel = PlayerPrefs.GetInt("HighestLevel");
-        //LevelsUnlocked(Highestlevel);
-        //LevelsUnlocked(levels.Count-1);
     }
 
     public void Play()
@@ -177,4 +180,6 @@ public class UIManager : MonoBehaviour
         }
 
     }
+
+    #endregion
 }

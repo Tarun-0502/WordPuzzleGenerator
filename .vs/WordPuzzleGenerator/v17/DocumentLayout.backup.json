@@ -3,39 +3,43 @@
   "WorkspaceRootPath": "D:\\WordPuzzleGenerator\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\uimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\uimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|d:\\wordpuzzlegenerator\\assets\\scripts\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MOKSHA\\AppData\\LocalLow\\cupGames\\WordPuzzle\\PlayerFoundedExtraWords.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\extrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\extrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\MOKSHA\\AppData\\LocalLow\\cupGames\\WordPuzzle\\PlayerFoundedExtraWords.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\extrawordcell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\extrawordcell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\saveextrawords\\saveextrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\saveextrawords\\saveextrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|d:\\wordpuzzlegenerator\\assets\\scripts\\saveextrawords\\playerdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\saveextrawords\\playerdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\letter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\letter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\generatepattern.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\generatepattern.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\sound.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\sound.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\uimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\uimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\letter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\letter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\saveextrawords\\playerdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\saveextrawords\\playerdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\sound.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\sound.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\lineword.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -64,47 +68,58 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
+              "Title": "ExtraWordCell.cs",
+              "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\ExtraWordCell.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\ExtraWordCell.cs",
+              "ToolTip": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\ExtraWordCell.cs",
+              "RelativeToolTip": "Assets\\Scripts\\ExtraWordCell.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwA0AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-24T06:19:03Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "PlayerFoundedExtraWords.json",
               "DocumentMoniker": "C:\\Users\\MOKSHA\\AppData\\LocalLow\\cupGames\\WordPuzzle\\PlayerFoundedExtraWords.json",
               "ToolTip": "C:\\Users\\MOKSHA\\AppData\\LocalLow\\cupGames\\WordPuzzle\\PlayerFoundedExtraWords.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2024-12-23T08:34:11.432Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "PlayerData.cs",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
               "ToolTip": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
               "RelativeToolTip": "Assets\\Scripts\\SaveExtraWords\\PlayerData.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAkAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-23T08:04:51.773Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-23T08:04:51.773Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 5,
               "Title": "Letter.cs",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\Letter.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Letter.cs",
               "ToolTip": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\Letter.cs",
               "RelativeToolTip": "Assets\\Scripts\\Letter.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAYwA0AAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAADIAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-18T11:43:31.053Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "GridScript.cs",
               "DocumentMoniker": "D:\\WordPlay\\Assets\\Scripts\\GridScript.cs",
               "RelativeDocumentMoniker": "..\\WordPlay\\Assets\\Scripts\\GridScript.cs",
@@ -112,7 +127,8 @@
               "RelativeToolTip": "..\\WordPlay\\Assets\\Scripts\\GridScript.cs",
               "ViewState": "AgIAAC4AAAAAAAAAAAAAAEUAAABPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-18T11:17:26.336Z"
+              "WhenOpened": "2024-12-18T11:17:26.336Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -122,27 +138,25 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\SaveExtraWords\\SaveExtraWords.cs",
               "ToolTip": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\SaveExtraWords\\SaveExtraWords.cs",
               "RelativeToolTip": "Assets\\Scripts\\SaveExtraWords\\SaveExtraWords.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwAQAAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD4AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-18T10:04:46.027Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-18T10:04:46.027Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "ExtraWords.cs",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\ExtraWords.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ExtraWords.cs",
               "ToolTip": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\ExtraWords.cs",
               "RelativeToolTip": "Assets\\Scripts\\ExtraWords.cs",
-              "ViewState": "AgIAAG8AAAAAAAAAAAAUwLQAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAADQAAAAAAAAAAIAwwEEAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-18T09:56:56.446Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-18T09:56:56.446Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "Cell.cs",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\Cell.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Cell.cs",
@@ -154,7 +168,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "Sound.cs",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\Sound.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Sound.cs",
@@ -166,7 +180,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "LineWord.cs",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\LineWord.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\LineWord.cs",
@@ -178,29 +192,27 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Game.cs",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\Game.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Game.cs",
               "ToolTip": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\Game.cs",
               "RelativeToolTip": "Assets\\Scripts\\Game.cs",
-              "ViewState": "AgIAABUCAAAAAAAAAIAwwCYCAAA8AAAAAAAAAA==",
+              "ViewState": "AgIAACkBAAAAAAAAAIAwwDwBAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-17T08:52:14.816Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-17T08:52:14.816Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
               "Title": "UIManager.cs",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\UIManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\UIManager.cs",
               "ToolTip": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\UIManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\UIManager.cs",
-              "ViewState": "AgIAAGcAAAAAAAAAAAAIwIsAAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAAAowIYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-17T08:42:16.251Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-17T08:42:16.251Z"
             },
             {
               "$type": "Document",
@@ -210,14 +222,13 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\GeneratePattern.cs",
               "ToolTip": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\GeneratePattern.cs",
               "RelativeToolTip": "Assets\\Scripts\\GeneratePattern.cs",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAQwFAAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAOICAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-17T08:38:41.303Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-17T08:38:41.303Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "Levels.cs",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\Levels.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Levels.cs",
@@ -229,7 +240,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "Levels.txt",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Resources\\Levels.txt",
               "RelativeDocumentMoniker": "Assets\\Resources\\Levels.txt",

@@ -73,8 +73,6 @@ public class Game : MonoBehaviour
     private List<Transform> letters = new List<Transform>();
     private List<Vector3> letterPositions = new List<Vector3>();
 
-    [SerializeField] internal GameObject levelSelectionScreen;
-
     private Transform CurrentLevelCircle;
 
     [SerializeField] private int Total_Coins;
@@ -95,7 +93,6 @@ public class Game : MonoBehaviour
 
     [SerializeField] ParticleSystem SnowEffect,Dust;
     [SerializeField] Transform levelComplete_Screen;
-    [SerializeField] Transform[] stars;
 
     [SerializeField] Image bg;
     [SerializeField] Sprite bg1, bg2;
@@ -117,6 +114,7 @@ public class Game : MonoBehaviour
     [SerializeField] AudioSource Music_Source;
 
     [SerializeField] int HighestLevel;
+    [SerializeField] int CurrentLevel;
 
     #endregion
 
@@ -125,6 +123,7 @@ public class Game : MonoBehaviour
 
     void Start()
     {
+
         if (gameLevelWords==null)
         {
             gameLevelWords = FindObjectOfType<GameLevelWords>();
@@ -141,8 +140,6 @@ public class Game : MonoBehaviour
         GameObject lineRe = Instantiate(linePrefab, Vector3.zero, Quaternion.identity, LineParent);
         lineRenderer = lineRe.GetComponent<LineRenderer>();
         lineRenderer.gameObject.SetActive(false);
-        //SetLineColor(colorCode);
-        //ChangeDotColor(colorCode);
 
         if (NewFontAsset != null)
         {
@@ -154,6 +151,7 @@ public class Game : MonoBehaviour
         ChangeDotColor(colorCode);
         ThemeSelection();
         LoadSavedData();
+        CurrentLevel = PlayerPrefs.GetInt("SelectedLevel");
     }
 
     public void ThemeSelection()
@@ -204,6 +202,37 @@ public class Game : MonoBehaviour
         }
     }
 
+    void ClipLineInsideCircle(LineRenderer line, Vector3 circleCenter, float circleRadius)
+    {
+        Vector3[] positions = new Vector3[line.positionCount];
+        line.GetPositions(positions);
+
+        List<Vector3> clippedPositions = new List<Vector3>();
+
+        for (int i = 0; i < positions.Length - 1; i++)
+        {
+            Vector3 p1 = positions[i];
+            Vector3 p2 = positions[i + 1];
+
+            bool p1Inside = (p1 - circleCenter).magnitude <= circleRadius;
+            bool p2Inside = (p2 - circleCenter).magnitude <= circleRadius;
+
+            if (p1Inside) clippedPositions.Add(p1);
+
+            if (p1Inside != p2Inside) // Line crosses the circle boundary
+            {
+                Vector3 direction = (p2 - p1).normalized;
+                float distanceToBoundary = circleRadius - (p1 - circleCenter).magnitude;
+                Vector3 intersection = p1 + direction * distanceToBoundary;
+                clippedPositions.Add(intersection);
+            }
+        }
+
+        line.positionCount = clippedPositions.Count;
+        line.SetPositions(clippedPositions.ToArray());
+    }
+
+
     public void CurrentLevelButton(int Level,List<char> characters)
     {
         //Debug.Log(HighestWord + "-" + currentWordsCount);
@@ -228,7 +257,6 @@ public class Game : MonoBehaviour
 
         LoadGame();
         InstiateDots();
-        levelSelectionScreen.SetActive(false);
     }
 
     void Update()
@@ -239,6 +267,7 @@ public class Game : MonoBehaviour
         if (!PauseScreen.activeInHierarchy)
         {
             Controls();
+            ClipLineInsideCircle(lineRenderer, Circle.position, 440f);
         }
     }
 
@@ -553,19 +582,8 @@ public class Game : MonoBehaviour
             // Scale to Vector3.one over 0.35 seconds.. Apply the OutBack easing function
             levelComplete_Screen.GetChild(0).transform.DOScale(Vector3.one, 0.5f).OnComplete(() =>
             {
-                Sequence sequence = DOTween.Sequence();
-
-                DOVirtual.DelayedCall(0.3f, () =>
+                DOVirtual.DelayedCall(0.5f, () =>
                 {
-                    for (int i = 0; i < stars.Length; i++)
-                    {
-                        int currentIndex = i; // Capture the current index in a local variable
-                        sequence.AppendCallback(() =>
-                        {
-                            stars[currentIndex].GetChild(0).gameObject.SetActive(true);
-                        });
-                        sequence.AppendInterval(0.35f);
-                    }
                     PlaySound(LevelComplete);
                 });
             });
@@ -574,7 +592,9 @@ public class Game : MonoBehaviour
 
     public void NextButton()
     {
-       SceneManager.LoadScene(0);
+        //SceneManager.LoadScene(0);
+        PlayerPrefs.SetInt("SelectedLevel", PlayerPrefs.GetInt("SelectedLevel")+1);
+        SceneManager.LoadScene(1);
     }
 
     #endregion
@@ -673,5 +693,7 @@ public class Game : MonoBehaviour
     }
 
     #endregion
+
+
 
 }

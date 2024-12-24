@@ -151,6 +151,7 @@ public class Game : MonoBehaviour
         ChangeDotColor(colorCode);
         ThemeSelection();
         LoadSavedData();
+        HighestLevel = PlayerPrefs.GetInt("HighestLevel");
         CurrentLevel = PlayerPrefs.GetInt("SelectedLevel");
     }
 
@@ -267,7 +268,7 @@ public class Game : MonoBehaviour
         if (!PauseScreen.activeInHierarchy)
         {
             Controls();
-            ClipLineInsideCircle(lineRenderer, Circle.position, 440f);
+            //ClipLineInsideCircle(lineRenderer, Circle.position, 440f);
         }
     }
 
@@ -572,12 +573,12 @@ public class Game : MonoBehaviour
             levelComplete_Screen.gameObject.SetActive(true);
             LevelComplete_Level_No.text = PlayerPrefs.GetInt("SelectedLevel", 1).ToString();
 
-            if (PlayerPrefs.GetInt("SelectedLevel")>=HighestLevel)
+            if (PlayerPrefs.GetInt("SelectedLevel") >= HighestLevel)
             {
                 HighestLevel = PlayerPrefs.GetInt("SelectedLevel");
             }
-            extraWords.SaveData();
-            PlayerPrefs.SetInt("HighestLevel",HighestLevel);
+            //extraWords.SaveData();
+            PlayerPrefs.SetInt("HighestLevel",PlayerPrefs.GetInt("HighestLevel")+1);
 
             // Scale to Vector3.one over 0.35 seconds.. Apply the OutBack easing function
             levelComplete_Screen.GetChild(0).transform.DOScale(Vector3.one, 0.5f).OnComplete(() =>
@@ -592,9 +593,22 @@ public class Game : MonoBehaviour
 
     public void NextButton()
     {
+        if (!PlayerPrefs.HasKey("Count"))
+        {
+            PlayerPrefs.SetInt("Count", 1);
+        }
         //SceneManager.LoadScene(0);
-        PlayerPrefs.SetInt("SelectedLevel", PlayerPrefs.GetInt("SelectedLevel")+1);
-        SceneManager.LoadScene(1);
+        if (PlayerPrefs.GetInt("Count")<5)
+        {
+            PlayerPrefs.SetInt("SelectedLevel", PlayerPrefs.GetInt("SelectedLevel") + 1);
+            PlayerPrefs.SetInt("Count", PlayerPrefs.GetInt("Count")+1);
+            SceneManager.LoadScene(1);
+        }
+        else
+        {
+            SceneManager.LoadScene(0);
+            PlayerPrefs.SetInt("Count", 1);
+        }
     }
 
     #endregion
@@ -687,7 +701,7 @@ public class Game : MonoBehaviour
             }
 
             // Set the current level to play from the saved data
-            HighestLevel = data.LevelToPlay;
+            //HighestLevel = data.LevelToPlay;
             Debug.Log($"Loaded level to play: {HighestLevel}");
         }
     }

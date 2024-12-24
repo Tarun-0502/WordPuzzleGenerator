@@ -12,12 +12,14 @@ public class UIManager : MonoBehaviour
     #region REFERENCES
 
     [SerializeField] Transform Content;
-    [SerializeField] GameObject LoadingScreen;
+    [SerializeField] GameObject LoadingScreen,MainScreen,LevelSelectionScreen;
     [SerializeField] Image Bar;
     [SerializeField] List<Transform> levels;
 
     [SerializeField] int Highestlevel;
     [SerializeField] int position = 0;
+
+    [SerializeField] Sprite Filled, Opacity;
 
     #endregion
 
@@ -31,17 +33,28 @@ public class UIManager : MonoBehaviour
         }
         SetLevels(Content);
         Highestlevel = PlayerPrefs.GetInt("HighestLevel");
+        if (PlayerPrefs.GetInt("Count")==1)
+        {
+            LevelSelectionScreen.SetActive(true);
+            Play();
+            PlayerPrefs.SetInt("Count", 0);
+        }
+        else
+        {
+            MainScreen.SetActive(true);
+        }
     }
 
     public void Play()
     {
-        LevelsUnlocked(Highestlevel+1);
+        //LevelsUnlocked(Highestlevel+1);
+        LevelWasLoaded(Highestlevel+1);
     }
 
     public void SetLevels(Transform levelsParent)
     {
         int levelIndex = 1;
-        for (int i = 0; i < levelsParent.childCount; i++)
+       /* for (int i = 0; i < levelsParent.childCount; i++)
         {
             Transform Level = levelsParent.GetChild(i);
             if (Level != null)
@@ -89,6 +102,45 @@ public class UIManager : MonoBehaviour
                                 }
                             }
                         }
+                    }
+                }
+            }
+        }*/
+
+        for (int i = 0;i < levelsParent.childCount; i++) 
+        {
+            Transform transform = levelsParent.GetChild(i).transform;
+            if (transform != null)
+            {
+                for (int j = 0; j < transform.childCount; j++)
+                {
+                    Transform child = transform.GetChild(j);
+                    child.localScale = Vector3.zero;
+                    levels.Add(child);
+                    if (child != null)
+                    {
+                        // Set the name of the GameObject
+                        child.gameObject.name = "Level" + levelIndex;
+
+                        // Capture the current levelIndex in a local variable
+                        int currentLevelIndex = levelIndex;
+
+                        // Set the button's onClick listener
+                        Button button = child.GetComponent<Button>();
+                        if (button != null)
+                        {
+                            button.onClick.AddListener(() => Chooselevel(currentLevelIndex));
+                        }
+
+                        // Set the text of the child
+                        TextMeshProUGUI text = child.GetChild(1).GetComponent<TextMeshProUGUI>();
+                        if (text != null)
+                        {
+                            text.text = levelIndex.ToString();
+                        }
+
+                        // Increment the levelIndex
+                        levelIndex++;
                     }
                 }
             }
@@ -178,7 +230,27 @@ public class UIManager : MonoBehaviour
                 Level.transform.localScale = Vector3.one;
             }
         }
+    }
 
+    private void LevelWasLoaded(int level_)
+    {
+        for (int i = 0; i < levels.Count; i++)
+        {
+            var level = levels[i];
+            bool isUnlocked = i < level_;
+
+            // Set active states and sprites based on level status
+            level.GetChild(0).gameObject.SetActive(!isUnlocked);
+            level.GetChild(1).gameObject.SetActive(isUnlocked);
+            level.GetComponent<Image>().sprite = isUnlocked ? Filled : Opacity;
+            level.GetComponent<Button>().enabled = isUnlocked;
+
+            // Scale animation with delay
+            float delay = i * 0.1f; // Adjust the delay time between each level scaling
+            level.transform.DOScale(Vector3.one, 0.25f)
+                .SetDelay(delay)
+                .SetEase(Ease.OutQuad);
+        }
     }
 
     #endregion

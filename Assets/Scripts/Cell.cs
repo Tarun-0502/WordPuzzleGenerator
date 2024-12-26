@@ -36,6 +36,7 @@ public class Cell : MonoBehaviour
     [SerializeField] private ParticleSystem hintEffect;
 
     [SerializeField] private Transform coin;
+    [SerializeField] private Sprite Opacity, filled;
 
     public bool isOccupied;
     public bool isAssigned;
@@ -47,7 +48,7 @@ public class Cell : MonoBehaviour
 
     private void Start()
     {
-        
+        transform.GetComponent<Image>().sprite = Opacity;
     }
 
     public bool IsFilled()
@@ -121,6 +122,7 @@ public class Cell : MonoBehaviour
             {
                 // Apply the new color to the material
                 transform.GetComponent<Image>().color = newColor;
+                transform.GetComponent<Image>().sprite = filled;
             }
             else
             {

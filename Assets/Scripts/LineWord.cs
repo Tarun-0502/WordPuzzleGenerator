@@ -45,7 +45,7 @@ public class LineWord : MonoBehaviour
                 Game.Instance.CompletedWords--;
                 if (Game.Instance.CompletedWords==0)
                 {
-                    DOVirtual.DelayedCall(0.75f, () =>
+                    DOVirtual.DelayedCall(1.75f, () =>
                     {
                         Game.Instance.LevelCompleted();
                     });
@@ -97,7 +97,7 @@ public class LineWord : MonoBehaviour
                         Game.Instance.CompletedWords--;
                         if (Game.Instance.CompletedWords == 0)
                         {
-                            DOVirtual.DelayedCall(0.75f, () =>
+                            DOVirtual.DelayedCall(1.75f, () =>
                             {
                                 Game.Instance.LevelCompleted();
                             });

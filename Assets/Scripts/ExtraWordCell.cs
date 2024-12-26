@@ -10,6 +10,7 @@ public class ExtraWordCell : MonoBehaviour
     public string letter;
     public TextMeshProUGUI Text;
     public bool showText;
+    [SerializeField] Sprite Opacity, filled;
 
     public void FlyText(Transform flyPosition)
     {
@@ -27,6 +28,7 @@ public class ExtraWordCell : MonoBehaviour
             {
                 Text.text = "";
                 transform.localScale = Vector3.zero;
+                transform.GetComponent<Image>().sprite = Opacity;
             });
         }
     }
@@ -40,6 +42,7 @@ public class ExtraWordCell : MonoBehaviour
             {
                 // Apply the new color to the material
                 transform.GetComponent<Image>().color = newColor;
+                transform.GetComponent<Image>().sprite = filled;
             }
             else
             {

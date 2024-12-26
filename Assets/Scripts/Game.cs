@@ -83,7 +83,7 @@ public class Game : MonoBehaviour
 
     [SerializeField] GameObject PauseScreen;
 
-    [SerializeField] TextMeshProUGUI levelText;
+    [SerializeField] TextMeshProUGUI levelText,Level_Text_Settings,Place_Text;
 
     [Tooltip("Font is Used EveryWhere in Game")]
     [SerializeField] internal TMP_FontAsset NewFontAsset,Incircle;
@@ -103,11 +103,11 @@ public class Game : MonoBehaviour
     [SerializeField] AudioSource AudioSource;
     [SerializeField] internal AudioClip LevelComplete, CoinCollect, WordComplete, Hint,tap;
 
-    [SerializeField] Sprite[] Paris_Theme; // Sprites for Paris Theme
-    [SerializeField] Sprite[] NewYork_Theme; // Sprites for New York Theme
-    [SerializeField] Sprite[] Tokyo_Theme; // Sprites for Tokyo Theme
-    [SerializeField] Sprite[] Egypt_Theme; // Sprites for Egypt Theme
-    [SerializeField] Sprite[] Sydney_Theme; // Sprites for Sydney Theme
+    [SerializeField] Sprite[] Paris; // Sprites for Paris Theme
+    [SerializeField] Sprite[] NewYork; // Sprites for New York Theme
+    [SerializeField] Sprite[] Tokyo; // Sprites for Tokyo Theme
+    [SerializeField] Sprite[] Egypt; // Sprites for Egypt Theme
+    [SerializeField] Sprite[] Sydney; // Sprites for Sydney Theme
 
     [SerializeField] Transform Sound_, Music_, Notification_;
 
@@ -115,6 +115,8 @@ public class Game : MonoBehaviour
 
     [SerializeField] int HighestLevel;
     [SerializeField] int CurrentLevel;
+
+    [SerializeField] List<string> ColorCodes;
 
     #endregion
 
@@ -147,8 +149,6 @@ public class Game : MonoBehaviour
             coinsText.font = NewFontAsset;
         }
 
-        SetLineColor(colorCode);
-        ChangeDotColor(colorCode);
         ThemeSelection();
         LoadSavedData();
         HighestLevel = PlayerPrefs.GetInt("HighestLevel");
@@ -162,24 +162,35 @@ public class Game : MonoBehaviour
         // Define all themes and their corresponding sprites
         List<Sprite[]> themes = new List<Sprite[]>
         {
-            Paris_Theme,  // Levels 1–20
-            NewYork_Theme, // Levels 21–40
-            Tokyo_Theme,  // Levels 41–60
-            Egypt_Theme, // Levels 61–80
-            Sydney_Theme  // Levels 81–100
+          Paris,  // Theme for Paris
+          NewYork, // Theme for New York
+          Tokyo,  // Theme for Tokyo
+          Egypt, // Theme for Egypt
+          Sydney  // Theme for Sydney
         };
 
-        // Determine the theme index based on the 20-level blocks
-        int themeIndex = (level_No - 1) / 20;
-
-        // Ensure the theme index does not exceed the number of available themes
-        if (themeIndex >= themes.Count)
+        // Define the theme names
+        List<string> themeNames = new List<string>
         {
-            themeIndex = themes.Count - 1; // Default to the last theme if out of range
-        }
+          "Paris",
+          "New York",
+          "Tokyo",
+          "Egypt",
+          "Sydney"
+         };
+
+        // Determine the cyclic theme index
+        int themeIndex = ((level_No - 1) / 20) % themes.Count;
 
         // Get the active theme
         Sprite[] activeTheme = themes[themeIndex];
+
+        // Change the color based on the theme index
+        ChangeColr(ColorCodes[themeIndex]);
+
+        // Set the place text to the current theme's name
+        Place_Text.text = themeNames[themeIndex];
+
 
         // Calculate the relative level within the 20-level block
         int relativeLevel = (level_No - 1) % 20 + 1;
@@ -233,6 +244,12 @@ public class Game : MonoBehaviour
         line.SetPositions(clippedPositions.ToArray());
     }
 
+    void ChangeColr(string newColor)
+    {
+        colorCode = newColor;
+        SetLineColor(colorCode);
+        ChangeDotColor(colorCode);
+    }
 
     public void CurrentLevelButton(int Level,List<char> characters)
     {
@@ -248,7 +265,9 @@ public class Game : MonoBehaviour
         CurrentLevelCircle.gameObject.SetActive(true);
 
         levelText.font = NewFontAsset;
+        Level_Text_Settings.font = NewFontAsset;
         levelText.text = "LEVEL - " + Level.ToString();
+        Level_Text_Settings.text = "LEVEL - " + Level.ToString();
 
         for (int i = 0; i < characters.Count; i++)
         {
@@ -377,6 +396,7 @@ public class Game : MonoBehaviour
 
     public void GetHint(int hintCoins)
     {
+        PlaySound(tap);
         if (Total_Coins>=hintCoins)
         {
             foreach (Transform word in LineWords)
@@ -392,6 +412,7 @@ public class Game : MonoBehaviour
 
     public void Shuffle()
     {
+        PlaySound(tap);
         letters.Clear();
         letterPositions.Clear();
 
@@ -576,28 +597,33 @@ public class Game : MonoBehaviour
             if (PlayerPrefs.GetInt("SelectedLevel") >= HighestLevel)
             {
                 HighestLevel = PlayerPrefs.GetInt("SelectedLevel");
+                PlayerPrefs.SetInt("HighestLevel", PlayerPrefs.GetInt("HighestLevel") + 1);
             }
             //extraWords.SaveData();
-            PlayerPrefs.SetInt("HighestLevel",PlayerPrefs.GetInt("HighestLevel")+1);
 
             // Scale to Vector3.one over 0.35 seconds.. Apply the OutBack easing function
             levelComplete_Screen.GetChild(0).transform.DOScale(Vector3.one, 0.5f).OnComplete(() =>
             {
                 DOVirtual.DelayedCall(0.5f, () =>
                 {
-                    PlaySound(LevelComplete);
+                    for (int i=0;i<3;i++)
+                    {
+                        Transform star = levelComplete_Screen.GetChild(0).GetChild(i);
+                        star.transform.DOScale(Vector3.one, 0.5f);
+                    }
                 });
             });
+            PlaySound(LevelComplete);
         });
     }
 
     public void NextButton()
     {
+        PlaySound(tap);
         if (!PlayerPrefs.HasKey("Count"))
         {
             PlayerPrefs.SetInt("Count", 1);
         }
-        //SceneManager.LoadScene(0);
         if (PlayerPrefs.GetInt("Count")<5)
         {
             PlayerPrefs.SetInt("SelectedLevel", PlayerPrefs.GetInt("SelectedLevel") + 1);
@@ -623,6 +649,7 @@ public class Game : MonoBehaviour
 
     public void Sound_On_Off()
     {
+        PlaySound(tap);
         Transform OnOff = Sound_.GetChild(0);
         Transform Onn = OnOff.GetChild(0);
         Transform Off = OnOff.GetChild(1);
@@ -646,6 +673,7 @@ public class Game : MonoBehaviour
 
     public void Music_On_Off()
     {
+        PlaySound(tap);
         Transform OnOff = Music_.GetChild(0);
         Transform Onn = OnOff.GetChild(0);
         Transform Off = OnOff.GetChild(1);
@@ -708,6 +736,5 @@ public class Game : MonoBehaviour
 
     #endregion
 
-
-
+    
 }

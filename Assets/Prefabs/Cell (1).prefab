@@ -5052,6 +5052,8 @@ MonoBehaviour:
   Effect: {fileID: 8965043657270355956}
   hintEffect: {fileID: 8044853264362764432}
   coin: {fileID: 1301019936469755094}
+  Opacity: {fileID: 21300000, guid: 6cf21b14e8ca6d546ac8471df2491d1b, type: 3}
+  filled: {fileID: 21300000, guid: 8b8642e3f87a6db40bc2f0d9a8cd1d87, type: 3}
   isOccupied: 0
   isAssigned: 0
 --- !u!1 &6227094330158877512

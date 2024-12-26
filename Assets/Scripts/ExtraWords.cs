@@ -10,6 +10,7 @@ using UnityEngine.Networking;
 
 public class ExtraWords : MonoBehaviour
 {
+
     #region REFERENCES
 
     [SerializeField] private GameObject wordFound;
@@ -21,10 +22,13 @@ public class ExtraWords : MonoBehaviour
     [SerializeField] private GameObject letterPrefab;
     [SerializeField] internal List<string> extraWordsFromFile;
     [SerializeField] private TextAsset TextAsset;
+    [SerializeField] private GameObject Network_Error;
 
     private string apiUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
     #endregion
+
+    #region METHODS
 
     private void Start()
     {
@@ -139,14 +143,35 @@ public class ExtraWords : MonoBehaviour
             request.timeout = 10;
             yield return request.SendWebRequest();
 
-            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+            // Handle network connection errors
+            if (request.result == UnityWebRequest.Result.ConnectionError)
             {
-                Debug.Log($"Error checking word '{word}': {request.error}");
+                Debug.LogWarning("Network lost! Please check your internet connection.");
+                Network_Error.SetActive(true);
                 callback?.Invoke(false);
                 yield break;
             }
 
-            callback?.Invoke(request.responseCode == 200);
+            // Handle protocol errors (e.g., 404 - Not Found)
+            if (request.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogWarning($"Word '{word}' not found. Error: {request.error}");
+                Game.Instance.TextPreview.transform.DOShakePosition(duration: 1f, strength: new Vector3(5f, 0f, 0f), vibrato: 5, randomness: 10, snapping: false, fadeOut: true);
+                callback?.Invoke(false);
+                yield break;
+            }
+
+            // Handle successful response
+            if (request.responseCode == 200)
+            {
+                Debug.Log($"Word '{word}' found successfully.");
+                callback?.Invoke(true);
+            }
+            else
+            {
+                Debug.LogWarning($"Unexpected response code: {request.responseCode}");
+                callback?.Invoke(false);
+            }
         }
     }
 
@@ -185,20 +210,6 @@ public class ExtraWords : MonoBehaviour
         SaveExtraWords.SavePlayerData(new PlayerData(this, currentLevelToPlay));
     }
 
-    //void LoadSavedExtraWords()
-    //{
-    //    PlayerData data = SaveExtraWords.LoadData();
-    //    if (data != null)
-    //    {
-    //        if (data.wordsCollected != null)
-    //        {
-    //            FoundedExtraWords.AddRange(data.wordsCollected);
-    //        }
-
-    //        // Set the current level to play from the saved data
-    //        int levelToPlay = data.LevelToPlay;
-    //        Debug.Log($"Loaded level to play: {levelToPlay}");
-    //    }
-    //}
+    #endregion
 
 }

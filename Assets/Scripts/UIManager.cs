@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -17,9 +18,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] List<Transform> levels;
 
     [SerializeField] int Highestlevel;
-    [SerializeField] int position = 0;
+    [SerializeField] float position;
 
     [SerializeField] Sprite Filled, Opacity;
+    [SerializeField] TextMeshProUGUI ThemeName,Left_arrow,Right_Arrow;
+    [SerializeField] List<string> ThemeNames;
+    [SerializeField] List<Sprite> ThemeSprites;
+    [SerializeField] int ThemeIndex;
+
+    [SerializeField] AudioSource AudioSource;
+    [SerializeField] AudioClip buttonSound;
 
     #endregion
 
@@ -48,7 +56,9 @@ public class UIManager : MonoBehaviour
     public void Play()
     {
         //LevelsUnlocked(Highestlevel+1);
-        LevelWasLoaded(Highestlevel+1);
+        LevelWasLoaded(Highestlevel + 1);
+        Button_Sound();
+        //LevelWasLoaded(300);
     }
 
     public void SetLevels(Transform levelsParent)
@@ -149,12 +159,13 @@ public class UIManager : MonoBehaviour
     }
 
     void Chooselevel(int current)
-        {
-            PlayerPrefs.SetInt("SelectedLevel", current);
-            LoadingScreen.SetActive(true);
-            LoadSceneWithProgress("GameScene");
-            //SceneManager.LoadScene(1);
-        }
+    {
+        Button_Sound();
+        PlayerPrefs.SetInt("SelectedLevel", current);
+        LoadingScreen.SetActive(true);
+        LoadSceneWithProgress("GameScene");
+        //SceneManager.LoadScene(1);   
+    }
 
     public void LoadSceneWithProgress(string sceneName)
     {
@@ -163,6 +174,7 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator LoadSceneCoroutine(string sceneName)
     {
+        //yield return new WaitForSeconds(1.05f); 
         // Start loading the scene asynchronously
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneName);
         asyncOperation.allowSceneActivation = false; // Prevent automatic activation
@@ -245,12 +257,137 @@ public class UIManager : MonoBehaviour
             level.GetComponent<Image>().sprite = isUnlocked ? Filled : Opacity;
             level.GetComponent<Button>().enabled = isUnlocked;
 
-            // Scale animation with delay
-            float delay = i * 0.1f; // Adjust the delay time between each level scaling
-            level.transform.DOScale(Vector3.one, 0.25f)
-                .SetDelay(delay)
-                .SetEase(Ease.OutQuad);
+            //// Scale animation with delay
+            //float delay = i * 0.1f; // Adjust the delay time between each level scaling
+            //level.transform.DOScale(Vector3.one, 0.25f)
+            //    .SetDelay(delay)
+            //    .SetEase(Ease.OutQuad);
         }
+        Display(0);
+        //StartCoroutine(DisplayTextLetterByLetter(0));
+    }
+
+    public void LeftClick()
+    {
+        Button_Sound();
+        if (position<0)
+        {
+            position += 1240f;
+            ThemeIndex = -(int)(position / 1240);
+            Display(ThemeIndex);
+        }
+    }
+    public void RightClick()
+    {
+        Button_Sound();
+        if (position>-17360)
+        {
+            position -= 1240f;
+            ThemeIndex = -(int)(position / 1240);
+            Display(ThemeIndex);
+        }
+    }
+
+    private void Update()
+    {
+        RectTransform rectTransform = Content.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = Vector2.Lerp(rectTransform.anchoredPosition,new Vector2(position,rectTransform.anchoredPosition.y),2.5f*Time.deltaTime);
+    }
+
+    private void Display(int index)
+    {
+        // Ensure index is within bounds, wrap around if needed
+        int themeIndex = (index + ThemeNames.Count) % ThemeNames.Count;
+
+        if (index >= 0 && index < Content.childCount)
+        {
+            Transform level_1_ = Content.GetChild(index);
+
+            // Animate each child scale
+            for (int i = 0; i < level_1_.childCount; i++)
+            {
+                Transform child_1_ = level_1_.GetChild(i);
+                child_1_.transform.localScale = Vector3.zero;
+                // Scale animation with delay
+                float delay = i * 0.1f; // Adjust the delay time between each level scaling
+                child_1_.transform.DOScale(Vector3.one, 0.15f)
+                    .SetDelay(delay)
+                    .SetEase(Ease.OutQuad);
+            }
+
+            // Calculate theme index correctly to avoid negative index
+             themeIndex = (index % ThemeNames.Count + ThemeNames.Count) % ThemeNames.Count;
+
+            // Update the theme name and sprite
+            ThemeName.text = ThemeNames[themeIndex];
+            LevelSelectionScreen.GetComponent<Image>().sprite = ThemeSprites[themeIndex];
+
+            // Set the Left Arrow text (previous theme)
+            int prevIndex = (index - 1 + ThemeNames.Count) % ThemeNames.Count; // Ensure previous index wraps around
+            Left_arrow.text = ThemeNames[prevIndex];
+
+            // Set the Right Arrow text (next theme)
+            int nextIndex = (index + 1) % ThemeNames.Count; // Ensure next index wraps around
+            Right_Arrow.text = ThemeNames[nextIndex];
+            if (index==0)
+            {
+                Left_arrow.text = "";
+            }
+            else if (index==Content.childCount-1)
+            {
+                Right_Arrow.text = "";
+            }
+        }
+    }
+
+    private IEnumerator DisplayTextLetterByLetter(int index)
+    {
+        if (index < ThemeNames.Count)
+        {
+            Transform level_1_ = Content.GetChild(index);
+
+            for (int i = 0;i<level_1_.childCount;i++)
+            {
+                Transform child_1_ = level_1_.GetChild(i);
+                // Scale animation with delay
+                float delay = i * 0.1f; // Adjust the delay time between each level scaling
+                child_1_.transform.DOScale(Vector3.one, 0.25f)
+                    .SetDelay(delay)
+                    .SetEase(Ease.OutQuad);
+            }
+        }
+
+        ThemeName.text = ThemeNames[index]; // Clear the initial text
+
+        string fullText = ThemeNames[index];
+        float totalDuration = 2.5f; // Total duration for displaying the text
+        float elapsedTime = 0f;
+
+        int currentCharIndex = 0; // Keeps track of the current character to display
+        while (currentCharIndex < fullText.Length)
+        {
+            // Calculate the target character index based on elapsed time
+            elapsedTime += Time.deltaTime;
+            int targetCharIndex = Mathf.FloorToInt((elapsedTime / totalDuration) * fullText.Length);
+
+            // Update the visible characters up to the target index
+            if (targetCharIndex > currentCharIndex)
+            {
+                currentCharIndex = targetCharIndex;
+                ThemeName.text = fullText.Substring(0, currentCharIndex); // Display the substring
+            }
+
+            yield return null; // Wait for the next frame
+        }
+
+        // Ensure the full text is displayed at the end
+        ThemeName.text = fullText;
+    }
+
+    void Button_Sound()
+    {
+        AudioSource.clip = buttonSound;
+        AudioSource.Play();
     }
 
     #endregion

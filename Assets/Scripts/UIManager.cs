@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] List<Sprite> ThemeSprites;
     [SerializeField] int ThemeIndex;
 
-    [SerializeField] AudioSource AudioSource;
+    [SerializeField] AudioSource AudioSource, Music_Source;
     [SerializeField] AudioClip buttonSound;
 
     #endregion
@@ -35,6 +35,17 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        // Initialize Music Setting
+        int musicSetting = PlayerPrefs.GetInt("Music", 1); // Default to 1 if not set
+        if (musicSetting == 1)
+        {
+            Music_Source.volume = 1; // Assuming MusicSource is the AudioSource for music
+        }
+        else
+        {
+            Music_Source.volume = 0;
+        }
+
         if (!PlayerPrefs.HasKey("HighestLevel"))
         {
             SaveExtraWords.ClearData();

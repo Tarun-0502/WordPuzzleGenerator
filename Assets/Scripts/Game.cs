@@ -109,7 +109,8 @@ public class Game : MonoBehaviour
     [SerializeField] Sprite[] Egypt; // Sprites for Egypt Theme
     [SerializeField] Sprite[] Sydney; // Sprites for Sydney Theme
 
-    [SerializeField] Transform Sound_, Music_, Notification_;
+    [SerializeField] Sprite Sound_Onn, Sound_off,Music_onn,Music_Off;
+    [SerializeField] Image Sound_Img, Music_Img;
 
     [SerializeField] AudioSource Music_Source;
 
@@ -125,6 +126,31 @@ public class Game : MonoBehaviour
 
     void Start()
     {
+
+        int soundSetting = PlayerPrefs.GetInt("Sound", 1); // Default to 1 if not set
+        if (soundSetting == 1)
+        {
+            Sound_Img.sprite = Sound_Onn;
+            AudioSource.volume = 1;
+        }
+        else
+        {
+            Sound_Img.sprite = Sound_off;
+            AudioSource.volume = 0;
+        }
+        // Initialize Music Setting
+        int musicSetting = PlayerPrefs.GetInt("Music", 1); // Default to 1 if not set
+        if (musicSetting == 1)
+        {
+            Music_Img.sprite = Music_onn;
+            Music_Source.volume = 1; // Assuming MusicSource is the AudioSource for music
+        }
+        else
+        {
+            Music_Img.sprite = Music_Off;
+            Music_Source.volume = 0;
+        }
+
 
         if (gameLevelWords==null)
         {
@@ -602,16 +628,17 @@ public class Game : MonoBehaviour
             //extraWords.SaveData();
 
             // Scale to Vector3.one over 0.35 seconds.. Apply the OutBack easing function
-            levelComplete_Screen.GetChild(0).transform.DOScale(Vector3.one, 0.5f).OnComplete(() =>
+            levelComplete_Screen.GetChild(0).transform.DOScale(Vector3.one, 0.25f).OnComplete(() =>
             {
-                DOVirtual.DelayedCall(0.5f, () =>
+                for (int i = 0; i < 3; i++)
                 {
-                    for (int i=0;i<3;i++)
+                    int index = i; // Create a local copy of i
+                    DOVirtual.DelayedCall(0.1f * index, () =>
                     {
-                        Transform star = levelComplete_Screen.GetChild(0).GetChild(i);
-                        star.transform.DOScale(Vector3.one, 0.5f);
-                    }
-                });
+                        Transform star = levelComplete_Screen.GetChild(0).GetChild(index);
+                        star.transform.DOScale(Vector3.one, 0.25f);
+                    });
+                }
             });
             PlaySound(LevelComplete);
         });
@@ -650,69 +677,36 @@ public class Game : MonoBehaviour
     public void Sound_On_Off()
     {
         PlaySound(tap);
-        Transform OnOff = Sound_.GetChild(0);
-        Transform Onn = OnOff.GetChild(0);
-        Transform Off = OnOff.GetChild(1);
 
-        if (OnOff!=null && Onn!=null && Onn.gameObject.activeInHierarchy)
+        if (Sound_Img.sprite == Sound_Onn)
         {
-            Off.gameObject.SetActive(true);
-            Onn.gameObject.SetActive(false);
+            Sound_Img.sprite = Sound_off;
+            PlayerPrefs.SetInt("Sound", 0);
             AudioSource.volume = 0;
         }
         else
         {
-            if (OnOff != null && Off != null && !Onn.gameObject.activeInHierarchy)
-            {
-                Off.gameObject.SetActive(false);
-                Onn.gameObject.SetActive(true);
-                AudioSource.volume = 1;
-            }
+            Sound_Img.sprite = Sound_Onn;
+            PlayerPrefs.SetInt("Sound", 1);
+            AudioSource.volume = 1;
         }
     }
 
     public void Music_On_Off()
     {
         PlaySound(tap);
-        Transform OnOff = Music_.GetChild(0);
-        Transform Onn = OnOff.GetChild(0);
-        Transform Off = OnOff.GetChild(1);
 
-        if (OnOff != null && Onn != null && Onn.gameObject.activeInHierarchy)
+        if (Music_Img.sprite == Music_onn)
         {
-            Off.gameObject.SetActive(true);
-            Onn.gameObject.SetActive(false);
-            Music_Source.volume = 0;
+            Music_Img.sprite = Music_Off;
+            PlayerPrefs.SetInt("Music", 0);
+            Music_Source.volume = 0; // Assuming MusicSource is the AudioSource for music
         }
         else
         {
-            if (OnOff != null && Off != null && !Onn.gameObject.activeInHierarchy)
-            {
-                Off.gameObject.SetActive(false);
-                Onn.gameObject.SetActive(true);
-                Music_Source.volume = 1;
-            }
-        }
-    }
-
-    public void Notification_On_Off()
-    {
-        Transform OnOff = Notification_.GetChild(0);
-        Transform Onn = OnOff.GetChild(0);
-        Transform Off = OnOff.GetChild(1);
-
-        if (OnOff != null && Onn != null && Onn.gameObject.activeInHierarchy)
-        {
-            Off.gameObject.SetActive(true);
-            Onn.gameObject.SetActive(false);
-        }
-        else
-        {
-            if (OnOff != null && Off != null && !Onn.gameObject.activeInHierarchy)
-            {
-                Off.gameObject.SetActive(false);
-                Onn.gameObject.SetActive(true);
-            }
+            Music_Img.sprite = Music_onn;
+            PlayerPrefs.SetInt("Music", 1);
+            Music_Source.volume = 1;
         }
     }
 

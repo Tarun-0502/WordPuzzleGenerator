@@ -36,12 +36,15 @@ public class Game : MonoBehaviour
     [SerializeField] internal string CurrentWord;
 
     [HideInInspector]
+    [SerializeField] List<Cell> Cells_In_GNR;
+
+    [HideInInspector]
     [SerializeField] internal List<Transform> LineWords = new List<Transform>();
 
     [HideInInspector]
     [SerializeField] List<Transform> LettersUsedInLevel = new List<Transform>();
 
-    [HideInInspector]
+    //[HideInInspector]
     [SerializeField] internal int CompletedWords;
 
     [HideInInspector]
@@ -95,7 +98,6 @@ public class Game : MonoBehaviour
     [SerializeField] Transform levelComplete_Screen;
 
     [SerializeField] Image bg;
-    [SerializeField] Sprite bg1, bg2;
 
     [SerializeField] Image TextImage;
     [SerializeField] TextMeshProUGUI LevelComplete_Level_No;
@@ -119,6 +121,8 @@ public class Game : MonoBehaviour
 
     [SerializeField] List<string> ColorCodes;
 
+    [SerializeField] int randomNumber;
+
     #endregion
 
 
@@ -126,7 +130,6 @@ public class Game : MonoBehaviour
 
     void Start()
     {
-
         int soundSetting = PlayerPrefs.GetInt("Sound", 1); // Default to 1 if not set
         if (soundSetting == 1)
         {
@@ -240,36 +243,6 @@ public class Game : MonoBehaviour
         }
     }
 
-    void ClipLineInsideCircle(LineRenderer line, Vector3 circleCenter, float circleRadius)
-    {
-        Vector3[] positions = new Vector3[line.positionCount];
-        line.GetPositions(positions);
-
-        List<Vector3> clippedPositions = new List<Vector3>();
-
-        for (int i = 0; i < positions.Length - 1; i++)
-        {
-            Vector3 p1 = positions[i];
-            Vector3 p2 = positions[i + 1];
-
-            bool p1Inside = (p1 - circleCenter).magnitude <= circleRadius;
-            bool p2Inside = (p2 - circleCenter).magnitude <= circleRadius;
-
-            if (p1Inside) clippedPositions.Add(p1);
-
-            if (p1Inside != p2Inside) // Line crosses the circle boundary
-            {
-                Vector3 direction = (p2 - p1).normalized;
-                float distanceToBoundary = circleRadius - (p1 - circleCenter).magnitude;
-                Vector3 intersection = p1 + direction * distanceToBoundary;
-                clippedPositions.Add(intersection);
-            }
-        }
-
-        line.positionCount = clippedPositions.Count;
-        line.SetPositions(clippedPositions.ToArray());
-    }
-
     void ChangeColr(string newColor)
     {
         colorCode = newColor;
@@ -313,7 +286,6 @@ public class Game : MonoBehaviour
         if (!PauseScreen.activeInHierarchy)
         {
             Controls();
-            //ClipLineInsideCircle(lineRenderer, Circle.position, 440f);
         }
     }
 
@@ -420,19 +392,37 @@ public class Game : MonoBehaviour
 
     #region Hint And Shuffle
 
-    public void GetHint(int hintCoins)
+    public void GetHint(int coins)
     {
         PlaySound(tap);
-        if (Total_Coins>=hintCoins)
+
+        if (Total_Coins >= coins)
         {
+            // First foreach loop: Find the first uncompleted word and call Hint()
             foreach (Transform word in LineWords)
             {
                 if (!word.GetComponent<LineWord>().AnswerChecked)
                 {
-                    word.GetComponent<LineWord>().Hint(hintCoins);
-                    break;
+                    word.GetComponent<LineWord>().Hint();
+                    PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") - coins);
+                    Debug.Log("HINT-CALLED");
+                    break; // Ensure only one word is processed
                 }
             }
+
+            // Second foreach loop: Check all cells for completion after the first loop
+            foreach (Transform word in LineWords)
+            {
+                var lineWord = word.GetComponent<LineWord>();
+                if (!lineWord.AnswerChecked)
+                {
+                    lineWord.CheckAllCellsFilled();
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Not enough coins for a Hint!");
         }
     }
 
@@ -707,6 +697,148 @@ public class Game : MonoBehaviour
             Music_Img.sprite = Music_onn;
             PlayerPrefs.SetInt("Music", 1);
             Music_Source.volume = 1;
+        }
+    }
+
+    #endregion
+
+    #region POWER-UPS
+
+    public void Get_Multi_Hint(int coins)
+    {
+        // Clear the list of eligible cells
+        Cells_In_GNR.Clear();
+
+        // Populate eligible cells that don't have their text revealed yet
+        foreach (Cell t in GeneratePattern.Instance.CellsUsed)
+        {
+            if (t != null && !t.showText)
+            {
+                Cells_In_GNR.Add(t);
+            }
+        }
+
+        // Number of hints to reveal (adjustable)
+        int revealed = 3;
+        if (Cells_In_GNR.Count < revealed)
+        {
+            revealed = Cells_In_GNR.Count; // Reduce to the actual number of available cells
+            Debug.Log("REVEALED " + revealed);
+        }
+
+        // Check if the player has enough coins
+        if (Total_Coins >= coins)
+        {
+            // Deduct coins and play sound
+            Total_Coins -= coins;
+            PlayerPrefs.SetInt("Coins", Total_Coins);
+            PlaySound(tap);
+
+            // Create a DOTween sequence for the delayed hinting process
+            Sequence hintSequence = DOTween.Sequence();
+
+            // Reveal hints one by one
+            for (int i = 0; i < revealed; i++)
+            {
+                hintSequence.AppendCallback(() =>
+                {
+                    // Pick a random cell and reveal the hint
+                    int randomNumber = Random.Range(0, Cells_In_GNR.Count);
+                    var selectedCell = Cells_In_GNR[randomNumber];
+                    selectedCell.showText = true;
+                    selectedCell.Hint();
+                    selectedCell.ChangeColor(Game.Instance.colorCode);
+
+                    // Remove the cell from the list to avoid duplication
+                    Cells_In_GNR.RemoveAt(randomNumber);
+                });
+
+                // Add a delay between each hint
+                hintSequence.AppendInterval(0.1f);
+            }
+
+            // After all hints are revealed, check all words for completion
+            hintSequence.AppendCallback(() =>
+            {
+                foreach (Transform word in LineWords)
+                {
+                    var lineWord = word.GetComponent<LineWord>();
+                    if (!lineWord.AnswerChecked)
+                    {
+                        lineWord.CheckAllCellsFilled();
+                    }
+                }
+            });
+
+            // Start the sequence
+            hintSequence.Play();
+        }
+        else
+        {
+            Debug.LogWarning("Not enough coins for a Multi-Hint!");
+        }
+    }
+
+    public void Get_Spot_Light(int coins)
+    {
+        // Clear the list of eligible cells
+        Cells_In_GNR.Clear();
+
+        // Populate eligible cells that don't have their text revealed yet
+        foreach (Cell t in GeneratePattern.Instance.CellsUsed)
+        {
+            if (t != null && !t.showText)
+            {
+                Cells_In_GNR.Add(t);
+            }
+        }
+
+        // Check if the player has enough coins
+        if (Total_Coins >= coins)
+        {
+            // Deduct coins and play sound
+            Total_Coins -= coins;
+            PlayerPrefs.SetInt("Coins", Total_Coins);
+            PlaySound(tap);
+
+            randomNumber = Random.Range(0,Cells_In_GNR.Count);
+            Cells_In_GNR[randomNumber].SpotLight();
+        }
+        else
+        {
+            Debug.LogWarning("Not enough coins for a Spot-Light!");
+        }
+
+    }
+
+    public void Get_Word_Chain(int coins)
+    {
+        // Check if the player has enough coins
+        if (Total_Coins >= coins)
+        {
+            // Deduct coins and play sound
+            Total_Coins -= coins;
+            PlayerPrefs.SetInt("Coins", Total_Coins);
+            PlaySound(tap);
+
+            for (int i = 0; i < LineWords.Count; i++)
+            {
+                if (!LineWords[i].GetComponent<LineWord>().AnswerChecked)
+                {
+                    for (int j = 0; j < LineWords[i].GetComponent<LineWord>().Cells.Count; j++)
+                    {
+                        LineWords[i].GetComponent<LineWord>().Cells[j].GetComponent<Cell>().showText = true;
+                        LineWords[i].GetComponent<LineWord>().Cells[j].GetComponent<Cell>().Hint();
+                        LineWords[i].GetComponent<LineWord>().Cells[j].GetComponent<Cell>().ChangeColor(Game.Instance.colorCode);
+                    }
+                    LineWords[i].GetComponent<LineWord>().CheckAllCellsFilled();
+                    break;
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Not enough coins for a Word-Chain!");
         }
     }
 

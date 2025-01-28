@@ -24,6 +24,9 @@ public class ExtraWords : MonoBehaviour
     [SerializeField] private TextAsset TextAsset;
     [SerializeField] private GameObject Network_Error;
 
+    [SerializeField] GameObject ExtraWordsPanel;
+    [SerializeField] TextMeshProUGUI WordsList;
+
     private string apiUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
     #endregion
@@ -208,6 +211,16 @@ public class ExtraWords : MonoBehaviour
     {
         int currentLevelToPlay = GetCurrentLevel(); // Replace this with your logic to get the current level.
         SaveExtraWords.SavePlayerData(new PlayerData(this, currentLevelToPlay));
+    }
+
+    public void ShowExtraWords()
+    {
+        ExtraWordsPanel.gameObject.SetActive(true);
+        WordsList.text = string.Empty;
+        for (int i = 0;i<FoundedExtraWords.Count;i++)
+        {
+            WordsList.text += FoundedExtraWords[i]+" ";
+        }
     }
 
     #endregion

@@ -15,6 +15,8 @@ public class LineWord : MonoBehaviour
     public bool isHorizontal;
     public bool isConnected;
 
+    [SerializeField] int Filled_Cells_Count;
+
     #endregion
 
 
@@ -71,7 +73,7 @@ public class LineWord : MonoBehaviour
         }
     }
 
-    public bool Hint(int hintCoins)
+    public void Hint()
     {
         if (!AnswerChecked)
         {
@@ -87,28 +89,47 @@ public class LineWord : MonoBehaviour
                     {
                         var cell = t.GetComponent<Cell>();
                         cell.showText = true;
-                        cell.Hint(hintCoins);
+                        cell.Hint();
                         cell.ChangeColor(Game.Instance.colorCode);
                     });
-                    if (index==Cells.Count-1)
-                    {
-                        AnswerChecked = true;
-                        PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + 5);
-                        Game.Instance.CompletedWords--;
-                        if (Game.Instance.CompletedWords == 0)
-                        {
-                            DOVirtual.DelayedCall(1.75f, () =>
-                            {
-                                Game.Instance.LevelCompleted();
-                            });
-                        }
-                        return true;
-                    }
-                    return false;
+                    break;
                 }
             }
         }
-        return false;
+    }
+
+    public void CheckAllCellsFilled()
+    {
+        // Ensure the filled cell count is accurate
+        Filled_Cells_Count = 0;
+
+        foreach (Transform t in Cells)
+        {
+            //Debug.Log(t.name + t.GetComponent<Cell>().showText);
+            if (t.GetComponent<Cell>().showText)
+            {
+                Filled_Cells_Count++;
+                //Debug.Log(t.name + Filled_Cells_Count);
+                //Debug.Log(t.name + t.GetComponent<Cell>().showText);
+            }
+        }
+
+        // Mark the answer as checked if all cells are filled
+        if (Filled_Cells_Count == Cells.Count)
+        {
+            AnswerChecked = true;
+            PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + 5);
+            Game.Instance.CompletedWords--;
+
+            // Trigger level completion if all words are completed
+            if (Game.Instance.CompletedWords == 0)
+            {
+                DOVirtual.DelayedCall(0.75f, () =>
+                {
+                    Game.Instance.LevelCompleted();
+                });
+            }
+        }
     }
 
     public void Reset()

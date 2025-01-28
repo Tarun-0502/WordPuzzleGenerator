@@ -41,6 +41,8 @@ public class Cell : MonoBehaviour
     public bool isOccupied;
     public bool isAssigned;
 
+    [SerializeField] string DefaultColorCode;
+
     #endregion
 
 
@@ -140,11 +142,11 @@ public class Cell : MonoBehaviour
         Text.transform.DOShakePosition(duration: 1f, strength: new Vector3(5f, 0f, 0f), vibrato: 5, randomness: 10, snapping: false, fadeOut: true);
     }
 
-    public void Hint(int hintCoins)
+    public void Hint()
     {
        if (showText)
        {
-            PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins")-hintCoins);
+            //PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins")-hintCoins);
             Text.text = letter;
             hint.SetParent(this.transform);
 
@@ -162,6 +164,22 @@ public class Cell : MonoBehaviour
                 });
             });
        }
+    }
+
+    public void SpotLight()
+    {
+        if (!showText)
+        {
+            Text.text = letter;
+            Text.transform.DOScale(Vector3.one, 0.1f);
+            ChangeColor(Game.Instance.colorCode);
+            DOVirtual.DelayedCall(1.25f, () =>
+            {
+                Text.text = "";
+                Text.transform.DOScale(Vector3.zero,0.1f);
+                ChangeColor(DefaultColorCode);
+            });
+        }
     }
 
     #endregion

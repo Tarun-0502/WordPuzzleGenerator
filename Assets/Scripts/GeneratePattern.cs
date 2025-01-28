@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class GeneratePattern : MonoBehaviour
 {
 
-
     #region SINGLETON REFERENCE
 
     public static GeneratePattern Instance;
@@ -27,7 +26,6 @@ public class GeneratePattern : MonoBehaviour
 
     #endregion
 
-
     #region REFERENCES
 
     #region Hide_In_Inspector
@@ -37,6 +35,9 @@ public class GeneratePattern : MonoBehaviour
 
     [HideInInspector]
     [SerializeField] List<LineWord> TotalLineWords = new List<LineWord>();
+
+    [HideInInspector]
+    [SerializeField] List<Row> Allrows = new List<Row>();
 
     [HideInInspector]
     [SerializeField] Transform lineWordsParent;
@@ -55,9 +56,9 @@ public class GeneratePattern : MonoBehaviour
 
     [SerializeField] List<string> words = new List<string>();
     [SerializeField] Transform GridLayout;
-    [SerializeField] List<Row> Allrows = new List<Row>();
     [SerializeField] internal List<string> AssignedWords = new List<string>();
     [SerializeField] List<LineWord> CurrentUsedLineWords = new List<LineWord>();
+    [SerializeField] internal List<Cell> CellsUsed = new List<Cell>();
 
     [SerializeField] GameObject lineWord_Prefab;
 
@@ -65,13 +66,9 @@ public class GeneratePattern : MonoBehaviour
 
     [SerializeField] int CurrentLevel;
 
-    [SerializeField] Transform levelsParent;
-
     private const int CellsPerRow = 9; // Define a constant for cells per row
-    private const int MaxColumnId = 8; // Define a constant for maximum column index
 
     #endregion
-
 
     #region METHODS
 
@@ -331,6 +328,13 @@ public class GeneratePattern : MonoBehaviour
             lineWord.isVertical = direction == 1;
             lineWord.isHorizontal = direction == 0;
             CurrentUsedLineWords.Add(lineWord);
+            for (int i = 0;i<lineWord.Cells.Count;i++)
+            {
+                if (!CellsUsed.Contains(lineWord.Cells[i].GetComponent<Cell>()))
+                {
+                    CellsUsed.Add(lineWord.Cells[i].GetComponent<Cell>());
+                }
+            }
             Game.Instance.CompletedWords = CurrentUsedLineWords.Count;
             Game.Instance.LineWords.Add(lineWord.transform);
             AssignedWords.Add(word);
@@ -659,62 +663,6 @@ public class GeneratePattern : MonoBehaviour
         }
     }
 
-    private bool checkAdjacentCells(int rowId,int colId)
-    {
-        bool assign = true;
-
-        if (rowId>0)
-        {
-            Cell TopCell = Allrows[rowId-1].RowCells[colId].GetComponent<Cell>();
-            if (!TopCell.isAssigned)
-            {
-                assign = true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        if (colId>0)
-        {
-            Cell leftCell = Allrows[rowId].RowCells[colId-1].GetComponent<Cell>();
-            if (!leftCell.isAssigned)
-            {
-                assign = true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        if (rowId<8)
-        {
-            Cell bottomCell = Allrows[rowId+1].RowCells[colId].GetComponent<Cell>();
-            if (!bottomCell.isAssigned)
-            {
-                assign = true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        if (colId < 8)
-        {
-            Cell rightCell = Allrows[rowId].RowCells[colId+1].GetComponent<Cell>();
-            if (!rightCell.isAssigned)
-            {
-                assign = true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        return assign;
-    }
-
     public void DeActivateAllCells()
     {
         foreach (var row in Allrows)
@@ -737,6 +685,5 @@ public class GeneratePattern : MonoBehaviour
     #endregion
 
     #endregion
-
 
 }

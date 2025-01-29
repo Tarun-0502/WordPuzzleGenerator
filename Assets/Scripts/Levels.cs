@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Text;
 using UnityEngine.Networking;
+using System.Linq;
 
 public class Levels : MonoBehaviour
 {
@@ -18,13 +19,13 @@ public class Levels : MonoBehaviour
 
     #endregion
 
-    public string fileName = "Levels"; // File name without extension
     public List<string> levelWords = new List<string>(); // List to store the words
+    public TextAsset levelText;
 
     public void LoadLevelData(string fileName, string levelName)
     {
         // Load the text file as a TextAsset
-        TextAsset textAsset = Resources.Load<TextAsset>(fileName);
+        TextAsset textAsset = levelText;
 
         if (textAsset != null)
         {
@@ -41,15 +42,19 @@ public class Levels : MonoBehaviour
                 {
                     if (i + 1 < lines.Length) // Ensure there is a next line
                     {
-                        // Split the next line into words and store them in the list
+                        // Split the next line into words, remove extra spaces, and store them in the list
                         string wordsLine = lines[i + 1].Trim();
-                        levelWords = new List<string>(wordsLine.Split(','));
+                        levelWords = new List<string>(wordsLine.Split(',')
+                                                  .Select(word => word.Trim()) // Remove extra spaces
+                                                  .Where(word => !string.IsNullOrEmpty(word)) // Remove empty words
+                        );
 
                         Debug.Log($"Loaded words for {levelName}: {string.Join(", ", levelWords)}");
                         return;
                     }
                 }
             }
+
 
             Debug.LogWarning($"Level '{levelName}' not found or has no words!");
         }
@@ -58,4 +63,5 @@ public class Levels : MonoBehaviour
             Debug.LogError($"File '{fileName}' not found in Resources folder!");
         }
     }
+
 }

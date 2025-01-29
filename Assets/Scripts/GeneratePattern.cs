@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -68,6 +68,10 @@ public class GeneratePattern : MonoBehaviour
 
     private const int CellsPerRow = 9; // Define a constant for cells per row
 
+    int RandomNumber;
+
+    int lastNumber = 1;
+
     #endregion
 
     #region METHODS
@@ -77,7 +81,15 @@ public class GeneratePattern : MonoBehaviour
         getAllCellIntoRows();
         lineWordsParent = GridLayout.parent;
 
-        Chooselevel(PlayerPrefs.GetInt("SelectedLevel", 1));
+        if (Game.Instance.Game_)
+        {
+            Chooselevel(PlayerPrefs.GetInt("SelectedLevel", 1));
+        }
+        else
+        {
+            CurrentLevel = Random.Range(1,60);
+            Chooselevel(CurrentLevel);
+        }
     }
 
     #region LevelSelectionScreen
@@ -127,27 +139,27 @@ public class GeneratePattern : MonoBehaviour
         switch (FindHighestWord().Length)
         {
             case 3:
-                Debug.Log(FindHighestWord().Length + "3" + FindHighestWord());
+                Debug.Log(FindHighestWord().Length + " " + FindHighestWord());
                 GridLayout.transform.localPosition = new Vector3(-190, -70, 0);
                 break;
 
             case 4:
-                Debug.Log(FindHighestWord().Length + "4" + FindHighestWord());
+                Debug.Log(FindHighestWord().Length + " " + FindHighestWord());
                 GridLayout.transform.localPosition = new Vector3(0, 0, 0);
                 break;
 
             case 5:
-                Debug.Log(FindHighestWord().Length + "5" + FindHighestWord());
+                Debug.Log(FindHighestWord().Length + " " + FindHighestWord());
                 GridLayout.transform.localPosition = new Vector3(-50, 10, 0);
                 break;
 
             case 6:
-                Debug.Log(FindHighestWord().Length + "6" + FindHighestWord());
+                Debug.Log(FindHighestWord().Length + " " + FindHighestWord());
                 GridLayout.transform.localPosition = new Vector3(-25, -50, 0);
                 break;
 
             case 7:
-                Debug.Log(FindHighestWord().Length + "7" + FindHighestWord());
+                Debug.Log(FindHighestWord().Length + " " + FindHighestWord());
                 GridLayout.transform.localPosition = new Vector3(-90, 100, 0);
                 break;
 
@@ -253,45 +265,142 @@ public class GeneratePattern : MonoBehaviour
         }
     }
 
-    void AssignNextWord(string word, List<Cell> cells, int direction)
+    //void AssignNextWord(string word, List<Cell> cells, int direction)
+    //{
+    //    if (cells == null || cells.Count != word.Length)
+    //    {
+    //        Debug.LogWarning(FindHighestWord()+" "+" Not Assigned!!! ");
+    //        //return;
+
+    //        if (AssignedWords.Count < words.Count)
+    //        {
+    //            WordsNotAssigned.Add(FindHighestWord());
+    //            string NxtWord = "";
+    //            foreach (string nxtWord in words)
+    //            {
+    //                if (!string.IsNullOrEmpty(nxtWord) && !AssignedWords.Contains(nxtWord) && !WordsNotAssigned.Contains(nxtWord) && nxtWord.Length > NxtWord.Length)
+    //                {
+    //                    NxtWord = nxtWord;
+    //                }
+    //            }
+    //            if (!string.IsNullOrEmpty(NxtWord))
+    //            {
+    //                Debug.Log("NEXT WORD TO ASSIGN " + " " + NxtWord);
+    //                //Debug.LogError("OVER" + AssignedWords.Count);
+
+    //                CheckPossibility(NxtWord);
+    //                AssignNextWord(NxtWord, cells_, index_);
+    //                //Assign(NxtWord, cells_, index_);
+    //            }
+    //        }
+    //        else
+    //        {
+    //            return;
+    //        }
+    //    }
+
+    //    else if (AssignedWords.Count < words.Count && cells != null && cells.Count == word.Length)
+    //    {
+    //        Assign(word, cells, direction);
+    //    }
+
+    //    else
+    //    {
+    //        Debug.LogError("OVER" + AssignedWords.Count);
+    //        return;
+    //    }
+    //}
+
+    void AssignNextWord(string word, List<Cell> cells, int direction, int depth = 0)
     {
+        const int MaxRecursionDepth = 10; // Prevent infinite recursion
+
+        if (depth > MaxRecursionDepth)
+        {
+            Debug.LogError("Recursion limit reached! Stopping AssignNextWord to prevent infinite loop.");
+            return;
+        }
+
         if (cells == null || cells.Count != word.Length)
         {
-            Debug.LogWarning(FindHighestWord()+" "+" Not Assigned!!! ");
-            //return;
+            string highestWord = word;
+            if (!string.IsNullOrEmpty(highestWord))
+            {
+                //Debug.LogWarning(highestWord + " Not Assigned!!!");
+            }
 
             if (AssignedWords.Count < words.Count)
             {
-                WordsNotAssigned.Add(FindHighestWord());
-                string NxtWord = "";
+                if (!string.IsNullOrEmpty(highestWord) && !WordsNotAssigned.Contains(highestWord))
+                {
+                    WordsNotAssigned.Add(highestWord);
+                }
+
+                string nextWord = "";
                 foreach (string nxtWord in words)
                 {
-                    if (!string.IsNullOrEmpty(nxtWord) && !AssignedWords.Contains(nxtWord) && !WordsNotAssigned.Contains(nxtWord) && nxtWord.Length > NxtWord.Length)
+                    if (!string.IsNullOrEmpty(nxtWord) && !AssignedWords.Contains(nxtWord) && !WordsNotAssigned.Contains(nxtWord) &&
+                        nxtWord.Length > nextWord.Length)
                     {
-                        NxtWord = nxtWord;
+                        nextWord = nxtWord;
                     }
                 }
-                if (!string.IsNullOrEmpty(NxtWord))
-                {
-                    Debug.Log("NEXT WORD TO ASSIGN " + " " + NxtWord);
 
-                    CheckPossibility(NxtWord);
-                    Assign(NxtWord, cells_, index_);
+                if (!string.IsNullOrEmpty(nextWord))
+                {
+                    //Debug.Log("NEXT WORD TO ASSIGN: " + nextWord);
+
+                    CheckPossibility(nextWord);
+
+                    // Ensure cells_ and index_ are properly assigned before recursion
+                    if (cells_ != null && index_ >= 0)
+                    {
+                        AssignNextWord(nextWord, cells_, index_, depth + 1);
+                    }
+                    else
+                    {
+                        //Debug.LogWarning("Cannot assign next word due to invalid cell data.");
+
+                        //WordsNotAssigned.Add(nextWord);
+
+                        nextWord = words[words.Count - lastNumber];
+                        lastNumber++;
+
+                        CheckPossibility(nextWord);
+
+                        //Debug.LogWarning("Nxt WORD " + nextWord );
+
+                        // Ensure cells_ and index_ are properly assigned before recursion
+                        if (cells_ != null && index_ >= 0)
+                        {
+                            AssignNextWord(nextWord, cells_, index_, depth + 1);
+                        }
+                        else
+                        {
+                            //Debug.LogError("All words have been assigned successfully!");
+                            if (Game.Instance.DailyChallenges)
+                            {
+                                Game.Instance.DailyChallenge1(true);
+                            }
+                            return;
+                        }
+                    }
                 }
             }
-            else
-            {
-                return;
-            }
+            return;
         }
 
-        else if (AssignedWords.Count < words.Count && cells != null && cells.Count == word.Length)
+        if (AssignedWords.Count < words.Count && cells != null && cells.Count == word.Length)
         {
             Assign(word, cells, direction);
         }
-
         else
         {
+            Debug.Log("All words have been assigned successfully!");
+            if (Game.Instance.DailyChallenges)
+            {
+                Game.Instance.DailyChallenge1(true);
+            }
             return;
         }
     }
@@ -334,6 +443,15 @@ public class GeneratePattern : MonoBehaviour
                 {
                     CellsUsed.Add(lineWord.Cells[i].GetComponent<Cell>());
                 }
+            }
+            RandomNumber = Random.Range(1, lineWord.Cells.Count-1);
+            if (!Game.Instance.GetCell_Word.Contains(lineWord.Cells[RandomNumber]))
+            {
+                Game.Instance.GetCell_Word.Add(lineWord.Cells[RandomNumber]);
+            }
+            if (Game.Instance.MissingLetters)
+            {
+                lineWord.Cells[RandomNumber].GetComponent<Cell>().SpotLight(true);
             }
             Game.Instance.CompletedWords = CurrentUsedLineWords.Count;
             Game.Instance.LineWords.Add(lineWord.transform);

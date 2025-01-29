@@ -401,5 +401,13 @@ public class UIManager : MonoBehaviour
         AudioSource.Play();
     }
 
+    public void DailyChallenges(int current)
+    {
+        Button_Sound();
+        PlayerPrefs.SetInt("Daily", current);
+        LoadingScreen.SetActive(true);
+        LoadSceneWithProgress("DailyChallenge");
+    }
+
     #endregion
 }

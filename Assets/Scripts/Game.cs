@@ -44,7 +44,7 @@ public class Game : MonoBehaviour
     [HideInInspector]
     [SerializeField] List<Transform> LettersUsedInLevel = new List<Transform>();
 
-    //[HideInInspector]
+    [HideInInspector]
     [SerializeField] internal int CompletedWords;
 
     [HideInInspector]
@@ -52,7 +52,12 @@ public class Game : MonoBehaviour
 
     #endregion
 
-
+    [SerializeField] internal bool DailyChallenges,MissingLetters,Timer;
+    [SerializeField] internal List<Transform> GetCell_Word;
+    [SerializeField] Cell CurrentFirstCell;
+    [SerializeField] int Badges = 3;
+    [SerializeField] TextMeshProUGUI TimerText,badgesText;
+    [SerializeField] float RemaningTime;
 
     [SerializeField] internal TextMeshProUGUI TextPreview;
     [SerializeField] private Transform Circle;
@@ -84,7 +89,7 @@ public class Game : MonoBehaviour
     public Transform hintPosition;
     public Transform hintParent;
 
-    [SerializeField] GameObject PauseScreen;
+    [SerializeField] GameObject SettingsScreen;
 
     [SerializeField] TextMeshProUGUI levelText,Level_Text_Settings,Place_Text;
 
@@ -122,6 +127,8 @@ public class Game : MonoBehaviour
     [SerializeField] List<string> ColorCodes;
 
     [SerializeField] int randomNumber;
+
+    [SerializeField] internal bool Game_;
 
     #endregion
 
@@ -178,8 +185,44 @@ public class Game : MonoBehaviour
             coinsText.font = NewFontAsset;
         }
 
-        ThemeSelection();
+        if (!DailyChallenges)
+        {
+            ThemeSelection();
+        }
+
         LoadSavedData();
+
+
+        if (!Game_)
+        {
+            switch (PlayerPrefs.GetInt("Daily"))
+            {
+                case 1:
+                    DailyChallenges = true;
+                    MissingLetters = false;
+                    Timer = false;
+                    break;
+
+                case 2:
+                    DailyChallenges = false;
+                    MissingLetters = true;
+                    Timer = false;
+                    break;
+
+                case 3:
+                    DailyChallenges = false;
+                    MissingLetters = false;
+                    Timer = true;
+                    break;
+
+                default:
+                    DailyChallenges = true;
+                    MissingLetters = false;
+                    Timer = false;
+                    break;
+            }
+        }
+
         HighestLevel = PlayerPrefs.GetInt("HighestLevel");
         CurrentLevel = PlayerPrefs.GetInt("SelectedLevel");
     }
@@ -252,7 +295,6 @@ public class Game : MonoBehaviour
 
     public void CurrentLevelButton(int Level,List<char> characters)
     {
-        //Debug.Log(HighestWord + "-" + currentWordsCount);
 
         //Debug.Log(characters.Count.ToString());
         //for (int i = 0; i < characters.Count; i++)
@@ -263,10 +305,40 @@ public class Game : MonoBehaviour
         CurrentLevelCircle = Circle.Find(characters.Count.ToString());
         CurrentLevelCircle.gameObject.SetActive(true);
 
-        levelText.font = NewFontAsset;
-        Level_Text_Settings.font = NewFontAsset;
-        levelText.text = "LEVEL - " + Level.ToString();
-        Level_Text_Settings.text = "LEVEL - " + Level.ToString();
+        if (NewFontAsset !=null)
+        {
+            levelText.font = NewFontAsset;
+            Level_Text_Settings.font = NewFontAsset;
+            if (badgesText!=null)
+            {
+                badgesText.font = NewFontAsset;
+            }
+        }
+
+        if (!Game_)
+        {
+           
+            if (!DailyChallenges)
+            {
+                if (badgesText != null)
+                {
+                    badgesText.transform.parent.gameObject.SetActive(false);
+                }
+            }
+            if (!MissingLetters || !DailyChallenges)
+            {
+                levelText.transform.parent.gameObject.SetActive(false);
+            }
+            if (Timer)
+            {
+                levelText.transform.parent.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            levelText.text = "LEVEL - " + Level.ToString();
+            Level_Text_Settings.text = "LEVEL - " + Level.ToString();
+        }
 
         for (int i = 0; i < characters.Count; i++)
         {
@@ -276,6 +348,10 @@ public class Game : MonoBehaviour
 
         LoadGame();
         InstiateDots();
+        if (DailyChallenges)
+        {
+            //DailyChallenge1(true);
+        }
     }
 
     void Update()
@@ -283,10 +359,21 @@ public class Game : MonoBehaviour
         TextPreview.text = CurrentWord;
         Total_Coins = PlayerPrefs.GetInt("Coins");
         coinsText.text = Total_Coins.ToString();
-        if (!PauseScreen.activeInHierarchy)
+        if (!SettingsScreen.activeInHierarchy)
         {
             Controls();
+            Time.timeScale = 1;
+            if (Timer)
+            {
+                RemaningTime -= Time.deltaTime;
+                TimerText.text = TimerUpdate(RemaningTime);
+                if (RemaningTime <=0)
+                {
+                    SceneManager.LoadScene(0);
+                }
+            }
         }
+        
     }
 
     // Loads Game On Start...
@@ -383,11 +470,6 @@ public class Game : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    public void Resume()
-    {
-        PauseScreen.SetActive(!PauseScreen.activeInHierarchy);
-    }
-
     #endregion
 
     #region Hint And Shuffle
@@ -410,15 +492,19 @@ public class Game : MonoBehaviour
                 }
             }
 
-            // Second foreach loop: Check all cells for completion after the first loop
-            foreach (Transform word in LineWords)
+            DOVirtual.DelayedCall(0.25f, () =>
             {
-                var lineWord = word.GetComponent<LineWord>();
-                if (!lineWord.AnswerChecked)
+                // Second foreach loop: Check all cells for completion after the first loop
+                foreach (Transform word in LineWords)
                 {
-                    lineWord.CheckAllCellsFilled();
+                    var lineWord = word.GetComponent<LineWord>();
+                    if (!lineWord.AnswerChecked)
+                    {
+                        lineWord.CheckAllCellsFilled();
+                    }
                 }
-            }
+            });
+
         }
         else
         {
@@ -634,7 +720,7 @@ public class Game : MonoBehaviour
         });
     }
 
-    public void NextButton()
+    public void NextButton(int scene)
     {
         PlaySound(tap);
         if (!PlayerPrefs.HasKey("Count"))
@@ -645,7 +731,7 @@ public class Game : MonoBehaviour
         {
             PlayerPrefs.SetInt("SelectedLevel", PlayerPrefs.GetInt("SelectedLevel") + 1);
             PlayerPrefs.SetInt("Count", PlayerPrefs.GetInt("Count")+1);
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(scene);
         }
         else
         {
@@ -706,17 +792,7 @@ public class Game : MonoBehaviour
 
     public void Get_Multi_Hint(int coins)
     {
-        // Clear the list of eligible cells
-        Cells_In_GNR.Clear();
-
-        // Populate eligible cells that don't have their text revealed yet
-        foreach (Cell t in GeneratePattern.Instance.CellsUsed)
-        {
-            if (t != null && !t.showText)
-            {
-                Cells_In_GNR.Add(t);
-            }
-        }
+        get_UNRevealed();
 
         // Number of hints to reveal (adjustable)
         int revealed = 3;
@@ -781,17 +857,7 @@ public class Game : MonoBehaviour
 
     public void Get_Spot_Light(int coins)
     {
-        // Clear the list of eligible cells
-        Cells_In_GNR.Clear();
-
-        // Populate eligible cells that don't have their text revealed yet
-        foreach (Cell t in GeneratePattern.Instance.CellsUsed)
-        {
-            if (t != null && !t.showText)
-            {
-                Cells_In_GNR.Add(t);
-            }
-        }
+        get_UNRevealed();
 
         // Check if the player has enough coins
         if (Total_Coins >= coins)
@@ -843,6 +909,61 @@ public class Game : MonoBehaviour
     }
 
     #endregion
+
+    #region DAILY CHALLENGES
+
+    public void DailyChallenge1(bool First = false)
+    {
+        if (Badges>0)
+        {
+            randomNumber = Random.Range(0, GetCell_Word.Count);
+            if (First)
+            {
+                CurrentFirstCell = GetCell_Word[randomNumber].GetComponent<Cell>();
+                CurrentFirstCell.Star.gameObject.SetActive(true);
+                Debug.LogWarning(CurrentFirstCell.name);
+                GetCell_Word.RemoveAt(randomNumber);
+            }
+            else
+            {
+                if(CurrentFirstCell.showText)
+                {
+                    CurrentFirstCell = GetCell_Word[randomNumber].GetComponent<Cell>();
+                    CurrentFirstCell.Star.gameObject.SetActive(true);
+                    Debug.LogWarning(CurrentFirstCell.name);
+                    GetCell_Word.RemoveAt(randomNumber);
+                    Badges--;
+                }
+            }
+            badgesText.text = (3 - Badges).ToString();
+        }
+    }
+
+    private System.String TimerUpdate(float elapsed)
+    {
+        int d = (int)(elapsed * 100.0f);
+        int minutes = d / (60 * 100);
+        int seconds = (d % (60 * 100)) / 100;
+        int hundredths = d % 100;
+        return System.String.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    #endregion
+
+    void get_UNRevealed()
+    {
+        // Clear the list of eligible cells
+        Cells_In_GNR.Clear();
+
+        // Populate eligible cells that don't have their text revealed yet
+        foreach (Cell t in GeneratePattern.Instance.CellsUsed)
+        {
+            if (t != null && !t.showText)
+            {
+                Cells_In_GNR.Add(t);
+            }
+        }
+    }
 
     void LoadSavedData()
     {

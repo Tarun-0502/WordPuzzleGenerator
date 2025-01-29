@@ -8,6 +8,7 @@ using DG.Tweening;
 public class Cell : MonoBehaviour
 {
 
+
     #region REFERENCES
 
     #region Hide_In_Inspector
@@ -40,6 +41,8 @@ public class Cell : MonoBehaviour
 
     public bool isOccupied;
     public bool isAssigned;
+
+    public Transform Star;
 
     [SerializeField] string DefaultColorCode;
 
@@ -93,6 +96,7 @@ public class Cell : MonoBehaviour
     {
         if (!showText)
         {
+            Star.gameObject.SetActive(false);
             Text.transform.SetParent(Game.Instance.TextPreview.transform);
             Text.transform.position = Vector2.zero;
             Text.transform.localScale = Vector3.zero;
@@ -166,22 +170,36 @@ public class Cell : MonoBehaviour
        }
     }
 
-    public void SpotLight()
+    public void SpotLight(bool Reveal=false)
     {
-        if (!showText)
+        if (!Reveal)
         {
-            Text.text = letter;
-            Text.transform.DOScale(Vector3.one, 0.1f);
-            ChangeColor(Game.Instance.colorCode);
-            DOVirtual.DelayedCall(1.25f, () =>
+            if (!showText)
             {
-                Text.text = "";
-                Text.transform.DOScale(Vector3.zero,0.1f);
-                ChangeColor(DefaultColorCode);
-            });
+                Text.text = letter;
+                Text.transform.DOScale(Vector3.one, 0.1f);
+                ChangeColor(Game.Instance.colorCode);
+                DOVirtual.DelayedCall(1.25f, () =>
+                {
+                    Text.text = "";
+                    Text.transform.DOScale(Vector3.zero, 0.1f);
+                    ChangeColor(DefaultColorCode);
+                });
+            }
+        }
+        else
+        {
+            if (!showText)
+            {
+                Text.text = letter;
+                Text.transform.DOScale(Vector3.one, 0.1f);
+                ChangeColor(Game.Instance.colorCode);
+                showText = true;
+            }
         }
     }
 
     #endregion
+
 
 }

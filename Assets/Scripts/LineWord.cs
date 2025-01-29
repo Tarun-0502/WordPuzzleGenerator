@@ -71,6 +71,13 @@ public class LineWord : MonoBehaviour
             }
             Game.Instance.CurrentWord = "";
         }
+        DOVirtual.DelayedCall(0.5f, () =>
+        {
+            if (Game.Instance.DailyChallenges)
+            {
+                Game.Instance.DailyChallenge1();
+            }
+        });
     }
 
     public void Hint()

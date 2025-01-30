@@ -5,6 +5,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+[System.Serializable]
+public class Characters_Dict
+{
+    public char ch;
+    public int Count;
+}
+
+
 public class GeneratePattern : MonoBehaviour
 {
 
@@ -74,6 +83,9 @@ public class GeneratePattern : MonoBehaviour
 
     #endregion
 
+    [SerializeField] List<Characters_Dict> Character_Count = new List<Characters_Dict>();
+    Dictionary<char,int> dic = new Dictionary<char,int>();
+
     #region METHODS
 
     void Start()
@@ -83,12 +95,15 @@ public class GeneratePattern : MonoBehaviour
 
         if (Game.Instance.Game_)
         {
+            //Normal Levels...
             Chooselevel(PlayerPrefs.GetInt("SelectedLevel", 1));
+            //Chooselevel(CurrentLevel);
         }
         else
         {
-            CurrentLevel = Random.Range(1,60);
-            Chooselevel(CurrentLevel);
+            // Daily Challenges Levels...
+            Chooselevel(PlayerPrefs.GetInt("DailyLevel", 1));
+            //Chooselevel(CurrentLevel);
         }
     }
 
@@ -96,7 +111,6 @@ public class GeneratePattern : MonoBehaviour
 
     public void Chooselevel(int selectedLevel)
     {
-
         List<char> characters = new List<char>();
 
         CurrentLevel = selectedLevel;
@@ -132,7 +146,7 @@ public class GeneratePattern : MonoBehaviour
             }
         }
 
-        Game.Instance.CurrentLevelButton(selectedLevel, characters);
+        Game.Instance.CurrentLevelButton(selectedLevel, GetCharacters(characters,words));
         
         InstantiateLineWords();
 
@@ -170,6 +184,62 @@ public class GeneratePattern : MonoBehaviour
         }
 
         WordToPlace(FindHighestWord(), true); // To place the first word
+    }
+
+    List<char> GetCharacters(List<char> defaultChars,List<string> LevelWords)
+    {
+        // Initialize dictionary with characters from the parameter, each starting with a count of 1
+        Dictionary<char, int> charDictionary = new Dictionary<char, int>();
+
+        foreach (char c in defaultChars)
+        {
+            charDictionary[c] = 1; // Set the initial count to 1
+        }
+
+
+        foreach (string word in LevelWords)
+        {
+            Dictionary<char, int> wordCharCount = new Dictionary<char, int>();
+
+            // Count occurrences of characters in the current word
+            foreach (char c in word)
+            {
+                if (wordCharCount.ContainsKey(c))
+                    wordCharCount[c]++;
+                else
+                    wordCharCount[c] = 1;
+            }
+
+            // Compare with the dictionary and update only if needed
+            foreach (var kvp in wordCharCount)
+            {
+                if (charDictionary.ContainsKey(kvp.Key))
+                {
+                    // Update count only if the word has more occurrences than the default
+                    if (kvp.Value > charDictionary[kvp.Key])
+                        charDictionary[kvp.Key] = kvp.Value;
+                }
+                else
+                {
+                    // If the character is not in the default list, add it
+                    charDictionary[kvp.Key] = kvp.Value;
+                }
+            }
+        }
+
+        // Prepare the list of characters (keys) based on their counts
+        List<char> result = new List<char>();
+
+        foreach (var kvp in charDictionary)
+        {
+            // Add the character to the result based on its count
+            for (int i = 0; i < kvp.Value; i++)
+            {
+                result.Add(kvp.Key);
+            }
+        }
+
+        return result;
     }
 
     #endregion
@@ -445,10 +515,6 @@ public class GeneratePattern : MonoBehaviour
                 }
             }
             RandomNumber = Random.Range(1, lineWord.Cells.Count-1);
-            if (!Game.Instance.GetCell_Word.Contains(lineWord.Cells[RandomNumber]))
-            {
-                Game.Instance.GetCell_Word.Add(lineWord.Cells[RandomNumber]);
-            }
             if (Game.Instance.MissingLetters)
             {
                 lineWord.Cells[RandomNumber].GetComponent<Cell>().SpotLight(true);

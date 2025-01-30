@@ -48,14 +48,17 @@ public class Game : MonoBehaviour
     [SerializeField] internal int CompletedWords;
 
     [HideInInspector]
+    [SerializeField] int maxLetters;
+
+    [HideInInspector]
     [SerializeField] int ExtraWordsCount;
 
     #endregion
 
     [SerializeField] internal bool DailyChallenges,MissingLetters,Timer;
-    [SerializeField] internal List<Transform> GetCell_Word;
     [SerializeField] Cell CurrentFirstCell;
-    [SerializeField] int Badges = 3;
+    [SerializeField] int TotalBadges = 3;
+    [SerializeField] internal int CollectedBadges = 0;
     [SerializeField] TextMeshProUGUI TimerText,badgesText;
     [SerializeField] float RemaningTime;
 
@@ -83,7 +86,7 @@ public class Game : MonoBehaviour
 
     private Transform CurrentLevelCircle;
 
-    [SerializeField] private int Total_Coins;
+    [SerializeField] private int Total_Coins,Total_Gems;
     [SerializeField] private TextMeshProUGUI coinsText;
     public Transform CoinPosition;
     public Transform hintPosition;
@@ -122,13 +125,13 @@ public class Game : MonoBehaviour
     [SerializeField] AudioSource Music_Source;
 
     [SerializeField] int HighestLevel;
-    [SerializeField] int CurrentLevel;
 
     [SerializeField] List<string> ColorCodes;
 
     [SerializeField] int randomNumber;
 
     [SerializeField] internal bool Game_;
+    [SerializeField] Button Shuffele_Btn;
 
     #endregion
 
@@ -169,10 +172,16 @@ public class Game : MonoBehaviour
 
         if (!PlayerPrefs.HasKey("Coins"))
         {
-            PlayerPrefs.SetInt("Coins",Total_Coins);
+            PlayerPrefs.SetInt("Coins",50);
+        }
+
+        if (!PlayerPrefs.HasKey("Gems"))
+        {
+            PlayerPrefs.SetInt("Gems", 10);
         }
 
         Total_Coins = PlayerPrefs.GetInt("Coins");
+        Total_Gems = PlayerPrefs.GetInt("Gems");
 
         mainCamera = Camera.main;
         GameObject lineRe = Instantiate(linePrefab, Vector3.zero, Quaternion.identity, LineParent);
@@ -224,7 +233,7 @@ public class Game : MonoBehaviour
         }
 
         HighestLevel = PlayerPrefs.GetInt("HighestLevel");
-        CurrentLevel = PlayerPrefs.GetInt("SelectedLevel");
+        //CurrentLevel = PlayerPrefs.GetInt("SelectedLevel");
     }
 
     public void ThemeSelection()
@@ -296,12 +305,13 @@ public class Game : MonoBehaviour
     public void CurrentLevelButton(int Level,List<char> characters)
     {
 
-        //Debug.Log(characters.Count.ToString());
-        //for (int i = 0; i < characters.Count; i++)
-        //{
-        //    Debug.Log(characters[i].ToString());
-        //}
+        Debug.Log(characters.Count.ToString());
+        for (int i = 0; i < characters.Count; i++)
+        {
+            Debug.Log(characters[i].ToString());
+        }
 
+        //Debug.LogWarning(Circle.Find(characters.Count.ToString()));
         CurrentLevelCircle = Circle.Find(characters.Count.ToString());
         CurrentLevelCircle.gameObject.SetActive(true);
 
@@ -317,7 +327,6 @@ public class Game : MonoBehaviour
 
         if (!Game_)
         {
-           
             if (!DailyChallenges)
             {
                 if (badgesText != null)
@@ -348,15 +357,13 @@ public class Game : MonoBehaviour
 
         LoadGame();
         InstiateDots();
-        if (DailyChallenges)
-        {
-            //DailyChallenge1(true);
-        }
+        maxLetters = characters.Count;
     }
 
     void Update()
     {
         TextPreview.text = CurrentWord;
+        currentText(TextPreview.transform.parent.GetComponent<Image>(),maxLetters,CurrentWord);
         Total_Coins = PlayerPrefs.GetInt("Coins");
         coinsText.text = Total_Coins.ToString();
         if (!SettingsScreen.activeInHierarchy)
@@ -514,6 +521,7 @@ public class Game : MonoBehaviour
 
     public void Shuffle()
     {
+        Shuffele_Btn.interactable = false;
         PlaySound(tap);
         letters.Clear();
         letterPositions.Clear();
@@ -538,6 +546,8 @@ public class Game : MonoBehaviour
 
         // Assign shuffled positions back to letters with delay and smooth movement
         float delayBetweenMoves = 0.01f; // Delay between each move
+        float totalDelayTime = letters.Count * delayBetweenMoves + 0.5f; // Total time after the last move is done
+
         for (int i = 0; i < letters.Count; i++)
         {
             int index = i; // Capture the current index for the delayed call
@@ -548,6 +558,12 @@ public class Game : MonoBehaviour
                     .SetEase(Ease.InOutQuad); // Smooth easing
             });
         }
+
+        // Delay the button interaction enable after the last letter move
+        DOVirtual.DelayedCall(totalDelayTime, () =>
+        {
+            Shuffele_Btn.interactable = true; // Enable the shuffle button after all letters have moved
+        });
     }
 
     #endregion
@@ -680,6 +696,14 @@ public class Game : MonoBehaviour
         lineRenderer.positionCount = 0;
         drawPositions.Clear();
         lineRenderer.gameObject.SetActive(false);
+
+        DOVirtual.DelayedCall(0.5f, () =>
+        {
+            if (Game.Instance.DailyChallenges)
+            {
+                Game.Instance.DailyChallenge1();
+            }
+        });
     }
     #endregion
 
@@ -689,6 +713,19 @@ public class Game : MonoBehaviour
     {
         DOVirtual.DelayedCall(0.3f, () =>
         {
+            if (!Game_)
+            {
+                PlayerPrefs.SetInt("DailyLevel",PlayerPrefs.GetInt("DailyLevel")+1);
+                if (PlayerPrefs.GetInt("DailyLevel")>70)
+                {
+                    PlayerPrefs.SetInt("DailyLevel", 1);
+                }
+            }
+            else
+            {
+                PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + 50);
+            }
+
             SnowEffect.gameObject.SetActive(false);
             Dust.gameObject.SetActive(false);
             CompletedWords = 0;
@@ -723,20 +760,27 @@ public class Game : MonoBehaviour
     public void NextButton(int scene)
     {
         PlaySound(tap);
-        if (!PlayerPrefs.HasKey("Count"))
+        if (Game_)
         {
-            PlayerPrefs.SetInt("Count", 1);
-        }
-        if (PlayerPrefs.GetInt("Count")<5)
-        {
-            PlayerPrefs.SetInt("SelectedLevel", PlayerPrefs.GetInt("SelectedLevel") + 1);
-            PlayerPrefs.SetInt("Count", PlayerPrefs.GetInt("Count")+1);
-            SceneManager.LoadScene(scene);
+            if (!PlayerPrefs.HasKey("Count"))
+            {
+                PlayerPrefs.SetInt("Count", 1);
+            }
+            if (PlayerPrefs.GetInt("Count") < 5)
+            {
+                PlayerPrefs.SetInt("SelectedLevel", PlayerPrefs.GetInt("SelectedLevel") + 1);
+                PlayerPrefs.SetInt("Count", PlayerPrefs.GetInt("Count") + 1);
+                SceneManager.LoadScene(scene);
+            }
+            else
+            {
+                SceneManager.LoadScene(0);
+                PlayerPrefs.SetInt("Count", 1);
+            }
         }
         else
         {
             SceneManager.LoadScene(0);
-            PlayerPrefs.SetInt("Count", 1);
         }
     }
 
@@ -914,29 +958,41 @@ public class Game : MonoBehaviour
 
     public void DailyChallenge1(bool First = false)
     {
-        if (Badges>0)
+        get_UNRevealed();
+
+        if (TotalBadges > 0) // Only execute if the player has TotalBadges remaining
         {
-            randomNumber = Random.Range(0, GetCell_Word.Count);
+            // Check if there are no available cells 
+            if (Cells_In_GNR.Count == 0)
+            {
+                Debug.LogWarning("No available cells in Cells_In_GNR.");
+                return;
+            }
+
             if (First)
             {
-                CurrentFirstCell = GetCell_Word[randomNumber].GetComponent<Cell>();
+                // Generate a random index within the available cells
+                randomNumber = Random.Range(0, Cells_In_GNR.Count);
+                CurrentFirstCell = Cells_In_GNR[randomNumber].GetComponent<Cell>(); // Get Cell component
+
+                // Activate the star for the first selection
                 CurrentFirstCell.Star.gameObject.SetActive(true);
-                Debug.LogWarning(CurrentFirstCell.name);
-                GetCell_Word.RemoveAt(randomNumber);
+                TotalBadges--; // Decrease the number of available TotalBadges
             }
             else
             {
-                if(CurrentFirstCell.showText)
+                // Ensure the star is not already active before activating again
+                if (CurrentFirstCell.showText)
                 {
-                    CurrentFirstCell = GetCell_Word[randomNumber].GetComponent<Cell>();
+                    // Generate a random index within the available cells
+                    randomNumber = Random.Range(0, Cells_In_GNR.Count);
+                    CurrentFirstCell = Cells_In_GNR[randomNumber].GetComponent<Cell>(); // Get Cell component
                     CurrentFirstCell.Star.gameObject.SetActive(true);
-                    Debug.LogWarning(CurrentFirstCell.name);
-                    GetCell_Word.RemoveAt(randomNumber);
-                    Badges--;
+                    TotalBadges--; // Decrease the number of available TotalBadges
                 }
             }
-            badgesText.text = (3 - Badges).ToString();
         }
+        badgesText.text = CollectedBadges.ToString();// Update UI Text
     }
 
     private System.String TimerUpdate(float elapsed)
@@ -981,7 +1037,26 @@ public class Game : MonoBehaviour
         }
     }
 
+    void currentText(Image preview, int maxLetters, string text)
+    {
+        int currentLetters = Mathf.Clamp(text.Length, 0, maxLetters); // Ensure within bounds
+
+        float sizeFactor = (float)currentLetters / maxLetters; // Normalize between 0 and 1
+
+        // Set min & max width values (change as needed)
+        float minWidth = 0f; // Smallest width when text length = 0
+        float maxWidth = 465f; // Maximum width when text length = maxLetters
+
+        // Lerp to smoothly transition between minWidth and maxWidth
+        float newWidth = Mathf.Lerp(minWidth, maxWidth, sizeFactor);
+
+        // Apply new width while keeping the height unchanged
+        preview.rectTransform.sizeDelta = new Vector2(newWidth, preview.rectTransform.sizeDelta.y);
+    }
+
+
+
     #endregion
 
-    
+
 }

@@ -172,6 +172,7 @@ public class UIManager : MonoBehaviour
     void Chooselevel(int current)
     {
         Button_Sound();
+        Debug.LogWarning("SELECTED LEVEL - "+ current);
         PlayerPrefs.SetInt("SelectedLevel", current);
         LoadingScreen.SetActive(true);
         LoadSceneWithProgress("GameScene");
@@ -405,6 +406,10 @@ public class UIManager : MonoBehaviour
     {
         Button_Sound();
         PlayerPrefs.SetInt("Daily", current);
+        if (!PlayerPrefs.HasKey("DailyLevel"))
+        {
+            PlayerPrefs.SetInt("DailyLevel",1);
+        }
         LoadingScreen.SetActive(true);
         LoadSceneWithProgress("DailyChallenge");
     }

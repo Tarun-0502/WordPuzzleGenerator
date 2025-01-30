@@ -42,7 +42,7 @@ public class LineWord : MonoBehaviour
                     });
                 }
                 AnswerChecked = true;
-                PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins")+5);
+                //PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins")+5);
                 Game.Instance.PlaySound(Game.Instance.WordComplete);
                 Game.Instance.CompletedWords--;
                 if (Game.Instance.CompletedWords==0)
@@ -71,13 +71,6 @@ public class LineWord : MonoBehaviour
             }
             Game.Instance.CurrentWord = "";
         }
-        DOVirtual.DelayedCall(0.5f, () =>
-        {
-            if (Game.Instance.DailyChallenges)
-            {
-                Game.Instance.DailyChallenge1();
-            }
-        });
     }
 
     public void Hint()

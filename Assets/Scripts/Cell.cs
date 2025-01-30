@@ -96,6 +96,11 @@ public class Cell : MonoBehaviour
     {
         if (!showText)
         {
+            if (Game.Instance.DailyChallenges && Star.gameObject.activeInHierarchy)
+            {
+                Debug.LogWarning("STAR");
+                Game.Instance.CollectedBadges++;
+            }
             Star.gameObject.SetActive(false);
             Text.transform.SetParent(Game.Instance.TextPreview.transform);
             Text.transform.position = Vector2.zero;

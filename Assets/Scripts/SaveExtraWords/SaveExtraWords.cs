@@ -48,7 +48,7 @@ public static class SaveExtraWords
         {
             try
             {
-                File.WriteAllText(FilePath, JsonUtility.ToJson(new PlayerData(null,1), true));
+                File.WriteAllText(FilePath, JsonUtility.ToJson(new PlayerData(null), true));
                 Debug.Log("Player data cleared successfully.");
             }
             catch (Exception ex)

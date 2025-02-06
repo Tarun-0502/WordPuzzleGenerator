@@ -57,12 +57,6 @@ public class CoinProcAnim : MonoBehaviour
 
     #endregion regular
 
-    public void Move()
-    {
-        //SceneCurve sc = GetComponent<SceneCurve>();
-        //sc.MoveAlongPath(coin.gameObject, transform, startSpeed, endSpeed, 0f, ()=> { coin.position = transform.position; } );
-    }
-
     public void Jump()
     {
         if (coinPrefab == null || coinPrefab.Length == 0) return;

@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\coinprocanim.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|d:\\wordpuzzlegenerator\\assets\\scripts\\spinwheel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\spinwheel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\spinwheel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -100,7 +100,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\CoinProcAnim.cs",
               "ToolTip": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\CoinProcAnim.cs",
               "RelativeToolTip": "Assets\\Scripts\\CoinProcAnim.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAYwDEAAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAADUAAAAAAAAAAAAswGYAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-31T10:13:37.244Z",
               "EditorCaption": ""
@@ -115,8 +115,7 @@
               "RelativeToolTip": "Assets\\Scripts\\SpinWheel.cs",
               "ViewState": "AgIAACsAAAAAAAAAAAAqwD8AAABTAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-31T09:36:33.721Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-31T09:36:33.721Z"
             },
             {
               "$type": "Document",

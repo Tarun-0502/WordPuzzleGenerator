@@ -1,10 +1,22 @@
 using DG.Tweening;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+[System.Serializable]
+public class StorePanel
+{
+    public GameObject Root;
+    public GameObject Coins1, Coins2, Coins3, Coins4;
+    public GameObject Gems1, Gems2, Gems3, Gems4;
+    public GameObject Gem1_Buy,Gem2_Buy, Gem3_Buy, Gem4_Buy;
+    public TextMeshProUGUI coinsText, GemsText;
+    public RectTransform Gems_Btn, Coins_Btn;
+}
 
 public class Game : MonoBehaviour
 {
@@ -87,7 +99,7 @@ public class Game : MonoBehaviour
     private Transform CurrentLevelCircle;
 
     [SerializeField] private int Total_Coins,Total_Gems;
-    [SerializeField] private TextMeshProUGUI coinsText;
+    [SerializeField] private TextMeshProUGUI coinsText,GemsText,LevelCompleteCoins_Text,LevelCompleteGems_Text;
     public Transform CoinPosition;
     public Transform hintPosition;
     public Transform hintParent;
@@ -109,6 +121,7 @@ public class Game : MonoBehaviour
 
     [SerializeField] Image TextImage;
     [SerializeField] TextMeshProUGUI LevelComplete_Level_No;
+    [SerializeField] Image LevelComplete_FillingBar;
 
     [SerializeField] AudioSource AudioSource;
     [SerializeField] internal AudioClip LevelComplete, CoinCollect, WordComplete, Hint,tap;
@@ -132,6 +145,11 @@ public class Game : MonoBehaviour
 
     [SerializeField] internal bool Game_;
     [SerializeField] Button Shuffele_Btn;
+
+    [SerializeField] StorePanel StorePanel_;
+
+    [SerializeField] Image Pop_Up_Panel, Pop_Up_Panel_Parent;
+    [SerializeField] Sprite Star_PopUp, Missing_PopUp, Timer_PopUp;
 
     #endregion
 
@@ -192,6 +210,7 @@ public class Game : MonoBehaviour
         {
             TextPreview.font = Incircle;
             coinsText.font = NewFontAsset;
+            GemsText.font = NewFontAsset;
         }
 
         if (!DailyChallenges)
@@ -201,27 +220,36 @@ public class Game : MonoBehaviour
 
         LoadSavedData();
 
+        //Coins_Gems_Text_Update();
+
 
         if (!Game_)
         {
             switch (PlayerPrefs.GetInt("Daily"))
             {
                 case 1:
+                    Pop_Up_Panel.sprite = Star_PopUp;
                     DailyChallenges = true;
                     MissingLetters = false;
                     Timer = false;
+                    Pop_Up_Panel_Parent.gameObject.SetActive(true);
                     break;
 
                 case 2:
+                    Pop_Up_Panel.sprite = Missing_PopUp;
                     DailyChallenges = false;
                     MissingLetters = true;
                     Timer = false;
+                    Pop_Up_Panel_Parent.gameObject.SetActive(true);
                     break;
 
                 case 3:
+                    Pop_Up_Panel.sprite = Timer_PopUp;
                     DailyChallenges = false;
                     MissingLetters = false;
                     Timer = true;
+                    Pop_Up_Panel_Parent.gameObject.SetActive(true);
+                    Time.timeScale = 0;
                     break;
 
                 default:
@@ -230,10 +258,30 @@ public class Game : MonoBehaviour
                     Timer = false;
                     break;
             }
+           
         }
 
         HighestLevel = PlayerPrefs.GetInt("HighestLevel");
         //CurrentLevel = PlayerPrefs.GetInt("SelectedLevel");
+
+        coinsText.text = Total_Coins.ToString();
+        LevelCompleteCoins_Text.text = Total_Coins.ToString();
+
+        GemsText.text = Total_Gems.ToString();
+        LevelCompleteGems_Text.text = Total_Gems.ToString();
+
+    }
+
+    public int relativeLevel;
+
+    public void Pop_Up_Close()
+    {
+        Pop_Up_Panel_Parent.gameObject.SetActive(false);
+        if (Pop_Up_Panel.sprite == Timer_PopUp)
+        {
+            Time.timeScale = 1;
+            Timer = true;
+        }
     }
 
     public void ThemeSelection()
@@ -274,7 +322,7 @@ public class Game : MonoBehaviour
 
 
         // Calculate the relative level within the 20-level block
-        int relativeLevel = (level_No - 1) % 20 + 1;
+         relativeLevel = (level_No - 1) % 20 + 1;
 
         // Determine which sprite to use based on 5-level sub-blocks
         if (relativeLevel >= 1 && relativeLevel <= 5)
@@ -364,12 +412,10 @@ public class Game : MonoBehaviour
     {
         TextPreview.text = CurrentWord;
         currentText(TextPreview.transform.parent.GetComponent<Image>(),maxLetters,CurrentWord);
-        Total_Coins = PlayerPrefs.GetInt("Coins");
-        coinsText.text = Total_Coins.ToString();
+        
         if (!SettingsScreen.activeInHierarchy)
         {
             Controls();
-            Time.timeScale = 1;
             if (Timer)
             {
                 RemaningTime -= Time.deltaTime;
@@ -494,6 +540,7 @@ public class Game : MonoBehaviour
                 {
                     word.GetComponent<LineWord>().Hint();
                     PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") - coins);
+                    Coins_Gems_Text_Update();
                     Debug.Log("HINT-CALLED");
                     break; // Ensure only one word is processed
                 }
@@ -721,9 +768,20 @@ public class Game : MonoBehaviour
                     PlayerPrefs.SetInt("DailyLevel", 1);
                 }
             }
+
             else
             {
-                PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + 50);
+                if (PlayerPrefs.GetInt("SelectedLevel") >= HighestLevel)
+                {
+                    HighestLevel = PlayerPrefs.GetInt("SelectedLevel");
+
+                    PlayerPrefs.SetInt("HighestLevel", PlayerPrefs.GetInt("HighestLevel") + 1);
+                    PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + 50);
+                    if (relativeLevel == 20)
+                    {
+                        PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") + 5);
+                    }
+                }
             }
 
             SnowEffect.gameObject.SetActive(false);
@@ -731,33 +789,18 @@ public class Game : MonoBehaviour
             CompletedWords = 0;
             CurrentLevelCircle.gameObject.SetActive(false);
             levelComplete_Screen.gameObject.SetActive(true);
-            LevelComplete_Level_No.text = PlayerPrefs.GetInt("SelectedLevel", 1).ToString();
+            LevelComplete_Level_No.text = relativeLevel + "/20";
+            LevelComplete_FillingBar.fillAmount += (float)relativeLevel / 20;
+            
 
-            if (PlayerPrefs.GetInt("SelectedLevel") >= HighestLevel)
-            {
-                HighestLevel = PlayerPrefs.GetInt("SelectedLevel");
-                PlayerPrefs.SetInt("HighestLevel", PlayerPrefs.GetInt("HighestLevel") + 1);
-            }
+            
             //extraWords.SaveData();
-
-            // Scale to Vector3.one over 0.35 seconds.. Apply the OutBack easing function
-            levelComplete_Screen.GetChild(0).transform.DOScale(Vector3.one, 0.25f).OnComplete(() =>
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    int index = i; // Create a local copy of i
-                    DOVirtual.DelayedCall(0.1f * index, () =>
-                    {
-                        Transform star = levelComplete_Screen.GetChild(0).GetChild(index);
-                        star.transform.DOScale(Vector3.one, 0.25f);
-                    });
-                }
-            });
+            Coins_Gems_Text_Update();
             PlaySound(LevelComplete);
         });
     }
 
-    public void NextButton(int scene)
+    public void NextButton()
     {
         PlaySound(tap);
         if (Game_)
@@ -770,7 +813,7 @@ public class Game : MonoBehaviour
             {
                 PlayerPrefs.SetInt("SelectedLevel", PlayerPrefs.GetInt("SelectedLevel") + 1);
                 PlayerPrefs.SetInt("Count", PlayerPrefs.GetInt("Count") + 1);
-                SceneManager.LoadScene(scene);
+                SceneManager.LoadScene(1);
             }
             else
             {
@@ -852,6 +895,7 @@ public class Game : MonoBehaviour
             // Deduct coins and play sound
             Total_Coins -= coins;
             PlayerPrefs.SetInt("Coins", Total_Coins);
+            Coins_Gems_Text_Update();
             PlaySound(tap);
 
             // Create a DOTween sequence for the delayed hinting process
@@ -909,6 +953,7 @@ public class Game : MonoBehaviour
             // Deduct coins and play sound
             Total_Coins -= coins;
             PlayerPrefs.SetInt("Coins", Total_Coins);
+            Coins_Gems_Text_Update();
             PlaySound(tap);
 
             randomNumber = Random.Range(0,Cells_In_GNR.Count);
@@ -929,6 +974,7 @@ public class Game : MonoBehaviour
             // Deduct coins and play sound
             Total_Coins -= coins;
             PlayerPrefs.SetInt("Coins", Total_Coins);
+            Coins_Gems_Text_Update();
             PlaySound(tap);
 
             for (int i = 0; i < LineWords.Count; i++)
@@ -975,7 +1021,7 @@ public class Game : MonoBehaviour
                 randomNumber = Random.Range(0, Cells_In_GNR.Count);
                 CurrentFirstCell = Cells_In_GNR[randomNumber].GetComponent<Cell>(); // Get Cell component
 
-                // Activate the star for the first selection
+                // Activate the Star_PopUp for the first selection
                 CurrentFirstCell.Star.gameObject.SetActive(true);
                 TotalBadges--; // Decrease the number of available TotalBadges
             }
@@ -1054,7 +1100,93 @@ public class Game : MonoBehaviour
         preview.rectTransform.sizeDelta = new Vector2(newWidth, preview.rectTransform.sizeDelta.y);
     }
 
+    void Coins_Gems_Text_Update()
+    {
+        Total_Coins = PlayerPrefs.GetInt("Coins");
+        Total_Gems = PlayerPrefs.GetInt("Gems");
 
+        int currentCoins = int.Parse(coinsText.text);  // Get the current displayed coins
+        int currentGems = int.Parse(GemsText.text);    // Get the current displayed gems
+
+        // Animate Coins Count
+        DOVirtual.Int(currentCoins, Total_Coins, 1f, value =>
+        {
+            coinsText.text = value.ToString();
+            LevelCompleteCoins_Text.text = value.ToString();
+            StorePanel_.coinsText.text = value.ToString();
+        });
+
+        // Animate Gems Count
+        DOVirtual.Int(currentGems, Total_Gems, 1f, value =>
+        {
+            GemsText.text = value.ToString();
+            LevelCompleteGems_Text.text = value.ToString();
+            StorePanel_.GemsText.text = value.ToString();
+        });
+    }
+
+    void Store(bool Coins)
+    {
+        if (Coins)
+        {
+            StorePanel_.Coins1.SetActive(true);
+            StorePanel_.Coins2.SetActive(true);
+            StorePanel_.Coins3.SetActive(true);
+            StorePanel_.Coins4.SetActive(true);
+            StorePanel_.Gems1.SetActive(false);
+            StorePanel_.Gems2.SetActive(false);
+            StorePanel_.Gems3.SetActive(false);
+            StorePanel_.Gems4.SetActive(false);
+            StorePanel_.Gem1_Buy.SetActive(true);
+            StorePanel_.Gem2_Buy.SetActive(true);
+            StorePanel_.Gem3_Buy.SetActive(true);
+            StorePanel_.Gem4_Buy.SetActive(true);
+        }
+        else
+        {
+            StorePanel_.Coins1.SetActive(false);
+            StorePanel_.Coins2.SetActive(false);
+            StorePanel_.Coins3.SetActive(false);
+            StorePanel_.Coins4.SetActive(false);
+            StorePanel_.Gems1.SetActive(true);
+            StorePanel_.Gems2.SetActive(true);
+            StorePanel_.Gems3.SetActive(true);
+            StorePanel_.Gems4.SetActive(true);
+            StorePanel_.Gem1_Buy.SetActive(false);
+            StorePanel_.Gem2_Buy.SetActive(false);
+            StorePanel_.Gem3_Buy.SetActive(false);
+            StorePanel_.Gem4_Buy.SetActive(false);
+        }
+    }
+
+    public void Store_Btn(bool Gems)
+    {
+        Timer=false;
+        if (Gems)
+        {
+            // Animate position of Coins_Btn
+            StorePanel_.Coins_Btn.DOAnchorPos(new Vector2(-220, -270), 0.5f).SetEase(Ease.OutQuad);
+            // Animate position of Gems_Btn
+            StorePanel_.Gems_Btn.DOAnchorPos(new Vector2(220, -259), 0.5f).SetEase(Ease.OutQuad);
+            // Animate scale of Coins_Btn
+            StorePanel_.Coins_Btn.transform.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.5f).SetEase(Ease.OutBack);
+            // Animate scale of Gems_Btn
+            StorePanel_.Gems_Btn.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+            Store(false);
+        }
+        else
+        {
+            // Animate position of Coins_Btn
+            StorePanel_.Coins_Btn.DOAnchorPos(new Vector2(-220, -259), 0.5f).SetEase(Ease.OutQuad);
+            // Animate position of Gems_Btn
+            StorePanel_.Gems_Btn.DOAnchorPos(new Vector2(220, -270), 0.5f).SetEase(Ease.OutQuad);
+            // Animate scale of Coins_Btn
+            StorePanel_.Coins_Btn.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+            // Animate scale of Gems_Btn
+            StorePanel_.Gems_Btn.transform.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.5f).SetEase(Ease.OutBack);
+            Store(true);
+        }
+    }
 
     #endregion
 

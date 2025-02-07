@@ -36,7 +36,7 @@ public class Cell : MonoBehaviour
     [SerializeField] private ParticleSystem Effect;
     [SerializeField] private ParticleSystem hintEffect;
 
-    [SerializeField] private Transform coin;
+    //[SerializeField] private Transform coin;
     [SerializeField] private Sprite Opacity, filled;
 
     public bool isOccupied;
@@ -78,7 +78,7 @@ public class Cell : MonoBehaviour
             Text.text = "";
             showText =false;
             Text.transform.localScale = Vector3.zero;
-            coin.localScale = Vector3.zero;
+            //coin.localScale = Vector3.zero;
             hint.localScale = Vector3.zero;
         }
     }
@@ -111,13 +111,13 @@ public class Cell : MonoBehaviour
             Text.transform.DOLocalMove(Vector3.zero, 0.25f);
             Text.transform.DOScale(Vector3.one, 0.25f).OnComplete(() =>
             {
-                coin.transform.DOScale(Vector3.one, 0.25f);
-                DOVirtual.DelayedCall(0.2f,() =>
-                {
-                    coin.transform.SetParent(coinHead);
-                    Game.Instance.PlaySound(Game.Instance.CoinCollect);
-                    coin.transform.DOLocalMove(Vector3.zero, 0.25f);
-                });
+                //coin.transform.DOScale(Vector3.one, 0.25f);
+                //DOVirtual.DelayedCall(0.2f,() =>
+                //{
+                //    coin.transform.SetParent(coinHead);
+                //    Game.Instance.PlaySound(Game.Instance.CoinCollect);
+                //    coin.transform.DOLocalMove(Vector3.zero, 0.25f);
+                //});
             });
             Effect.Play();
             showText = true;

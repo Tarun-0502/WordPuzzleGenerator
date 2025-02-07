@@ -28,6 +28,7 @@ public class ExtraWords : MonoBehaviour
     [SerializeField] TextMeshProUGUI WordsList;
 
     [SerializeField] const int ExtraWordsCollected = 5;
+    [SerializeField] Image fillBar;
 
     private string apiUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
@@ -227,6 +228,7 @@ public class ExtraWords : MonoBehaviour
         {
             WordsList.text += FoundedExtraWords[i]+" ";
         }
+        fillBar.fillAmount = (float)FoundedExtraWords.Count / ExtraWordsCollected;
     }
 
     void ExtraWords_Collected(List<string> words,int count)

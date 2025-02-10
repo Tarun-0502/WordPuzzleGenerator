@@ -74,12 +74,14 @@ public class GeneratePattern : MonoBehaviour
     [SerializeField] List<string> WordsNotAssigned = new List<string>(); 
 
     [SerializeField] int CurrentLevel;
+    [SerializeField] int BonusLevel_;
 
     private const int CellsPerRow = 9; // Define a constant for cells per row
 
     int RandomNumber;
 
     int lastNumber = 1;
+
 
     #endregion
 
@@ -114,8 +116,18 @@ public class GeneratePattern : MonoBehaviour
         List<char> characters = new List<char>();
 
         CurrentLevel = selectedLevel;
-        Levels.Instance.LoadLevelData("Levels","Level-"+selectedLevel);
-        gameLevels = Levels.Instance.levelWords;
+        BonusLevel_ = PlayerPrefs.GetInt("Bonus",60);
+
+        if (PlayerPrefs.GetInt("BonusLevel")==1)
+        {
+            BonusLevel.Instance.LoadLevelData( "Level-" +BonusLevel_);
+            gameLevels = BonusLevel.Instance.levelWords;
+        }
+        else
+        {
+            Levels.Instance.LoadLevelData( "Level-" + selectedLevel);
+            gameLevels = Levels.Instance.levelWords;
+        }
 
         if (gameLevels == null || gameLevels.Count == 0)
         {

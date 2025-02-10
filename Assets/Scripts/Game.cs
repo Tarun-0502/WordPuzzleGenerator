@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
@@ -16,6 +17,19 @@ public class StorePanel
     public GameObject Gem1_Buy,Gem2_Buy, Gem3_Buy, Gem4_Buy;
     public TextMeshProUGUI coinsText, GemsText;
     public RectTransform Gems_Btn, Coins_Btn;
+}
+
+[System.Serializable]
+public class Power_up
+{
+    public Transform hintPosition;
+    public Transform hintParent;
+    public Transform MultiHintPosition;
+    public Transform MultiHintParent;
+    public Transform SpotLightPosition;
+    public Transform SpotLightParent;
+    public Transform WordChainPosition;
+    public Transform WordChainParent;
 }
 
 public class Game : MonoBehaviour
@@ -67,6 +81,8 @@ public class Game : MonoBehaviour
 
     #endregion
 
+    [SerializeField] internal Power_up Power_up;
+
     [SerializeField] internal bool DailyChallenges,MissingLetters,Timer;
     [SerializeField] Cell CurrentFirstCell;
     [SerializeField] int TotalBadges = 3;
@@ -100,9 +116,9 @@ public class Game : MonoBehaviour
 
     [SerializeField] private int Total_Coins,Total_Gems;
     [SerializeField] private TextMeshProUGUI coinsText,GemsText,LevelCompleteCoins_Text,LevelCompleteGems_Text;
+    [SerializeField] private TextMeshProUGUI ExtraCoins_text, ExtraGems_Text;
     public Transform CoinPosition;
-    public Transform hintPosition;
-    public Transform hintParent;
+    
 
     [SerializeField] GameObject SettingsScreen;
 
@@ -130,7 +146,6 @@ public class Game : MonoBehaviour
     [SerializeField] Sprite[] NewYork; // Sprites for New York Theme
     [SerializeField] Sprite[] Tokyo; // Sprites for Tokyo Theme
     [SerializeField] Sprite[] Egypt; // Sprites for Egypt Theme
-    [SerializeField] Sprite[] Sydney; // Sprites for Sydney Theme
 
     [SerializeField] Sprite Sound_Onn, Sound_off,Music_onn,Music_Off;
     [SerializeField] Image Sound_Img, Music_Img;
@@ -151,38 +166,19 @@ public class Game : MonoBehaviour
     [SerializeField] Image Pop_Up_Panel, Pop_Up_Panel_Parent;
     [SerializeField] Sprite Star_PopUp, Missing_PopUp, Timer_PopUp;
 
+    [SerializeField] int bonusLevel;
+
     #endregion
 
+
+    [SerializeField] List<GameObject> Screens;
 
     #region METHODS
 
     void Start()
     {
-        int soundSetting = PlayerPrefs.GetInt("Sound", 1); // Default to 1 if not set
-        if (soundSetting == 1)
-        {
-            Sound_Img.sprite = Sound_Onn;
-            AudioSource.volume = 1;
-        }
-        else
-        {
-            Sound_Img.sprite = Sound_off;
-            AudioSource.volume = 0;
-        }
-        // Initialize Music Setting
-        int musicSetting = PlayerPrefs.GetInt("Music", 1); // Default to 1 if not set
-        if (musicSetting == 1)
-        {
-            Music_Img.sprite = Music_onn;
-            Music_Source.volume = 1; // Assuming MusicSource is the AudioSource for music
-        }
-        else
-        {
-            Music_Img.sprite = Music_Off;
-            Music_Source.volume = 0;
-        }
 
-
+        
         if (gameLevelWords==null)
         {
             gameLevelWords = FindObjectOfType<GameLevelWords>();
@@ -197,6 +193,9 @@ public class Game : MonoBehaviour
         {
             PlayerPrefs.SetInt("Gems", 10);
         }
+
+        
+        
 
         Total_Coins = PlayerPrefs.GetInt("Coins");
         Total_Gems = PlayerPrefs.GetInt("Gems");
@@ -266,9 +265,11 @@ public class Game : MonoBehaviour
 
         coinsText.text = Total_Coins.ToString();
         LevelCompleteCoins_Text.text = Total_Coins.ToString();
+        ExtraCoins_text.text = Total_Coins.ToString();
 
         GemsText.text = Total_Gems.ToString();
         LevelCompleteGems_Text.text = Total_Gems.ToString();
+        ExtraGems_Text.text = Total_Gems.ToString();
 
     }
 
@@ -295,7 +296,6 @@ public class Game : MonoBehaviour
           NewYork, // Theme for New York
           Tokyo,  // Theme for Tokyo
           Egypt, // Theme for Egypt
-          Sydney  // Theme for Sydney
         };
 
         // Define the theme names
@@ -396,6 +396,11 @@ public class Game : MonoBehaviour
             levelText.text = "LEVEL - " + Level.ToString();
             Level_Text_Settings.text = "LEVEL - " + Level.ToString();
         }
+        if (PlayerPrefs.GetInt("BonusLevel") ==1)
+        {
+            levelText.text = "BonusLevel";
+            Level_Text_Settings.text = "BonusLevel";
+        }
 
         for (int i = 0; i < characters.Count; i++)
         {
@@ -413,7 +418,7 @@ public class Game : MonoBehaviour
         TextPreview.text = CurrentWord;
         currentText(TextPreview.transform.parent.GetComponent<Image>(),maxLetters,CurrentWord);
         
-        if (!SettingsScreen.activeInHierarchy)
+        if (!Screens_Active(Screens))
         {
             Controls();
             if (Timer)
@@ -428,6 +433,13 @@ public class Game : MonoBehaviour
         }
         
     }
+
+    bool Screens_Active(List<GameObject> Screens)
+    {
+        // Check if all screens are active
+        return Screens.All(screen => screen.activeSelf);
+    }
+
 
     // Loads Game On Start...
     private void LoadGame()
@@ -538,7 +550,7 @@ public class Game : MonoBehaviour
             {
                 if (!word.GetComponent<LineWord>().AnswerChecked)
                 {
-                    word.GetComponent<LineWord>().Hint();
+                    word.GetComponent<LineWord>().Hint(Power_up.hintParent,Power_up.hintPosition);
                     PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") - coins);
                     Coins_Gems_Text_Update();
                     Debug.Log("HINT-CALLED");
@@ -813,12 +825,28 @@ public class Game : MonoBehaviour
             {
                 PlayerPrefs.SetInt("SelectedLevel", PlayerPrefs.GetInt("SelectedLevel") + 1);
                 PlayerPrefs.SetInt("Count", PlayerPrefs.GetInt("Count") + 1);
+                PlayerPrefs.SetInt("BonusLevel", 0);
                 SceneManager.LoadScene(1);
             }
             else
             {
-                SceneManager.LoadScene(0);
-                PlayerPrefs.SetInt("Count", 1);
+                if ((PlayerPrefs.GetInt("Count"))==5 && PlayerPrefs.GetInt("BonusLevel")==0)
+                {
+                    SceneManager.LoadScene(1);
+                    PlayerPrefs.SetInt("BonusLevel",1);
+                    PlayerPrefs.SetInt("Count", 1);
+                }
+                else
+                {
+                    SceneManager.LoadScene(0);
+                    PlayerPrefs.SetInt("Bonus", PlayerPrefs.GetInt("Bonus")+1);
+                    if (PlayerPrefs.GetInt("Bonus")>=60)
+                    {
+                        PlayerPrefs.SetInt("Bonus", 1);
+                    }
+                    PlayerPrefs.SetInt("Count", 1);
+                    PlayerPrefs.SetInt("BonusLevel", 0);
+                }
             }
         }
         else
@@ -910,7 +938,7 @@ public class Game : MonoBehaviour
                     int randomNumber = Random.Range(0, Cells_In_GNR.Count);
                     var selectedCell = Cells_In_GNR[randomNumber];
                     selectedCell.showText = true;
-                    selectedCell.Hint();
+                    selectedCell.Hint(Power_up.MultiHintParent,Power_up.MultiHintPosition);
                     selectedCell.ChangeColor(Game.Instance.colorCode);
 
                     // Remove the cell from the list to avoid duplication
@@ -984,7 +1012,7 @@ public class Game : MonoBehaviour
                     for (int j = 0; j < LineWords[i].GetComponent<LineWord>().Cells.Count; j++)
                     {
                         LineWords[i].GetComponent<LineWord>().Cells[j].GetComponent<Cell>().showText = true;
-                        LineWords[i].GetComponent<LineWord>().Cells[j].GetComponent<Cell>().Hint();
+                        LineWords[i].GetComponent<LineWord>().Cells[j].GetComponent<Cell>().Hint(Power_up.WordChainParent,Power_up.WordChainPosition);
                         LineWords[i].GetComponent<LineWord>().Cells[j].GetComponent<Cell>().ChangeColor(Game.Instance.colorCode);
                     }
                     LineWords[i].GetComponent<LineWord>().CheckAllCellsFilled();
@@ -1100,7 +1128,7 @@ public class Game : MonoBehaviour
         preview.rectTransform.sizeDelta = new Vector2(newWidth, preview.rectTransform.sizeDelta.y);
     }
 
-    void Coins_Gems_Text_Update()
+    public void Coins_Gems_Text_Update()
     {
         Total_Coins = PlayerPrefs.GetInt("Coins");
         Total_Gems = PlayerPrefs.GetInt("Gems");
@@ -1109,19 +1137,21 @@ public class Game : MonoBehaviour
         int currentGems = int.Parse(GemsText.text);    // Get the current displayed gems
 
         // Animate Coins Count
-        DOVirtual.Int(currentCoins, Total_Coins, 1f, value =>
+        DOVirtual.Int(currentCoins, Total_Coins, 0.75f, value =>
         {
             coinsText.text = value.ToString();
+            ExtraCoins_text.text = value.ToString();
             LevelCompleteCoins_Text.text = value.ToString();
             StorePanel_.coinsText.text = value.ToString();
         });
 
         // Animate Gems Count
-        DOVirtual.Int(currentGems, Total_Gems, 1f, value =>
+        DOVirtual.Int(currentGems, Total_Gems, 0.75f, value =>
         {
             GemsText.text = value.ToString();
             LevelCompleteGems_Text.text = value.ToString();
             StorePanel_.GemsText.text = value.ToString();
+            ExtraGems_Text.text = value.ToString();
         });
     }
 

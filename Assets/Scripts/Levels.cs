@@ -22,7 +22,7 @@ public class Levels : MonoBehaviour
     public List<string> levelWords = new List<string>(); // List to store the words
     public TextAsset levelText;
 
-    public void LoadLevelData(string fileName, string levelName)
+    public void LoadLevelData( string levelName)
     {
         // Load the text file as a TextAsset
         TextAsset textAsset = levelText;
@@ -58,10 +58,7 @@ public class Levels : MonoBehaviour
 
             Debug.LogWarning($"Level '{levelName}' not found or has no words!");
         }
-        else
-        {
-            Debug.LogError($"File '{fileName}' not found in Resources folder!");
-        }
+        
     }
 
 }

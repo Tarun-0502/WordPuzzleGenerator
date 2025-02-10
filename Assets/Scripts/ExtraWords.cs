@@ -27,8 +27,11 @@ public class ExtraWords : MonoBehaviour
     [SerializeField] GameObject ExtraWordsPanel;
     [SerializeField] TextMeshProUGUI WordsList;
 
-    [SerializeField] const int ExtraWordsCollected = 5;
+    [SerializeField] const int ExtraWordsCollected = 10;
+    [SerializeField] TextMeshProUGUI CurrentWords_Collected;
     [SerializeField] Image fillBar;
+
+    [SerializeField] List<Transform> Coins;
 
     private string apiUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
@@ -229,6 +232,10 @@ public class ExtraWords : MonoBehaviour
             WordsList.text += FoundedExtraWords[i]+" ";
         }
         fillBar.fillAmount = (float)FoundedExtraWords.Count / ExtraWordsCollected;
+        CurrentWords_Collected.text = FoundedExtraWords.Count +"/"+ExtraWordsCollected;
+
+        ExtraWords_Collected(FoundedExtraWords,ExtraWordsCollected);
+        Game.Instance.Coins_Gems_Text_Update();
     }
 
     void ExtraWords_Collected(List<string> words,int count)
@@ -236,6 +243,10 @@ public class ExtraWords : MonoBehaviour
         if (words.Count==count)
         {
             SaveExtraWords.ClearData();
+            foreach (var coin in Coins)
+            {
+                coin.gameObject.SetActive(true);
+            }
         }
     }
 

@@ -71,8 +71,8 @@ public class Cell : MonoBehaviour
             }
 
             coinHead = Game.Instance.CoinPosition;
-            hint = Game.Instance.hintPosition;
-            hintParent = Game.Instance.hintParent;
+            hint = Game.Instance.Power_up.hintPosition;
+            hintParent = Game.Instance.Power_up.hintParent;
             letter = character.ToString();
             isOccupied = true;
             Text.text = "";
@@ -151,9 +151,12 @@ public class Cell : MonoBehaviour
         Text.transform.DOShakePosition(duration: 1f, strength: new Vector3(5f, 0f, 0f), vibrato: 5, randomness: 10, snapping: false, fadeOut: true);
     }
 
-    public void Hint()
+    public void Hint(Transform Parent, Transform position)
     {
-       if (showText)
+        hint = position;
+        hintParent = Parent;
+
+        if (showText)
        {
             //PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins")-hintCoins);
             Text.text = letter;

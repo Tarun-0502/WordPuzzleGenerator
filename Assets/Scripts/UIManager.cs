@@ -29,6 +29,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] AudioSource AudioSource, Music_Source;
     [SerializeField] AudioClip buttonSound;
 
+    [SerializeField] TextMeshProUGUI Cityname, CityFact;
+    [SerializeField] List<Facts> Facts_;
+
+    [SerializeField] int FactsIndex;
+
     #endregion
 
     #region METHODS
@@ -49,6 +54,7 @@ public class UIManager : MonoBehaviour
         if (!PlayerPrefs.HasKey("HighestLevel"))
         {
             SaveExtraWords.ClearData();
+            PlayerPrefs.SetInt("Bonus", 1);
         }
         SetLevels(Content);
         Highestlevel = PlayerPrefs.GetInt("HighestLevel");
@@ -62,6 +68,12 @@ public class UIManager : MonoBehaviour
         {
             MainScreen.SetActive(true);
         }
+
+        FactsIndex = Random.Range(0, Facts_.Count);
+
+        Cityname.text = Facts_[FactsIndex].City_Name;
+        CityFact.text = Facts_[FactsIndex].City_Fact;
+        
     }
 
     public void Play()

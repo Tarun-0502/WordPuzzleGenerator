@@ -42,7 +42,6 @@ public class LineWord : MonoBehaviour
                     });
                 }
                 AnswerChecked = true;
-                //PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins")+5);
                 Game.Instance.PlaySound(Game.Instance.WordComplete);
                 Game.Instance.CompletedWords--;
                 if (Game.Instance.CompletedWords==0)
@@ -73,7 +72,7 @@ public class LineWord : MonoBehaviour
         }
     }
 
-    public void Hint()
+    public void Hint(Transform Parent , Transform position)
     {
         if (!AnswerChecked)
         {
@@ -89,7 +88,7 @@ public class LineWord : MonoBehaviour
                     {
                         var cell = t.GetComponent<Cell>();
                         cell.showText = true;
-                        cell.Hint();
+                        cell.Hint(Parent,position);
                         cell.ChangeColor(Game.Instance.colorCode);
                     });
                     break;
@@ -105,12 +104,9 @@ public class LineWord : MonoBehaviour
 
         foreach (Transform t in Cells)
         {
-            //Debug.Log(t.name + t.GetComponent<Cell>().showText);
             if (t.GetComponent<Cell>().showText)
             {
                 Filled_Cells_Count++;
-                //Debug.Log(t.name + Filled_Cells_Count);
-                //Debug.Log(t.name + t.GetComponent<Cell>().showText);
             }
         }
 
@@ -118,7 +114,6 @@ public class LineWord : MonoBehaviour
         if (Filled_Cells_Count == Cells.Count)
         {
             AnswerChecked = true;
-            PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + 5);
             Game.Instance.CompletedWords--;
 
             // Trigger level completion if all words are completed

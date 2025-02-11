@@ -156,7 +156,7 @@ public class Cell : MonoBehaviour
         hint = position;
         hintParent = Parent;
 
-        if (showText)
+       if (showText)
        {
             //PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins")-hintCoins);
             Text.text = letter;

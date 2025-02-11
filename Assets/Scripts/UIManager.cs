@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,6 +8,8 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+
 
 public class UIManager : MonoBehaviour
 {
@@ -29,10 +32,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] AudioSource AudioSource, Music_Source;
     [SerializeField] AudioClip buttonSound;
 
-    [SerializeField] TextMeshProUGUI Cityname, CityFact;
-    [SerializeField] List<Facts> Facts_;
-
     [SerializeField] int FactsIndex;
+
+    [SerializeField] StorePanel StorePanel_;
+    [SerializeField] List<TextMeshProUGUI> CoinsText;
+    [SerializeField] List<TextMeshProUGUI> GemsText;
+
+    [SerializeField] int Total_Coins, Total_Gems;
+
+    [SerializeField] NewFacts Paris, NewYork, Tokyo, Egypt;
+    [SerializeField] TextMeshProUGUI Cityname, CityFact;
 
     #endregion
 
@@ -49,6 +58,16 @@ public class UIManager : MonoBehaviour
         else
         {
             Music_Source.volume = 0;
+        }
+
+        if (!PlayerPrefs.HasKey("Coins"))
+        {
+            PlayerPrefs.SetInt("Coins", 50);
+        }
+
+        if (!PlayerPrefs.HasKey("Gems"))
+        {
+            PlayerPrefs.SetInt("Gems", 5);
         }
 
         if (!PlayerPrefs.HasKey("HighestLevel"))
@@ -69,11 +88,35 @@ public class UIManager : MonoBehaviour
             MainScreen.SetActive(true);
         }
 
-        FactsIndex = Random.Range(0, Facts_.Count);
+        Coins_Gems_Text_Update(false);
+    }
 
-        Cityname.text = Facts_[FactsIndex].City_Name;
-        CityFact.text = Facts_[FactsIndex].City_Fact;
-        
+    void Facts_()
+    {
+        int level_No = PlayerPrefs.GetInt("SelectedLevel", 1);
+
+        // List of theme objects (cyclic order)
+        List<NewFacts> themes = new List<NewFacts> { Paris, NewYork, Tokyo, Egypt};
+
+        // Determine the cyclic theme index (every 20 levels)
+        int themeIndex = ((level_No - 1) / 20) % themes.Count;
+        NewFacts activeTheme = themes[themeIndex];
+
+        // Update city name
+        Cityname.text = activeTheme.CityName;
+
+        // Determine fact index within the 20-level block
+        int factIndex = ((level_No - 1) % 20) / 5;
+
+        // Ensure the fact index is within bounds
+        if (factIndex < activeTheme.Facts.Count)
+        {
+            CityFact.text = activeTheme.Facts[factIndex];
+        }
+        else
+        {
+            CityFact.text = "No fact available!";
+        }
     }
 
     public void Play()
@@ -187,6 +230,7 @@ public class UIManager : MonoBehaviour
         Debug.LogWarning("SELECTED LEVEL - "+ current);
         PlayerPrefs.SetInt("SelectedLevel", current);
         LoadingScreen.SetActive(true);
+        Facts_();
         LoadSceneWithProgress("GameScene");
         //SceneManager.LoadScene(1);   
     }
@@ -198,7 +242,7 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator LoadSceneCoroutine(string sceneName)
     {
-        //yield return new WaitForSeconds(1.05f); 
+        yield return new WaitForSeconds(1f); 
         // Start loading the scene asynchronously
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneName);
         asyncOperation.allowSceneActivation = false; // Prevent automatic activation
@@ -218,53 +262,6 @@ public class UIManager : MonoBehaviour
             }
 
             yield return null;
-        }
-    }
-
-    private void LevelsUnlocked(int Levels)
-    {
-        position = 0;
-        for (int i = 0; i < Levels; i++)
-        {
-            Transform Level = levels[i];
-
-            // Add to position after every 5 iterations
-            if ((i + 1) % 5 == 0)
-            {
-                position += 3020;
-                Debug.Log(i + " POsition ");
-            }
-
-            if (i == Levels - 1)
-            {
-                RectTransform rectTransform = Content.GetComponent<RectTransform>();
-                if (rectTransform != null)
-                {
-                    // Use DOTween to animate anchoredPosition smoothly
-                    float y = rectTransform.anchoredPosition.y - position;
-                    rectTransform.DOAnchorPos(new Vector2(0, y), 1.2f).SetEase(Ease.OutQuad).OnComplete(() =>
-                    {
-                        // Animate the last level
-                        Level.transform.DOScale(Vector3.one, 0.35f).SetEase(Ease.OutQuad);
-                        Debug.Log(i + " - " + y);
-                        Debug.Log(rectTransform.anchoredPosition.y + position);
-                    });
-
-                    //// Animate the last level
-                    //Level.transform.DOScale(Vector3.one, 0.35f).SetEase(Ease.OutQuad).SetDelay(1.2f);
-                    //Debug.Log(i + " - " + y);
-                    //Debug.Log(rectTransform.anchoredPosition.y + position);
-                }
-                else
-                {
-                    Debug.LogError("Content does not have a RectTransform component!");
-                }
-            }
-            else
-            {
-                // No delay for other iterations
-                Level.transform.localScale = Vector3.one;
-            }
         }
     }
 
@@ -364,50 +361,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private IEnumerator DisplayTextLetterByLetter(int index)
-    {
-        if (index < ThemeNames.Count)
-        {
-            Transform level_1_ = Content.GetChild(index);
-
-            for (int i = 0;i<level_1_.childCount;i++)
-            {
-                Transform child_1_ = level_1_.GetChild(i);
-                // Scale animation with delay
-                float delay = i * 0.1f; // Adjust the delay time between each level scaling
-                child_1_.transform.DOScale(Vector3.one, 0.25f)
-                    .SetDelay(delay)
-                    .SetEase(Ease.OutQuad);
-            }
-        }
-
-        ThemeName.text = ThemeNames[index]; // Clear the initial text
-
-        string fullText = ThemeNames[index];
-        float totalDuration = 2.5f; // Total duration for displaying the text
-        float elapsedTime = 0f;
-
-        int currentCharIndex = 0; // Keeps track of the current character to display
-        while (currentCharIndex < fullText.Length)
-        {
-            // Calculate the target character index based on elapsed time
-            elapsedTime += Time.deltaTime;
-            int targetCharIndex = Mathf.FloorToInt((elapsedTime / totalDuration) * fullText.Length);
-
-            // Update the visible characters up to the target index
-            if (targetCharIndex > currentCharIndex)
-            {
-                currentCharIndex = targetCharIndex;
-                ThemeName.text = fullText.Substring(0, currentCharIndex); // Display the substring
-            }
-
-            yield return null; // Wait for the next frame
-        }
-
-        // Ensure the full text is displayed at the end
-        ThemeName.text = fullText;
-    }
-
     void Button_Sound()
     {
         AudioSource.clip = buttonSound;
@@ -425,6 +378,193 @@ public class UIManager : MonoBehaviour
         LoadingScreen.SetActive(true);
         LoadSceneWithProgress("DailyChallenge");
     }
+
+    public void Coins_Gems_Text_Update(bool anim = false)
+    {
+        Total_Coins = PlayerPrefs.GetInt("Coins");
+        Total_Gems = PlayerPrefs.GetInt("Gems");
+
+        int currentCoins = int.Parse(CoinsText[0].text);  // Get the current displayed coins
+        int currentGems = int.Parse(GemsText[0].text);    // Get the current displayed gems
+
+        if (anim)
+        {
+            // Animate Coins Count
+            DOVirtual.Int(currentCoins, Total_Coins, 0.75f, value =>
+            {
+                for (int i = 0;i<CoinsText.Count;i++)
+                {
+                    CoinsText[i].text = value.ToString();
+                }
+            });
+
+            // Animate Gems Count
+            DOVirtual.Int(currentGems, Total_Gems, 0.75f, value =>
+            {
+                for(int i = 0; i < GemsText.Count; i++)
+                {
+                    GemsText[i].text = value.ToString();
+                }
+            });
+        }
+        else
+        {
+            for (int i = 0; i < CoinsText.Count; i++)
+            {
+                CoinsText[i].text = Total_Coins.ToString();
+            }
+            for (int i = 0; i < GemsText.Count; i++)
+            {
+                GemsText[i].text = Total_Gems.ToString();
+            }
+        }
+    }
+
+    #region COINS,GEMS ADD AND REMOVE
+
+    public void AddCoins(int Count)
+    {
+        PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + Count);
+    }
+
+    public void AddGems(int Count)
+    {
+        PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") + Count);
+    }
+
+    public void RemoveCoins(int Count)
+    {
+        if (PlayerPrefs.GetInt("Coins") > Count)
+        {
+            PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") - Count);
+        }
+    }
+
+    public void RemoveGems(int Count)
+    {
+        if (PlayerPrefs.GetInt("Gems") > Count)
+        {
+            PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") - Count);
+        }
+    }
+
+    #endregion
+
+    #region StorePanel
+
+    void Store(bool Coins)
+    {
+        if (Coins)
+        {
+            foreach (var gem in StorePanel_.Gems)
+            {
+                gem.SetActive(false);
+            }
+            foreach (var coin in StorePanel_.Coins)
+            {
+                coin.SetActive(true);
+            }
+        }
+        else
+        {
+            foreach (var gem in StorePanel_.Gems)
+            {
+                gem.SetActive(true);
+            }
+            foreach (var coin in StorePanel_.Coins)
+            {
+                coin.SetActive(false);
+            }
+        }
+    }
+
+    public void Store_Btn(bool Gems)
+    {
+        if (Gems)
+        {
+            // Animate position of Coins_Btn
+            StorePanel_.Coins_Btn.DOAnchorPos(new Vector2(-220, -270), 0.5f).SetEase(Ease.OutQuad);
+            // Animate position of Gems_Btn
+            StorePanel_.Gems_Btn.DOAnchorPos(new Vector2(220, -259), 0.5f).SetEase(Ease.OutQuad);
+            // Animate scale of Coins_Btn
+            StorePanel_.Coins_Btn.transform.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.5f).SetEase(Ease.OutBack);
+            // Animate scale of Gems_Btn
+            StorePanel_.Gems_Btn.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+            Store(false);
+        }
+        else
+        {
+            // Animate position of Coins_Btn
+            StorePanel_.Coins_Btn.DOAnchorPos(new Vector2(-220, -259), 0.5f).SetEase(Ease.OutQuad);
+            // Animate position of Gems_Btn
+            StorePanel_.Gems_Btn.DOAnchorPos(new Vector2(220, -270), 0.5f).SetEase(Ease.OutQuad);
+            // Animate scale of Coins_Btn
+            StorePanel_.Coins_Btn.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+            // Animate scale of Gems_Btn
+            StorePanel_.Gems_Btn.transform.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.5f).SetEase(Ease.OutBack);
+            Store(true);
+        }
+    }
+
+    public void Move_Coins(Transform parent)
+    {
+        float delayIncrement = 0.2f; // Adjust for desired spacing
+        float duration = 0.5f;
+
+        int count = parent.childCount;
+        for (int i = 0; i < count; i++)
+        {
+            Transform coin = parent.GetChild(0);
+            coin.SetParent(StorePanel_.coin_rot);
+            coin.localScale = Vector3.zero;
+
+            // Scale animation with delay
+            coin.DOScale(Vector3.one, duration)
+                .SetDelay(i * delayIncrement);
+
+            // Move animation with delay
+            coin.DOMove(StorePanel_.coin_pos.position, duration)
+                .SetDelay(i * delayIncrement)
+                .OnComplete(() =>
+                {
+                    coin.localScale = Vector3.zero;
+                    coin.SetParent(parent);
+                    coin.SetAsFirstSibling();
+                    coin.localPosition = Vector3.zero;
+                });
+        }
+    }
+
+    public void Move_Gems(Transform parent)
+    {
+        float delayIncrement = 0.2f; // Adjust this value for spacing between animations
+        float duration = 0.5f;
+
+        int count = parent.childCount;
+        for (int i = 0; i < count; i++)
+        {
+            Transform gem = parent.GetChild(0);
+            gem.SetParent(StorePanel_.gem_rot);
+            gem.localScale = Vector3.zero;
+
+            // Scale animation
+            gem.DOScale(Vector3.one, duration)
+                .SetDelay(i * delayIncrement);
+
+            // Move animation
+            gem.DOLocalMove(StorePanel_.gem_pos.localPosition, duration)
+                .SetDelay(i * delayIncrement)
+                .OnComplete(() =>
+                {
+                    gem.localScale = Vector3.zero;
+                    gem.SetParent(parent);
+                    gem.SetAsFirstSibling();
+                    gem.localPosition = Vector3.zero;
+                });
+        }
+    }
+
+    #endregion
 
     #endregion
 }

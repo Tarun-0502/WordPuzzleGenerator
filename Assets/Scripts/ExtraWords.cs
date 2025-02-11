@@ -31,7 +31,10 @@ public class ExtraWords : MonoBehaviour
     [SerializeField] TextMeshProUGUI CurrentWords_Collected;
     [SerializeField] Image fillBar;
 
-    [SerializeField] List<Transform> Coins;
+    [SerializeField] Transform coin_rot, coin_pos;
+    [SerializeField] Transform gem_rot, gem_pos;
+
+    [SerializeField] Transform Gift;
 
     private string apiUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
@@ -234,8 +237,11 @@ public class ExtraWords : MonoBehaviour
         fillBar.fillAmount = (float)FoundedExtraWords.Count / ExtraWordsCollected;
         CurrentWords_Collected.text = FoundedExtraWords.Count +"/"+ExtraWordsCollected;
 
-        ExtraWords_Collected(FoundedExtraWords,ExtraWordsCollected);
-        Game.Instance.Coins_Gems_Text_Update();
+        if (FoundedExtraWords.Count == ExtraWordsCollected)
+        {
+            Gift.DOShakePosition(1, new Vector3(-14, 1, 1), 10, 90);
+        }
+
     }
 
     void ExtraWords_Collected(List<string> words,int count)
@@ -243,9 +249,41 @@ public class ExtraWords : MonoBehaviour
         if (words.Count==count)
         {
             SaveExtraWords.ClearData();
-            foreach (var coin in Coins)
+            Game.Instance.AddCoins(10);
+            Game.Instance.Coins_Gems_Text_Update(true);
+        }
+    }
+
+    public void Move_Coins(Transform parent)
+    {
+        ExtraWords_Collected(FoundedExtraWords, ExtraWordsCollected);
+
+        if (FoundedExtraWords.Count==ExtraWordsCollected)
+        {
+            float delayIncrement = 0.2f; // Adjust for desired spacing
+            float duration = 0.5f;
+
+            int count = parent.childCount;
+            for (int i = 0; i < count; i++)
             {
-                coin.gameObject.SetActive(true);
+                Transform coin = parent.GetChild(0);
+                coin.SetParent(coin_rot);
+                coin.localScale = Vector3.zero;
+
+                // Scale animation with delay
+                coin.DOScale(Vector3.one, duration)
+                    .SetDelay(i * delayIncrement);
+
+                // Move animation with delay
+                coin.DOMove(coin_pos.position, duration)
+                    .SetDelay(i * delayIncrement)
+                    .OnComplete(() =>
+                    {
+                        coin.localScale = Vector3.zero;
+                        coin.SetParent(parent);
+                        coin.SetAsFirstSibling();
+                        coin.localPosition = Vector3.zero;
+                    });
             }
         }
     }

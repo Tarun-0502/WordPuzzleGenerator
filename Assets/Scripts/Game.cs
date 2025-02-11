@@ -12,11 +12,10 @@ using UnityEngine.UI;
 public class StorePanel
 {
     public GameObject Root;
-    public GameObject Coins1, Coins2, Coins3, Coins4;
-    public GameObject Gems1, Gems2, Gems3, Gems4;
-    public GameObject Gem1_Buy,Gem2_Buy, Gem3_Buy, Gem4_Buy;
-    public TextMeshProUGUI coinsText, GemsText;
-    public RectTransform Gems_Btn, Coins_Btn;
+    public List<GameObject> Coins,Gems;
+    public RectTransform Coins_Btn, Gems_Btn;
+    public Transform coin_pos, coin_rot;
+    public Transform gem_pos,gem_rot;
 }
 
 [System.Serializable]
@@ -30,6 +29,19 @@ public class Power_up
     public Transform SpotLightParent;
     public Transform WordChainPosition;
     public Transform WordChainParent;
+}
+
+[System.Serializable]
+public class Coins_Gems_Text
+{
+    public TextMeshProUGUI coinsText;
+    public TextMeshProUGUI coinsText_LevelComplete;
+    public TextMeshProUGUI coinsText_Store;
+    public TextMeshProUGUI coinsText_Extra;
+    public TextMeshProUGUI gemsText;
+    public TextMeshProUGUI gemsText_LevelComplete;
+    public TextMeshProUGUI gemsText_Store;
+    public TextMeshProUGUI gemsText_Extra;
 }
 
 public class Game : MonoBehaviour
@@ -115,8 +127,8 @@ public class Game : MonoBehaviour
     private Transform CurrentLevelCircle;
 
     [SerializeField] private int Total_Coins,Total_Gems;
-    [SerializeField] private TextMeshProUGUI coinsText,GemsText,LevelCompleteCoins_Text,LevelCompleteGems_Text;
-    [SerializeField] private TextMeshProUGUI ExtraCoins_text, ExtraGems_Text;
+    //[SerializeField] private TextMeshProUGUI coinsText,GemsText,LevelCompleteCoins_Text,LevelCompleteGems_Text;
+    //[SerializeField] private TextMeshProUGUI ExtraCoins_text, ExtraGems_Text;
     public Transform CoinPosition;
     
 
@@ -170,6 +182,7 @@ public class Game : MonoBehaviour
 
     #endregion
 
+    [SerializeField] Coins_Gems_Text text_update;
 
     [SerializeField] List<GameObject> Screens;
 
@@ -177,24 +190,11 @@ public class Game : MonoBehaviour
 
     void Start()
     {
-
-        
         if (gameLevelWords==null)
         {
             gameLevelWords = FindObjectOfType<GameLevelWords>();
         }
 
-        if (!PlayerPrefs.HasKey("Coins"))
-        {
-            PlayerPrefs.SetInt("Coins",50);
-        }
-
-        if (!PlayerPrefs.HasKey("Gems"))
-        {
-            PlayerPrefs.SetInt("Gems", 10);
-        }
-
-        
         
 
         Total_Coins = PlayerPrefs.GetInt("Coins");
@@ -205,12 +205,7 @@ public class Game : MonoBehaviour
         lineRenderer = lineRe.GetComponent<LineRenderer>();
         lineRenderer.gameObject.SetActive(false);
 
-        if (NewFontAsset != null)
-        {
-            TextPreview.font = Incircle;
-            coinsText.font = NewFontAsset;
-            GemsText.font = NewFontAsset;
-        }
+        UpdateFont();
 
         if (!DailyChallenges)
         {
@@ -220,7 +215,6 @@ public class Game : MonoBehaviour
         LoadSavedData();
 
         //Coins_Gems_Text_Update();
-
 
         if (!Game_)
         {
@@ -263,13 +257,7 @@ public class Game : MonoBehaviour
         HighestLevel = PlayerPrefs.GetInt("HighestLevel");
         //CurrentLevel = PlayerPrefs.GetInt("SelectedLevel");
 
-        coinsText.text = Total_Coins.ToString();
-        LevelCompleteCoins_Text.text = Total_Coins.ToString();
-        ExtraCoins_text.text = Total_Coins.ToString();
-
-        GemsText.text = Total_Gems.ToString();
-        LevelCompleteGems_Text.text = Total_Gems.ToString();
-        ExtraGems_Text.text = Total_Gems.ToString();
+        Coins_Gems_Text_Update();
 
     }
 
@@ -440,7 +428,6 @@ public class Game : MonoBehaviour
         return Screens.All(screen => screen.activeSelf);
     }
 
-
     // Loads Game On Start...
     private void LoadGame()
     {
@@ -529,100 +516,9 @@ public class Game : MonoBehaviour
     }
 
     #region PAUSE SCREEN
-
     public void home()
     {
         SceneManager.LoadScene(0);
-    }
-
-    #endregion
-
-    #region Hint And Shuffle
-
-    public void GetHint(int coins)
-    {
-        PlaySound(tap);
-
-        if (Total_Coins >= coins)
-        {
-            // First foreach loop: Find the first uncompleted word and call Hint()
-            foreach (Transform word in LineWords)
-            {
-                if (!word.GetComponent<LineWord>().AnswerChecked)
-                {
-                    word.GetComponent<LineWord>().Hint(Power_up.hintParent,Power_up.hintPosition);
-                    PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") - coins);
-                    Coins_Gems_Text_Update();
-                    Debug.Log("HINT-CALLED");
-                    break; // Ensure only one word is processed
-                }
-            }
-
-            DOVirtual.DelayedCall(0.25f, () =>
-            {
-                // Second foreach loop: Check all cells for completion after the first loop
-                foreach (Transform word in LineWords)
-                {
-                    var lineWord = word.GetComponent<LineWord>();
-                    if (!lineWord.AnswerChecked)
-                    {
-                        lineWord.CheckAllCellsFilled();
-                    }
-                }
-            });
-
-        }
-        else
-        {
-            Debug.LogWarning("Not enough coins for a Hint!");
-        }
-    }
-
-    public void Shuffle()
-    {
-        Shuffele_Btn.interactable = false;
-        PlaySound(tap);
-        letters.Clear();
-        letterPositions.Clear();
-
-        // Collect letters and their initial positions
-        foreach (var letter in LettersUsedInLevel)
-        {
-            letters.Add(letter);
-            letterPositions.Add(letter.localPosition);
-        }
-
-        // Shuffle positions
-        List<Vector3> shuffledPositions = new List<Vector3>(letterPositions);
-        for (int i = 0; i < shuffledPositions.Count; i++)
-        {
-            int randomIndex = Random.Range(0, shuffledPositions.Count);
-            // Swap positions in the shuffled list
-            Vector3 temp = shuffledPositions[i];
-            shuffledPositions[i] = shuffledPositions[randomIndex];
-            shuffledPositions[randomIndex] = temp;
-        }
-
-        // Assign shuffled positions back to letters with delay and smooth movement
-        float delayBetweenMoves = 0.01f; // Delay between each move
-        float totalDelayTime = letters.Count * delayBetweenMoves + 0.5f; // Total time after the last move is done
-
-        for (int i = 0; i < letters.Count; i++)
-        {
-            int index = i; // Capture the current index for the delayed call
-            DOVirtual.DelayedCall(index * delayBetweenMoves, () =>
-            {
-                letters[index].transform
-                    .DOLocalMove(shuffledPositions[index], 0.5f) // Move to new position over 0.5 seconds
-                    .SetEase(Ease.InOutQuad); // Smooth easing
-            });
-        }
-
-        // Delay the button interaction enable after the last letter move
-        DOVirtual.DelayedCall(totalDelayTime, () =>
-        {
-            Shuffele_Btn.interactable = true; // Enable the shuffle button after all letters have moved
-        });
     }
 
     #endregion
@@ -788,10 +684,10 @@ public class Game : MonoBehaviour
                     HighestLevel = PlayerPrefs.GetInt("SelectedLevel");
 
                     PlayerPrefs.SetInt("HighestLevel", PlayerPrefs.GetInt("HighestLevel") + 1);
-                    PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + 50);
+                    AddCoins(50);
                     if (relativeLevel == 20)
                     {
-                        PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") + 5);
+                        AddGems(5);
                     }
                 }
             }
@@ -807,7 +703,7 @@ public class Game : MonoBehaviour
 
             
             //extraWords.SaveData();
-            Coins_Gems_Text_Update();
+            Coins_Gems_Text_Update(true);
             PlaySound(LevelComplete);
         });
     }
@@ -905,6 +801,92 @@ public class Game : MonoBehaviour
 
     #region POWER-UPS
 
+    public void GetHint(int coins)
+    {
+        PlaySound(tap);
+
+        if (Total_Coins >= coins)
+        {
+            // First foreach loop: Find the first uncompleted word and call Hint()
+            foreach (Transform word in LineWords)
+            {
+                if (!word.GetComponent<LineWord>().AnswerChecked)
+                {
+                    word.GetComponent<LineWord>().Hint(Power_up.hintParent, Power_up.hintPosition);
+                    RemoveCoins(coins);
+                    Coins_Gems_Text_Update(true);
+                    Debug.Log("HINT-CALLED");
+                    break; // Ensure only one word is processed
+                }
+            }
+
+            DOVirtual.DelayedCall(0.25f, () =>
+            {
+                // Second foreach loop: Check all cells for completion after the first loop
+                foreach (Transform word in LineWords)
+                {
+                    var lineWord = word.GetComponent<LineWord>();
+                    if (!lineWord.AnswerChecked)
+                    {
+                        lineWord.CheckAllCellsFilled();
+                    }
+                }
+            });
+
+        }
+        else
+        {
+            Debug.LogWarning("Not enough coins for a Hint!");
+        }
+    }
+
+    public void Shuffle()
+    {
+        Shuffele_Btn.interactable = false;
+        PlaySound(tap);
+        letters.Clear();
+        letterPositions.Clear();
+
+        // Collect letters and their initial positions
+        foreach (var letter in LettersUsedInLevel)
+        {
+            letters.Add(letter);
+            letterPositions.Add(letter.localPosition);
+        }
+
+        // Shuffle positions
+        List<Vector3> shuffledPositions = new List<Vector3>(letterPositions);
+        for (int i = 0; i < shuffledPositions.Count; i++)
+        {
+            int randomIndex = Random.Range(0, shuffledPositions.Count);
+            // Swap positions in the shuffled list
+            Vector3 temp = shuffledPositions[i];
+            shuffledPositions[i] = shuffledPositions[randomIndex];
+            shuffledPositions[randomIndex] = temp;
+        }
+
+        // Assign shuffled positions back to letters with delay and smooth movement
+        float delayBetweenMoves = 0.01f; // Delay between each move
+        float totalDelayTime = letters.Count * delayBetweenMoves + 0.5f; // Total time after the last move is done
+
+        for (int i = 0; i < letters.Count; i++)
+        {
+            int index = i; // Capture the current index for the delayed call
+            DOVirtual.DelayedCall(index * delayBetweenMoves, () =>
+            {
+                letters[index].transform
+                    .DOLocalMove(shuffledPositions[index], 0.5f) // Move to new position over 0.5 seconds
+                    .SetEase(Ease.InOutQuad); // Smooth easing
+            });
+        }
+
+        // Delay the button interaction enable after the last letter move
+        DOVirtual.DelayedCall(totalDelayTime, () =>
+        {
+            Shuffele_Btn.interactable = true; // Enable the shuffle button after all letters have moved
+        });
+    }
+
     public void Get_Multi_Hint(int coins)
     {
         get_UNRevealed();
@@ -921,9 +903,8 @@ public class Game : MonoBehaviour
         if (Total_Coins >= coins)
         {
             // Deduct coins and play sound
-            Total_Coins -= coins;
-            PlayerPrefs.SetInt("Coins", Total_Coins);
-            Coins_Gems_Text_Update();
+            RemoveCoins(coins);
+            Coins_Gems_Text_Update(true);
             PlaySound(tap);
 
             // Create a DOTween sequence for the delayed hinting process
@@ -979,9 +960,8 @@ public class Game : MonoBehaviour
         if (Total_Coins >= coins)
         {
             // Deduct coins and play sound
-            Total_Coins -= coins;
-            PlayerPrefs.SetInt("Coins", Total_Coins);
-            Coins_Gems_Text_Update();
+            RemoveCoins(coins);
+            Coins_Gems_Text_Update(true);
             PlaySound(tap);
 
             randomNumber = Random.Range(0,Cells_In_GNR.Count);
@@ -1000,9 +980,8 @@ public class Game : MonoBehaviour
         if (Total_Coins >= coins)
         {
             // Deduct coins and play sound
-            Total_Coins -= coins;
-            PlayerPrefs.SetInt("Coins", Total_Coins);
-            Coins_Gems_Text_Update();
+            RemoveCoins(coins);
+            Coins_Gems_Text_Update(true);
             PlaySound(tap);
 
             for (int i = 0; i < LineWords.Count; i++)
@@ -1128,70 +1107,127 @@ public class Game : MonoBehaviour
         preview.rectTransform.sizeDelta = new Vector2(newWidth, preview.rectTransform.sizeDelta.y);
     }
 
-    public void Coins_Gems_Text_Update()
+    public void Coins_Gems_Text_Update(bool anim=false)
     {
         Total_Coins = PlayerPrefs.GetInt("Coins");
         Total_Gems = PlayerPrefs.GetInt("Gems");
 
-        int currentCoins = int.Parse(coinsText.text);  // Get the current displayed coins
-        int currentGems = int.Parse(GemsText.text);    // Get the current displayed gems
+        int currentCoins = int.Parse(text_update.coinsText.text);  // Get the current displayed coins
+        int currentGems = int.Parse(text_update.gemsText.text);    // Get the current displayed gems
 
-        // Animate Coins Count
-        DOVirtual.Int(currentCoins, Total_Coins, 0.75f, value =>
+        if (anim)
         {
-            coinsText.text = value.ToString();
-            ExtraCoins_text.text = value.ToString();
-            LevelCompleteCoins_Text.text = value.ToString();
-            StorePanel_.coinsText.text = value.ToString();
-        });
+            // Animate Coins Count
+            DOVirtual.Int(currentCoins, Total_Coins, 0.75f, value =>
+            {
+               
+                text_update.coinsText.text = value.ToString();
+                text_update.coinsText_LevelComplete.text = value.ToString();
+                text_update.coinsText_Store.text = value.ToString();
+                text_update.coinsText_Extra.text = value.ToString();
+            });
 
-        // Animate Gems Count
-        DOVirtual.Int(currentGems, Total_Gems, 0.75f, value =>
+            // Animate Gems Count
+            DOVirtual.Int(currentGems, Total_Gems, 0.75f, value =>
+            {
+                
+                text_update.gemsText.text = value.ToString();
+                text_update.gemsText_LevelComplete.text = value.ToString();
+                text_update.gemsText_Store.text = value.ToString();
+                text_update.gemsText_Extra.text = value.ToString();
+            });
+        }
+        else
         {
-            GemsText.text = value.ToString();
-            LevelCompleteGems_Text.text = value.ToString();
-            StorePanel_.GemsText.text = value.ToString();
-            ExtraGems_Text.text = value.ToString();
-        });
+            text_update.coinsText.text= Total_Coins.ToString();
+            text_update.coinsText_LevelComplete.text= Total_Coins.ToString();
+            text_update.coinsText_Store.text= Total_Coins.ToString();
+            text_update.coinsText_Extra.text= Total_Coins.ToString();
+
+            text_update.gemsText.text = Total_Gems.ToString();
+            text_update.gemsText_LevelComplete.text = Total_Gems.ToString();
+            text_update.gemsText_Store.text = Total_Gems.ToString();
+            text_update.gemsText_Extra.text = Total_Gems.ToString();
+        }
     }
+
+    #region COINS,GEMS ADD AND REMOVE
+
+    public void AddCoins(int Count)
+    {
+        PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + Count);
+    }
+
+    public void AddGems(int Count)
+    {
+        PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") + Count);
+    }
+
+    public void RemoveCoins(int Count)
+    {
+        if (PlayerPrefs.GetInt("Coins") > 0)
+        {
+            PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") - Count);
+        }
+    }
+
+    public void RemoveGems(int Count)
+    {
+        if (PlayerPrefs.GetInt("Gems") > 0)
+        {
+            PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") - Count);
+        }
+    }
+
+    #endregion
+
+    public void UpdateFont()
+    {
+        if (NewFontAsset != null)
+        {
+            TextPreview.font = Incircle;
+            text_update.coinsText_LevelComplete.font = Incircle;
+            text_update.coinsText_Store.font = Incircle;
+            text_update.coinsText_Extra.font = Incircle;
+            text_update.coinsText.font = Incircle;
+            text_update.gemsText.font = Incircle;
+            text_update.gemsText_Store.font = Incircle;
+            text_update.gemsText_Extra.font = Incircle;
+            text_update.gemsText_LevelComplete.font = Incircle;
+        }
+    }
+
+    #region StorePanel
 
     void Store(bool Coins)
     {
         if (Coins)
         {
-            StorePanel_.Coins1.SetActive(true);
-            StorePanel_.Coins2.SetActive(true);
-            StorePanel_.Coins3.SetActive(true);
-            StorePanel_.Coins4.SetActive(true);
-            StorePanel_.Gems1.SetActive(false);
-            StorePanel_.Gems2.SetActive(false);
-            StorePanel_.Gems3.SetActive(false);
-            StorePanel_.Gems4.SetActive(false);
-            StorePanel_.Gem1_Buy.SetActive(true);
-            StorePanel_.Gem2_Buy.SetActive(true);
-            StorePanel_.Gem3_Buy.SetActive(true);
-            StorePanel_.Gem4_Buy.SetActive(true);
+            foreach (var gem in StorePanel_.Gems)
+            {
+                gem.SetActive(false);
+            }
+            foreach (var coin in StorePanel_.Coins)
+            {
+                coin.SetActive(true);
+            }
         }
         else
         {
-            StorePanel_.Coins1.SetActive(false);
-            StorePanel_.Coins2.SetActive(false);
-            StorePanel_.Coins3.SetActive(false);
-            StorePanel_.Coins4.SetActive(false);
-            StorePanel_.Gems1.SetActive(true);
-            StorePanel_.Gems2.SetActive(true);
-            StorePanel_.Gems3.SetActive(true);
-            StorePanel_.Gems4.SetActive(true);
-            StorePanel_.Gem1_Buy.SetActive(false);
-            StorePanel_.Gem2_Buy.SetActive(false);
-            StorePanel_.Gem3_Buy.SetActive(false);
-            StorePanel_.Gem4_Buy.SetActive(false);
+            foreach (var gem in StorePanel_.Gems)
+            {
+                gem.SetActive(true);
+            }
+            foreach (var coin in StorePanel_.Coins)
+            {
+                coin.SetActive(false);
+            }
         }
     }
 
     public void Store_Btn(bool Gems)
     {
-        Timer=false;
+        Timer = false;
         if (Gems)
         {
             // Animate position of Coins_Btn
@@ -1217,6 +1253,66 @@ public class Game : MonoBehaviour
             Store(true);
         }
     }
+
+    public void Move_Coins(Transform parent)
+    {
+        float delayIncrement = 0.2f; // Adjust for desired spacing
+        float duration = 0.5f;
+
+        int count = parent.childCount;
+        for (int i = 0; i < count; i++)
+        {
+            Transform coin = parent.GetChild(0);
+            coin.SetParent(StorePanel_.coin_rot);
+            coin.localScale = Vector3.zero;
+
+            // Scale animation with delay
+            coin.DOScale(Vector3.one, duration)
+                .SetDelay(i * delayIncrement);
+
+            // Move animation with delay
+            coin.DOMove(StorePanel_.coin_pos.position, duration)
+                .SetDelay(i * delayIncrement)
+                .OnComplete(() =>
+                {
+                    coin.localScale = Vector3.zero;
+                    coin.SetParent(parent);
+                    coin.SetAsFirstSibling();
+                    coin.localPosition = Vector3.zero;
+                });
+        }
+    }
+
+    public void Move_Gems(Transform parent)
+    {
+        float delayIncrement = 0.2f; // Adjust this value for spacing between animations
+        float duration = 0.5f;
+
+        int count = parent.childCount;
+        for (int i = 0; i < count; i++)
+        {
+            Transform gem = parent.GetChild(0);
+            gem.SetParent(StorePanel_.gem_rot);
+            gem.localScale = Vector3.zero;
+
+            // Scale animation
+            gem.DOScale(Vector3.one, duration)
+                .SetDelay(i * delayIncrement);
+
+            // Move animation
+            gem.DOLocalMove(StorePanel_.gem_pos.localPosition, duration)
+                .SetDelay(i * delayIncrement)
+                .OnComplete(() =>
+                {
+                    gem.localScale = Vector3.zero;
+                    gem.SetParent(parent);
+                    gem.SetAsFirstSibling();
+                    gem.localPosition = Vector3.zero;
+                });
+        }
+    }
+
+    #endregion
 
     #endregion
 

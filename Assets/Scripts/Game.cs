@@ -186,6 +186,8 @@ public class Game : MonoBehaviour
 
     [SerializeField] List<GameObject> Screens;
 
+    [SerializeField] RectTransform LevelTextBg_;
+
     #region METHODS
 
     void Start()
@@ -195,7 +197,19 @@ public class Game : MonoBehaviour
             gameLevelWords = FindObjectOfType<GameLevelWords>();
         }
 
-        
+        if (PlayerPrefs.GetInt("BonusLevel") == 1)
+        {
+            DOVirtual.DelayedCall(0.35f,() =>
+            {
+                LevelTextBg_.DOAnchorPos(new Vector2(13, -98), 0.5f);
+                LevelTextBg_.transform.DOScale(Vector3.one, 0.5f);
+            });
+        }
+        else
+        {
+            LevelTextBg_.DOAnchorPos(new Vector2(13, -98), 0f);
+            LevelTextBg_.transform.DOScale(Vector3.one, 0f);
+        }
 
         Total_Coins = PlayerPrefs.GetInt("Coins");
         Total_Gems = PlayerPrefs.GetInt("Gems");
@@ -671,6 +685,7 @@ public class Game : MonoBehaviour
             if (!Game_)
             {
                 PlayerPrefs.SetInt("DailyLevel",PlayerPrefs.GetInt("DailyLevel")+1);
+                PlayerPrefs.SetInt("DailyChallengeComplete", 1);
                 if (PlayerPrefs.GetInt("DailyLevel")>70)
                 {
                     PlayerPrefs.SetInt("DailyLevel", 1);
@@ -711,37 +726,57 @@ public class Game : MonoBehaviour
     public void NextButton()
     {
         PlaySound(tap);
-        if (Game_)
+
+        if (Game_) // Ensure Game_ is correctly defined elsewhere
         {
+            // Initialize "Count" if not already set
             if (!PlayerPrefs.HasKey("Count"))
             {
                 PlayerPrefs.SetInt("Count", 1);
             }
-            if (PlayerPrefs.GetInt("Count") < 5)
+
+            int count = PlayerPrefs.GetInt("Count");
+            int bonusLevel = PlayerPrefs.GetInt("BonusLevel");
+            int selectedLevel = PlayerPrefs.GetInt("SelectedLevel");
+            int bonus = PlayerPrefs.GetInt("Bonus", 0); // Default value 0
+
+            if (count < 5 && bonusLevel == 0)
             {
-                PlayerPrefs.SetInt("SelectedLevel", PlayerPrefs.GetInt("SelectedLevel") + 1);
-                PlayerPrefs.SetInt("Count", PlayerPrefs.GetInt("Count") + 1);
+                // Update PlayerPrefs BEFORE scene transition
+                PlayerPrefs.SetInt("SelectedLevel", selectedLevel + 1);
+                PlayerPrefs.SetInt("Count", count + 1);
                 PlayerPrefs.SetInt("BonusLevel", 0);
+
+                Debug.LogError("COUNT " + (count + 1));
                 SceneManager.LoadScene(1);
             }
             else
             {
-                if ((PlayerPrefs.GetInt("Count"))==5 && PlayerPrefs.GetInt("BonusLevel")==0)
+                if (count == 5 && bonusLevel == 0)
                 {
-                    SceneManager.LoadScene(1);
-                    PlayerPrefs.SetInt("BonusLevel",1);
+                   // Debug.LogError("Bonus-Level " + bonus);
+
+                    // Update PlayerPrefs BEFORE scene transition
+                    PlayerPrefs.SetInt("BonusLevel", 1);
                     PlayerPrefs.SetInt("Count", 1);
+
+                    SceneManager.LoadScene(1);
                 }
                 else
                 {
-                    SceneManager.LoadScene(0);
-                    PlayerPrefs.SetInt("Bonus", PlayerPrefs.GetInt("Bonus")+1);
-                    if (PlayerPrefs.GetInt("Bonus")>=60)
-                    {
-                        PlayerPrefs.SetInt("Bonus", 1);
-                    }
+                   // Debug.LogError("Bonus-Completed " + bonus);
+
+                    // Update PlayerPrefs BEFORE scene transition
+                    PlayerPrefs.SetInt("Bonus", bonus + 1);
                     PlayerPrefs.SetInt("Count", 1);
                     PlayerPrefs.SetInt("BonusLevel", 0);
+
+                    if (PlayerPrefs.GetInt("Bonus") >= 60)
+                    {
+                        PlayerPrefs.SetInt("Bonus", 0); // Reset to 0 instead of 1
+                    }
+
+                    SceneManager.LoadScene(0);
                 }
             }
         }
@@ -750,6 +785,7 @@ public class Game : MonoBehaviour
             SceneManager.LoadScene(0);
         }
     }
+
 
     #endregion
 
@@ -1155,11 +1191,13 @@ public class Game : MonoBehaviour
 
     public void AddCoins(int Count)
     {
+        Debug.LogError("COINS " + Count);
         PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + Count);
     }
 
     public void AddGems(int Count)
     {
+        Debug.LogError("GEMS " + Count);
         PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") + Count);
     }
 

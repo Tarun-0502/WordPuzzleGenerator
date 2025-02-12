@@ -99,7 +99,7 @@ public class GeneratePattern : MonoBehaviour
         {
             //Normal Levels...
             Chooselevel(PlayerPrefs.GetInt("SelectedLevel", 1));
-           // Chooselevel(CurrentLevel);
+            //Chooselevel(CurrentLevel);
         }
         else
         {
@@ -116,7 +116,7 @@ public class GeneratePattern : MonoBehaviour
         List<char> characters = new List<char>();
 
         CurrentLevel = selectedLevel;
-        BonusLevel_ = PlayerPrefs.GetInt("Bonus",60);
+        BonusLevel_ = PlayerPrefs.GetInt("Bonus");
 
         if (PlayerPrefs.GetInt("BonusLevel")==1)
         {

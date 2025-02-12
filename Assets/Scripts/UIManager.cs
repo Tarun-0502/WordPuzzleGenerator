@@ -1,5 +1,6 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -45,6 +46,17 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
+    #region SINGLETON
+
+    public static UIManager Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    #endregion
+
     #region METHODS
 
     void Start()
@@ -81,7 +93,6 @@ public class UIManager : MonoBehaviour
         {
             LevelSelectionScreen.SetActive(true);
             Play();
-            PlayerPrefs.SetInt("Count", 0);
         }
         else
         {
@@ -122,104 +133,167 @@ public class UIManager : MonoBehaviour
     public void Play()
     {
         //LevelsUnlocked(Highestlevel+1);
-        LevelWasLoaded(Highestlevel + 1);
+        //LevelWasLoaded(Highestlevel + 1);
         Button_Sound();
         //LevelWasLoaded(300);
     }
 
+    //public void SetLevels(Transform levelsParent)
+    //{
+    //    int levelIndex = 1;
+    //   /* for (int i = 0; i < levelsParent.childCount; i++)
+    //    {
+    //        Transform Level = levelsParent.GetChild(i);
+    //        if (Level != null)
+    //        {
+    //            for (int j = 0; j < Level.childCount; j++)
+    //            {
+    //                Transform Theme = Level.GetChild(j);
+    //                if (Theme != null)
+    //                {
+    //                    for (int k = 0; k < Theme.childCount; k++)
+    //                    {
+    //                        Transform Line = Theme.GetChild(k);
+    //                        if (Line != null)
+    //                        {
+    //                            for (int l = 0; l < Line.childCount; l++)
+    //                            {
+    //                                Transform child = Line.GetChild(l);
+    //                                child.localScale = Vector3.zero;
+    //                                levels.Add(child);
+    //                                if (child != null)
+    //                                {
+    //                                    // Set the name of the GameObject
+    //                                    child.gameObject.name = "Level" + levelIndex;
+
+    //                                    // Capture the current levelIndex in a local variable
+    //                                    int currentLevelIndex = levelIndex;
+
+    //                                    // Set the button's onClick listener
+    //                                    Button button = child.GetComponent<Button>();
+    //                                    if (button != null)
+    //                                    {
+    //                                        button.onClick.AddListener(() => Chooselevel(currentLevelIndex));
+    //                                    }
+
+    //                                    // Set the text of the child
+    //                                    TextMeshProUGUI text = child.GetChild(0).GetComponent<TextMeshProUGUI>();
+    //                                    if (text != null)
+    //                                    {
+    //                                        text.text = levelIndex.ToString();
+    //                                    }
+
+    //                                    // Increment the levelIndex
+    //                                    levelIndex++;
+    //                                }
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }*/
+
+    //    for (int i = 0;i < levelsParent.childCount; i++) 
+    //    {
+    //        Transform transform = levelsParent.GetChild(i).transform;
+    //        if (transform != null)
+    //        {
+    //            for (int j = 0; j < transform.childCount; j++)
+    //            {
+    //                Transform child = transform.GetChild(j);
+    //                child.localScale = Vector3.zero;
+    //                levels.Add(child);
+    //                if (child != null)
+    //                {
+    //                    // Set the name of the GameObject
+    //                    child.gameObject.name = "Level" + levelIndex;
+
+    //                    // Capture the current levelIndex in a local variable
+    //                    int currentLevelIndex = levelIndex;
+
+    //                    // Set the button's onClick listener
+    //                    Button button = child.GetComponent<Button>();
+    //                    if (button != null)
+    //                    {
+    //                        button.onClick.AddListener(() => Chooselevel(currentLevelIndex));
+    //                    }
+
+    //                    // Set the text of the child
+    //                    TextMeshProUGUI text = child.GetChild(1).GetComponent<TextMeshProUGUI>();
+    //                    if (text != null)
+    //                    {
+    //                        text.text = levelIndex.ToString();
+    //                    }
+
+    //                    // Increment the levelIndex
+    //                    levelIndex++;
+    //                }
+    //            }
+    //        }
+    //    }
+
+    //}
+
     public void SetLevels(Transform levelsParent)
     {
         int levelIndex = 1;
-       /* for (int i = 0; i < levelsParent.childCount; i++)
-        {
-            Transform Level = levelsParent.GetChild(i);
-            if (Level != null)
-            {
-                for (int j = 0; j < Level.childCount; j++)
-                {
-                    Transform Theme = Level.GetChild(j);
-                    if (Theme != null)
-                    {
-                        for (int k = 0; k < Theme.childCount; k++)
-                        {
-                            Transform Line = Theme.GetChild(k);
-                            if (Line != null)
-                            {
-                                for (int l = 0; l < Line.childCount; l++)
-                                {
-                                    Transform child = Line.GetChild(l);
-                                    child.localScale = Vector3.zero;
-                                    levels.Add(child);
-                                    if (child != null)
-                                    {
-                                        // Set the name of the GameObject
-                                        child.gameObject.name = "Level" + levelIndex;
 
-                                        // Capture the current levelIndex in a local variable
-                                        int currentLevelIndex = levelIndex;
-
-                                        // Set the button's onClick listener
-                                        Button button = child.GetComponent<Button>();
-                                        if (button != null)
-                                        {
-                                            button.onClick.AddListener(() => Chooselevel(currentLevelIndex));
-                                        }
-
-                                        // Set the text of the child
-                                        TextMeshProUGUI text = child.GetChild(0).GetComponent<TextMeshProUGUI>();
-                                        if (text != null)
-                                        {
-                                            text.text = levelIndex.ToString();
-                                        }
-
-                                        // Increment the levelIndex
-                                        levelIndex++;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
-
-        for (int i = 0;i < levelsParent.childCount; i++) 
+        for (int i = 0; i < levelsParent.childCount; i++)
         {
             Transform transform = levelsParent.GetChild(i).transform;
             if (transform != null)
             {
                 for (int j = 0; j < transform.childCount; j++)
                 {
+                    int currentLevelIndex = levelIndex;
                     Transform child = transform.GetChild(j);
-                    child.localScale = Vector3.zero;
                     levels.Add(child);
-                    if (child != null)
+                    child.name = "Level" + levelIndex;
+                    // Set the button's onClick listener
+                    Button button = child.GetComponent<Button>();
+                    if (button != null)
                     {
-                        // Set the name of the GameObject
-                        child.gameObject.name = "Level" + levelIndex;
-
-                        // Capture the current levelIndex in a local variable
-                        int currentLevelIndex = levelIndex;
-
-                        // Set the button's onClick listener
-                        Button button = child.GetComponent<Button>();
-                        if (button != null)
-                        {
-                            button.onClick.AddListener(() => Chooselevel(currentLevelIndex));
-                        }
-
-                        // Set the text of the child
-                        TextMeshProUGUI text = child.GetChild(1).GetComponent<TextMeshProUGUI>();
-                        if (text != null)
-                        {
-                            text.text = levelIndex.ToString();
-                        }
-
-                        // Increment the levelIndex
-                        levelIndex++;
+                        button.onClick.AddListener(() => Chooselevel(currentLevelIndex));
                     }
+                    child.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = levelIndex.ToString();
+                    levelIndex++;
                 }
             }
+            //if (transform != null)
+            //{
+            //    for (int j = 0; j < transform.childCount; j++)
+            //    {
+            //        Transform child = transform.GetChild(j);
+            //        child.localScale = Vector3.zero;
+            //        levels.Add(child);
+            //        if (child != null)
+            //        {
+            //            // Set the name of the GameObject
+            //            child.gameObject.name = "Level" + levelIndex;
+
+            //            // Capture the current levelIndex in a local variable
+            //            int currentLevelIndex = levelIndex;
+
+            //            // Set the button's onClick listener
+            //            Button button = child.GetComponent<Button>();
+            //            if (button != null)
+            //            {
+            //                button.onClick.AddListener(() => Chooselevel(currentLevelIndex));
+            //            }
+
+            //            // Set the text of the child
+            //            TextMeshProUGUI text = child.GetChild(1).GetComponent<TextMeshProUGUI>();
+            //            if (text != null)
+            //            {
+            //                text.text = levelIndex.ToString();
+            //            }
+
+            //            // Increment the levelIndex
+            //            levelIndex++;
+            //        }
+            //    }
+            //}
         }
 
     }
@@ -242,7 +316,7 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator LoadSceneCoroutine(string sceneName)
     {
-        yield return new WaitForSeconds(1f); 
+        yield return new WaitForSeconds(3f);
         // Start loading the scene asynchronously
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneName);
         asyncOperation.allowSceneActivation = false; // Prevent automatic activation
@@ -284,7 +358,7 @@ public class UIManager : MonoBehaviour
             //    .SetDelay(delay)
             //    .SetEase(Ease.OutQuad);
         }
-        Display(0);
+        //Display(0);
         //StartCoroutine(DisplayTextLetterByLetter(0));
     }
 
@@ -367,16 +441,42 @@ public class UIManager : MonoBehaviour
         AudioSource.Play();
     }
 
-    public void DailyChallenges(int current)
+    public void DailyChallenges()
     {
         Button_Sound();
-        PlayerPrefs.SetInt("Daily", current);
-        if (!PlayerPrefs.HasKey("DailyLevel"))
+
+        // Ensure the key exists (fixed spelling mistake)
+        if (!PlayerPrefs.HasKey("DailyChallengeComplete"))
         {
-            PlayerPrefs.SetInt("DailyLevel",1);
+            PlayerPrefs.SetInt("DailyChallengeComplete", 0);
         }
-        LoadingScreen.SetActive(true);
-        LoadSceneWithProgress("DailyChallenge");
+
+        // Reset challenge status if it's a new day
+        if (PlayerPrefs.GetInt("LastActiveDay") != DateTime.Now.DayOfYear)
+        {
+            PlayerPrefs.SetInt("DailyChallengeComplete", 0);
+            PlayerPrefs.Save(); // Ensure changes persist
+        }
+
+        // If the challenge is not completed, proceed
+        if (PlayerPrefs.GetInt("DailyChallengeComplete") == 0)
+        {
+            PlayerPrefs.SetInt("LastActiveDay", DateTime.Now.DayOfYear);
+            PlayerPrefs.Save(); // Save to ensure persistence
+
+            // Get the current day of the year
+            int dayOfYear = DateTime.Now.DayOfYear;
+
+            // Cycle Current_Day in the pattern 1 → 2 → 3 → 1 → 2 → 3
+            int Current_Day = ((dayOfYear - 1) % 3) + 1;
+
+            PlayerPrefs.SetInt("Daily", Current_Day);
+            PlayerPrefs.Save(); // Save the current day's challenge
+
+            // Start loading the daily challenge
+            LoadingScreen.SetActive(true);
+            LoadSceneWithProgress("DailyChallenge");
+        }
     }
 
     public void Coins_Gems_Text_Update(bool anim = false)
@@ -390,7 +490,7 @@ public class UIManager : MonoBehaviour
         if (anim)
         {
             // Animate Coins Count
-            DOVirtual.Int(currentCoins, Total_Coins, 0.75f, value =>
+            DOVirtual.Int(currentCoins, Total_Coins, 1.75f, value =>
             {
                 for (int i = 0;i<CoinsText.Count;i++)
                 {
@@ -399,7 +499,7 @@ public class UIManager : MonoBehaviour
             });
 
             // Animate Gems Count
-            DOVirtual.Int(currentGems, Total_Gems, 0.75f, value =>
+            DOVirtual.Int(currentGems, Total_Gems, 1.75f, value =>
             {
                 for(int i = 0; i < GemsText.Count; i++)
                 {
@@ -425,11 +525,13 @@ public class UIManager : MonoBehaviour
     public void AddCoins(int Count)
     {
         PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + Count);
+        Coins_Gems_Text_Update(true);
     }
 
     public void AddGems(int Count)
     {
         PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") + Count);
+        Coins_Gems_Text_Update(true);
     }
 
     public void RemoveCoins(int Count)
@@ -438,6 +540,7 @@ public class UIManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") - Count);
         }
+        Coins_Gems_Text_Update(true);
     }
 
     public void RemoveGems(int Count)
@@ -446,6 +549,7 @@ public class UIManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") - Count);
         }
+        Coins_Gems_Text_Update(true);
     }
 
     #endregion

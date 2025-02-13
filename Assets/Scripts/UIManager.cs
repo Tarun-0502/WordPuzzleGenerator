@@ -107,7 +107,7 @@ public class UIManager : MonoBehaviour
         int level_No = PlayerPrefs.GetInt("SelectedLevel", 1);
 
         // List of theme objects (cyclic order)
-        List<NewFacts> themes = new List<NewFacts> { Paris, NewYork, Tokyo, Egypt};
+        List<NewFacts> themes = new List<NewFacts> { Paris, Egypt, NewYork, Tokyo };
 
         // Determine the cyclic theme index (every 20 levels)
         int themeIndex = ((level_No - 1) / 20) % themes.Count;

@@ -295,19 +295,18 @@ public class Game : MonoBehaviour
         List<Sprite[]> themes = new List<Sprite[]>
         {
           Paris,  // Theme for Paris
+          Egypt, // Theme for Egypt
           NewYork, // Theme for New York
           Tokyo,  // Theme for Tokyo
-          Egypt, // Theme for Egypt
         };
 
         // Define the theme names
         List<string> themeNames = new List<string>
         {
           "Paris",
+          "Egypt",
           "New York",
           "Tokyo",
-          "Egypt",
-          "Sydney"
          };
 
         // Determine the cyclic theme index

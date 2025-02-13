@@ -1,0 +1,179 @@
+Level-1 
+PARIS
+
+Level-2 
+SEINE
+
+Level-3 
+LOVE, OWL
+
+Level-4 
+TOWER, WORE
+
+Level-5 
+EIFFEL, FILE, FEEL
+
+Level-6 
+ART, RAT, TAR
+
+Level-7 
+FRENCH, CHEF, REF
+
+Level-8 
+METRO, MORE, TERM
+
+Level-9 
+LOUVRE, LOVE, RULE
+
+Level-10 
+MONA, MOAN, MAN
+
+Level-11 
+SEINE, LINE, NINE, SINE
+
+Level-12 
+AMOUR, ARM, RUM, ROAM
+
+Level-13 
+FLEUR, RULE, ELF, RUE
+
+Level-14 
+CITY, TIC, IT, TINY
+
+Level-15 
+EIFFEL, FILE, FLEE, LIFE, FEEL
+
+Level-16 
+NILE, LINE, NIL
+
+Level-17 
+GIZA, GAZE
+
+Level-18 
+SAND, DNA
+
+Level-19 
+TEMPLE, PET, LET
+
+Level-20 
+PHARAOH, PAR, ROAR
+
+Level-21 
+SPHINX, SPIN, PIN
+
+Level-22 
+MUMMY, UM, YUM
+
+Level-23 
+ANKH, HAN
+
+Level-24 
+OBELISK, BEL, LOB
+
+Level-25 
+DESERT, REST, SET, RED
+
+Level-26 
+CAIRO, AIR, ARC
+
+Level-27 
+LUXOR, LUX, OUR
+
+Level-28 
+SCARAB, SCAR, BAR, CAR
+
+Level-29 
+PYRAMID, DRIP, RAP, PRIM
+
+Level-30 
+SUEZ, USE, ZUE, SUE
+
+Level-31 
+NEWYORK, WON, NEW
+
+Level-32 
+HUDSON, SON
+
+Level-33 
+BIG, BIN
+
+Level-34 
+BRIDGE, GRID
+
+Level-35 
+STATUE, STATE, TEA
+
+Level-36 
+SKYLINE, SKY, LINE
+
+Level-37 
+TIMES, MET, ITEM, SIT
+
+Level-38 
+CITY, TIC, IT, TINY
+
+Level-39 
+WALL, LAW, WAIL
+
+Level-40 
+BROOK, BOOK, BOO, ROB, ROOK
+
+Level-41 
+PLAZA, ZAP, PAL
+
+Level-42 
+LIGHTS, LIST, SIGHT, LIT
+
+Level-43 
+NIGHT, GIN, HIT, TIN
+
+Level-44 
+BRIDGE, DIG, BED, GRID
+
+Level-45 
+PARK, ARK, RAP, PAR, PACK
+
+Level-46 
+TOKYO
+
+Level-47 
+SUSHI, FISH
+
+Level-48 
+ZEN, NET
+
+Level-49 
+SHRINE, SIN
+
+Level-50 
+CHERRY, CRY, HER
+
+Level-51 
+KIMONO, MONO, INK
+
+Level-52 
+GEISHA, SHE, SEA, GAS
+
+Level-53 
+NINJA, NAN, JAN, ANI
+
+Level-54 
+SUMO, MUS, MO
+
+Level-55 
+RISING, RIG, SING, SIGN, GRIN
+
+Level-56 
+TEMPLE, PET, MELT, MET, LET
+
+Level-57 
+SAMURAI, SAM, RAM, ARM
+
+Level-58 
+BLOSSOM, LOSS, SOB, BOOM
+
+Level-59 
+KABUKI, KAB, BUCK
+
+Level-60 
+CHERRY, CHEER, HER, RYE, CRY

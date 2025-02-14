@@ -1,179 +1,239 @@
-Level-1 
-PARIS
-
-Level-2 
-SEINE
-
-Level-3 
-LOVE, OWL
-
-Level-4 
-TOWER, WORE
-
-Level-5 
-EIFFEL, FILE, FEEL
-
-Level-6 
+Level-1
 ART, RAT, TAR
 
-Level-7 
-FRENCH, CHEF, REF
+Level-2
+SEINE, LINE, NINE
 
-Level-8 
-METRO, MORE, TERM
+Level-3
+EIFFEL, FILE, LIFE
 
-Level-9 
-LOUVRE, LOVE, RULE
+Level-4
+LOUVRE, LOVE, ROVE
 
-Level-10 
-MONA, MOAN, MAN
+Level-5
+PYRAMID, DRIP, RAP
 
-Level-11 
-SEINE, LINE, NINE, SINE
+Level-6
+SPHINX, PIN, SPIN
 
-Level-12 
-AMOUR, ARM, RUM, ROAM
-
-Level-13 
-FLEUR, RULE, ELF, RUE
-
-Level-14 
-CITY, TIC, IT, TINY
-
-Level-15 
-EIFFEL, FILE, FLEE, LIFE, FEEL
-
-Level-16 
+Level-7
 NILE, LINE, NIL
 
-Level-17 
-GIZA, GAZE
+Level-8
+DESERT, REST, RED
 
-Level-18 
-SAND, DNA
+Level-9
+BIG, GIB, BIN
 
-Level-19 
-TEMPLE, PET, LET
+Level-10
+BEN, BE, EN
 
-Level-20 
-PHARAOH, PAR, ROAR
+Level-11
+PALACE, LACE, PLACE
 
-Level-21 
-SPHINX, SPIN, PIN
+Level-12
+QUEEN, EON, NEE 
+ 
+Level-13
+SUSHI, FISH, HIS
 
-Level-22 
-MUMMY, UM, YUM
+Level-14
+KIMONO, INK, MONO
 
-Level-23 
-ANKH, HAN
+Level-15
+TEMPLE, PET, MET
 
-Level-24 
-OBELISK, BEL, LOB
-
-Level-25 
-DESERT, REST, SET, RED
-
-Level-26 
-CAIRO, AIR, ARC
-
-Level-27 
-LUXOR, LUX, OUR
-
-Level-28 
-SCARAB, SCAR, BAR, CAR
-
-Level-29 
-PYRAMID, DRIP, RAP, PRIM
-
-Level-30 
-SUEZ, USE, ZUE, SUE
-
-Level-31 
-NEWYORK, WON, NEW
-
-Level-32 
-HUDSON, SON
-
-Level-33 
-BIG, BIN
-
-Level-34 
-BRIDGE, GRID
-
-Level-35 
-STATUE, STATE, TEA
-
-Level-36 
-SKYLINE, SKY, LINE
-
-Level-37 
-TIMES, MET, ITEM, SIT
-
-Level-38 
-CITY, TIC, IT, TINY
-
-Level-39 
-WALL, LAW, WAIL
-
-Level-40 
-BROOK, BOOK, BOO, ROB, ROOK
-
-Level-41 
-PLAZA, ZAP, PAL
-
-Level-42 
-LIGHTS, LIST, SIGHT, LIT
-
-Level-43 
-NIGHT, GIN, HIT, TIN
-
-Level-44 
-BRIDGE, DIG, BED, GRID
-
-Level-45 
-PARK, ARK, RAP, PAR, PACK
-
-Level-46 
-TOKYO
-
-Level-47 
-SUSHI, FISH
-
-Level-48 
-ZEN, NET
-
-Level-49 
-SHRINE, SIN
-
-Level-50 
+Level-16
 CHERRY, CRY, HER
 
-Level-51 
-KIMONO, MONO, INK
+Level-17
+BRIDGE, GRID, DIG
 
-Level-52 
-GEISHA, SHE, SEA, GAS
+Level-18
+BIG, BIN, GIN
 
-Level-53 
-NINJA, NAN, JAN, ANI
+Level-19
+PALACE, LACE, PLACE
 
-Level-54 
-SUMO, MUS, MO
+Level-20
+BAY, ABY, YAB
 
-Level-55 
-RISING, RIG, SING, SIGN, GRIN
+Level-21
+ANGELS, LENS, LAG
 
-Level-56 
-TEMPLE, PET, MELT, MET, LET
+Level-22
+HOLLYWOOD, WOOD, HOWL
 
-Level-57 
-SAMURAI, SAM, RAM, ARM
+Level-23
+MOVIE, VIE, LOVE
 
-Level-58 
-BLOSSOM, LOSS, SOB, BOOM
+Level-24
+STARS, STAR, TAR
 
-Level-59 
-KABUKI, KAB, BUCK
+Level-25
+CANADA, AND, CAN
 
-Level-60 
-CHERRY, CHEER, HER, RYE, CRY
+Level-26
+MAPLE, LAME, PALE
+
+Level-27
+LEAF, ELF, FLEA
+
+Level-28
+HOCKEY, KEY, HEY
+
+Level-29
+BURJ, RUB, JAR
+
+Level-30
+TOWER, TWO, ROW
+
+Level-31
+DESERT, REST, RED
+
+Level-32
+DUBAI, BID, DUB
+
+Level-33
+SKYLINE, SKY, LINE
+
+Level-34
+HUDSON, SON, NO
+
+Level-35
+TIMES, SIT, MET
+
+Level-36
+BRIDGE, GRID, DIG
+
+Level-37
+WALL, LAW, ALL
+
+Level-38
+GERMAN, ARM, MAN
+
+Level-39
+BRANDENBURG, BRAND, BURG
+
+Level-40
+EAST, SAT, TEA
+
+Level-41
+GAUDI, DIG, AID
+
+Level-42
+TAPAS, SAT, PAT
+
+Level-43
+SAGRADA, RAD, DRAG
+
+Level-44
+RAMBLA, LAMB, BAR
+
+Level-45
+TEMPLE, MELT, PET
+
+Level-46
+THAI, HIT, IT
+
+Level-47
+RIVER, REV, VIE
+
+Level-48
+WAT, TA, AT
+
+Level-49
+MAYA, AMA, YAM
+
+Level-50
+PYRAMID, RAP, DRIP
+
+Level-51
+TACOS, CAT, ACT
+
+Level-52
+CATHEDRAL, THREAD, LEAD
+
+Level-53
+TWIN, WIN, TIN
+
+Level-54
+TOWER, ROW, TWO
+
+Level-55
+SKY, KEY
+
+Level-56
+PALM, LAMP, AMP
+
+Level-57
+CHINA, IN, CHIN
+
+Level-58
+PEARL, EAR, PAR
+
+Level-59
+TOWER, TWO, ROW
+
+Level-60
+SKYLINE, SKY, LINE
+
+Level-61
+ROME, MORE, ORE
+
+Level-62
+EMPIRE, RIM, PIER
+
+Level-63
+RUINS, SUN, RUN
+
+Level-64
+VATICAN, VAN, CAN
+
+Level-65
+INDIA, AID, DIN
+
+Level-66
+GATEWAY, WAY, GATE
+
+Level-67
+BOLLYWOOD, WOOD, BOLD
+
+Level-68
+RAILWAY, WAY, RAY
+
+Level-69
+BRAZIL, RAZE, RIB
+
+Level-70
+BEACH, EACH, ACE
+
+Level-71
+STREET, TREE, REST
+
+Level-72
+PARK, PAR, ARK
+
+Level-73
+TURKEY, KEY, TRY
+
+Level-74
+BOSPHORUS, HOP, SOP
+
+Level-75
+MOSQUE, QUO, USE
+
+Level-76
+SPICE, ICE, SIP
+
+Level-77
+TABLE, ABLE, BAT
+
+Level-78
+MOUNTAIN, MAIN, TIN
+
+Level-79
+CAPE, PACE, APE
+
+Level-80
+SAFARI, FAIR, AIR

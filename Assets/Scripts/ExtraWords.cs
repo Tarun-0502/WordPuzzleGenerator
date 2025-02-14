@@ -250,6 +250,8 @@ public class ExtraWords : MonoBehaviour
         {
             SaveExtraWords.ClearData();
             Game.Instance.AddCoins(10);
+            FoundedExtraWords.Clear();
+            WordsList.text= string.Empty;
             Game.Instance.Coins_Gems_Text_Update(true);
         }
     }

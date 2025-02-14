@@ -11,6 +11,22 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
+[System.Serializable]
+public class Stamps
+{
+    public Transform Puzzle1;
+    public Transform Puzzle2;
+    public Transform Puzzle3;
+    public Transform Puzzle4;
+
+    public Transform MainImage;
+    public TextMeshProUGUI cityName;
+}
+[System.Serializable]
+public class CityStamp
+{
+    public Stamps Stamp;
+}
 
 public class UIManager : MonoBehaviour
 {
@@ -27,7 +43,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] Sprite Filled, Opacity;
     [SerializeField] TextMeshProUGUI ThemeName,Left_arrow,Right_Arrow;
     [SerializeField] List<string> ThemeNames;
-    [SerializeField] List<Sprite> ThemeSprites;
     [SerializeField] int ThemeIndex;
 
     [SerializeField] AudioSource AudioSource, Music_Source;
@@ -43,6 +58,10 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] NewFacts Paris, NewYork, Tokyo, Egypt;
     [SerializeField] TextMeshProUGUI Cityname, CityFact;
+
+    [SerializeField] Transform Stamps;
+    [SerializeField] List<Transform> StampPages;
+    [SerializeField] int CurrentPage,previousPage,NextPage;
 
     #endregion
 
@@ -100,6 +119,7 @@ public class UIManager : MonoBehaviour
         }
 
         Coins_Gems_Text_Update(false);
+
     }
 
     void Facts_()
@@ -132,10 +152,9 @@ public class UIManager : MonoBehaviour
 
     public void Play()
     {
-        //LevelsUnlocked(Highestlevel+1);
         //LevelWasLoaded(Highestlevel + 1);
         Button_Sound();
-        //LevelWasLoaded(300);
+        LevelWasLoaded(400);
     }
 
     //public void SetLevels(Transform levelsParent)
@@ -235,6 +254,8 @@ public class UIManager : MonoBehaviour
 
     //}
 
+    #region LEVELS_SELECTION
+
     public void SetLevels(Transform levelsParent)
     {
         int levelIndex = 1;
@@ -298,6 +319,17 @@ public class UIManager : MonoBehaviour
 
     }
 
+    private void LevelWasLoaded(int level_)
+    {
+        for (int i = 0; i < levels.Count; i++)
+        {
+            var level = levels[i];
+            bool isUnlocked = i < level_;
+
+            level.GetComponent<Button>().interactable = isUnlocked;
+        }
+    }
+
     void Chooselevel(int current)
     {
         Button_Sound();
@@ -308,6 +340,10 @@ public class UIManager : MonoBehaviour
         LoadSceneWithProgress("GameScene");
         //SceneManager.LoadScene(1);   
     }
+
+    #endregion
+
+    #region LOADING-PROGESS
 
     public void LoadSceneWithProgress(string sceneName)
     {
@@ -339,100 +375,12 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void LevelWasLoaded(int level_)
-    {
-        for (int i = 0; i < levels.Count; i++)
-        {
-            var level = levels[i];
-            bool isUnlocked = i < level_;
-
-            // Set active states and sprites based on level status
-            level.GetChild(0).gameObject.SetActive(!isUnlocked);
-            level.GetChild(1).gameObject.SetActive(isUnlocked);
-            level.GetComponent<Image>().sprite = isUnlocked ? Filled : Opacity;
-            level.GetComponent<Button>().enabled = isUnlocked;
-
-            //// Scale animation with delay
-            //float delay = i * 0.1f; // Adjust the delay time between each level scaling
-            //level.transform.DOScale(Vector3.one, 0.25f)
-            //    .SetDelay(delay)
-            //    .SetEase(Ease.OutQuad);
-        }
-        //Display(0);
-        //StartCoroutine(DisplayTextLetterByLetter(0));
-    }
-
-    public void LeftClick()
-    {
-        Button_Sound();
-        if (position<0)
-        {
-            position += 1240f;
-            ThemeIndex = -(int)(position / 1240);
-            Display(ThemeIndex);
-        }
-    }
-    public void RightClick()
-    {
-        Button_Sound();
-        if (position>-17360)
-        {
-            position -= 1240f;
-            ThemeIndex = -(int)(position / 1240);
-            Display(ThemeIndex);
-        }
-    }
+    #endregion
 
     private void Update()
     {
         RectTransform rectTransform = Content.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = Vector2.Lerp(rectTransform.anchoredPosition,new Vector2(position,rectTransform.anchoredPosition.y),2.5f*Time.deltaTime);
-    }
-
-    private void Display(int index)
-    {
-        // Ensure index is within bounds, wrap around if needed
-        int themeIndex = (index + ThemeNames.Count) % ThemeNames.Count;
-
-        if (index >= 0 && index < Content.childCount)
-        {
-            Transform level_1_ = Content.GetChild(index);
-
-            // Animate each child scale
-            for (int i = 0; i < level_1_.childCount; i++)
-            {
-                Transform child_1_ = level_1_.GetChild(i);
-                child_1_.transform.localScale = Vector3.zero;
-                // Scale animation with delay
-                float delay = i * 0.1f; // Adjust the delay time between each level scaling
-                child_1_.transform.DOScale(Vector3.one, 0.15f)
-                    .SetDelay(delay)
-                    .SetEase(Ease.OutQuad);
-            }
-
-            // Calculate theme index correctly to avoid negative index
-             themeIndex = (index % ThemeNames.Count + ThemeNames.Count) % ThemeNames.Count;
-
-            // Update the theme name and sprite
-            ThemeName.text = ThemeNames[themeIndex];
-            LevelSelectionScreen.GetComponent<Image>().sprite = ThemeSprites[themeIndex];
-
-            // Set the Left Arrow text (previous theme)
-            int prevIndex = (index - 1 + ThemeNames.Count) % ThemeNames.Count; // Ensure previous index wraps around
-            Left_arrow.text = ThemeNames[prevIndex];
-
-            // Set the Right Arrow text (next theme)
-            int nextIndex = (index + 1) % ThemeNames.Count; // Ensure next index wraps around
-            Right_Arrow.text = ThemeNames[nextIndex];
-            if (index==0)
-            {
-                Left_arrow.text = "";
-            }
-            else if (index==Content.childCount-1)
-            {
-                Right_Arrow.text = "";
-            }
-        }
     }
 
     void Button_Sound()
@@ -671,4 +619,87 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #endregion
+
+    #region STAMPS
+
+    [SerializeField] private List<Transform> Stamps_;
+    [SerializeField] private List<CityStamp> stamps;
+
+    void getStamps()
+    {
+        for (int i = 0; i < Stamps.childCount; i++)
+        {
+            CityStamp newStamp = new CityStamp();
+            newStamp.Stamp = new Stamps();  // Initialize the Stamps object
+
+            newStamp.Stamp.Puzzle1 = Stamps_[i].Find("Puzzle_1");
+            newStamp.Stamp.Puzzle2 = Stamps_[i].Find("Puzzle_2");
+            newStamp.Stamp.Puzzle3 = Stamps_[i].Find("Puzzle_3");
+            newStamp.Stamp.Puzzle4 = Stamps_[i].Find("Puzzle_4");
+
+            newStamp.Stamp.MainImage = Stamps_[i].Find("Main_");
+            newStamp.Stamp.cityName = Stamps_[i].GetComponentInChildren<TextMeshProUGUI>();
+
+            stamps.Add(newStamp);  // Add after setting up newStamp
+        }
+    }
+
+    public void Stamps_Display()
+    {
+
+    }
+
+    private bool isAnimating = false;  // Animation lock
+
+    public void Stamps_Update(bool Left)
+    {
+        if (isAnimating) return;  // Prevent multiple clicks during animation
+        isAnimating = true;        // Lock animation
+
+        if (Left)
+        {
+            if (CurrentPage > 0)
+            {
+                previousPage = CurrentPage - 1;
+
+                StampPages[previousPage].transform.DOScale(0.8f, 0.25f).SetEase(Ease.InOutSine)
+                    .OnComplete(() => StampPages[previousPage].transform.DOScale(1f, 0.25f).SetEase(Ease.InOutSine));
+
+                StampPages[previousPage].transform.DORotate(new Vector3(0, 0, 0), 0.5f, RotateMode.FastBeyond360)
+                    .OnComplete(() =>
+                    {
+                        CurrentPage--;
+                        isAnimating = false;  // Unlock after animation completes
+                    });
+            }
+            else
+            {
+                isAnimating = false;  // Unlock if no page flip happens
+            }
+        }
+        else
+        {
+            if (CurrentPage < StampPages.Count - 1)
+            {
+                previousPage = CurrentPage;
+
+                StampPages[CurrentPage].transform.DOScale(0.8f, 0.25f).SetEase(Ease.InOutSine)
+                    .OnComplete(() => StampPages[CurrentPage].transform.DOScale(1f, 0.25f).SetEase(Ease.InOutSine));
+
+                StampPages[CurrentPage].transform.DORotate(new Vector3(0, 180, 0), 0.5f, RotateMode.FastBeyond360)
+                    .OnComplete(() =>
+                    {
+                        CurrentPage++;
+                        isAnimating = false;  // Unlock after animation completes
+                    });
+            }
+            else
+            {
+                isAnimating = false;  // Unlock if no page flip happens
+            }
+        }
+    }
+
+    #endregion
+
 }

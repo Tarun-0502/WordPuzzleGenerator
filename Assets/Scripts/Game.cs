@@ -154,10 +154,30 @@ public class Game : MonoBehaviour
     [SerializeField] AudioSource AudioSource;
     [SerializeField] internal AudioClip LevelComplete, CoinCollect, WordComplete, Hint,tap;
 
-    [SerializeField] Sprite[] Paris; // Sprites for Paris Theme
-    [SerializeField] Sprite[] NewYork; // Sprites for New York Theme
-    [SerializeField] Sprite[] Tokyo; // Sprites for Tokyo Theme
-    [SerializeField] Sprite[] Egypt; // Sprites for Egypt Theme
+    #region THEMES_SPRITES
+
+    [SerializeField, HideInInspector] Sprite[] Paris;
+    [SerializeField, HideInInspector] Sprite[] Egypt;
+    [SerializeField, HideInInspector] Sprite[] London;
+    [SerializeField, HideInInspector] Sprite[] Tokyo;
+    [SerializeField, HideInInspector] Sprite[] SanFrancisco;
+    [SerializeField, HideInInspector] Sprite[] LosAngeles;
+    [SerializeField, HideInInspector] Sprite[] Toronto;
+    [SerializeField, HideInInspector] Sprite[] Dubai;
+    [SerializeField, HideInInspector] Sprite[] NewYork;
+    [SerializeField, HideInInspector] Sprite[] Berlin;
+    [SerializeField, HideInInspector] Sprite[] Barcelona;
+    [SerializeField, HideInInspector] Sprite[] Bangkok;
+    [SerializeField, HideInInspector] Sprite[] MexicoCity;
+    [SerializeField, HideInInspector] Sprite[] KualaLumpur;
+    [SerializeField, HideInInspector] Sprite[] Shanghai;
+    [SerializeField, HideInInspector] Sprite[] Rome;
+    [SerializeField, HideInInspector] Sprite[] Mumbai;
+    [SerializeField, HideInInspector] Sprite[] SaoPaulo;
+    [SerializeField, HideInInspector] Sprite[] Istanbul;
+    [SerializeField, HideInInspector] Sprite[] CapeTown;
+
+    #endregion
 
     [SerializeField] Sprite Sound_Onn, Sound_off,Music_onn,Music_Off;
     [SerializeField] Image Sound_Img, Music_Img;
@@ -221,6 +241,8 @@ public class Game : MonoBehaviour
 
         UpdateFont();
 
+        LoadAllCitySprites();
+
         if (!DailyChallenges)
         {
             ThemeSelection();
@@ -275,6 +297,8 @@ public class Game : MonoBehaviour
 
     }
 
+    #region THEME_SELECTION
+
     public int relativeLevel;
 
     public void Pop_Up_Close()
@@ -287,54 +311,133 @@ public class Game : MonoBehaviour
         }
     }
 
+    private void LoadAllCitySprites()
+    {
+        Paris = LoadSpritesFromResources("Paris");
+        Egypt = LoadSpritesFromResources("Egypt");
+        London = LoadSpritesFromResources("London");
+        Tokyo = LoadSpritesFromResources("Tokyo");
+        SanFrancisco = LoadSpritesFromResources("SanFrancisco");
+        LosAngeles = LoadSpritesFromResources("LosAngeles");
+        Toronto = LoadSpritesFromResources("Toronto");
+        Dubai = LoadSpritesFromResources("Dubai");
+        NewYork = LoadSpritesFromResources("NewYork");
+        Berlin = LoadSpritesFromResources("Berlin");
+        Barcelona = LoadSpritesFromResources("Barcelona");
+        Bangkok = LoadSpritesFromResources("Bangkok");
+        MexicoCity = LoadSpritesFromResources("MexicoCity");
+        KualaLumpur = LoadSpritesFromResources("KualaLumpur");
+        Shanghai = LoadSpritesFromResources("Shanghai");
+        Rome = LoadSpritesFromResources("Rome");
+        Mumbai = LoadSpritesFromResources("Mumbai");
+        SaoPaulo = LoadSpritesFromResources("SaoPaulo");
+        Istanbul = LoadSpritesFromResources("Istanbul");
+        CapeTown = LoadSpritesFromResources("CapeTown");
+    }
+
+    private Sprite[] LoadSpritesFromResources(string cityName)
+    {
+        // Try to load the sprites from the folder with the exact city name
+        Sprite[] sprites = Resources.LoadAll<Sprite>("Themes/" + cityName);
+
+        if (sprites.Length == 0)
+        {
+            // If not found, try with lowercase city name
+            sprites = Resources.LoadAll<Sprite>("Themes/" + cityName.ToLower());
+        }
+
+        if (sprites.Length == 0)
+        {
+            Debug.LogError("No sprites found for city: " + cityName);
+        }
+
+        return sprites;
+    }
+
     public void ThemeSelection()
     {
         int level_No = PlayerPrefs.GetInt("SelectedLevel", 1);
 
         // Define all themes and their corresponding sprites
         List<Sprite[]> themes = new List<Sprite[]>
-        {
-          Paris,  // Theme for Paris
-          Egypt, // Theme for Egypt
-          NewYork, // Theme for New York
-          Tokyo,  // Theme for Tokyo
-        };
+    {
+        Paris,
+        Egypt,
+        London,
+        Tokyo,
+        SanFrancisco,
+        LosAngeles,
+        Toronto,
+        Dubai,
+        NewYork,
+        Berlin,
+        Barcelona,
+        Bangkok,
+        MexicoCity,
+        KualaLumpur,
+        Shanghai,
+        Rome,
+        Mumbai,
+        SaoPaulo,
+        Istanbul,
+        CapeTown
+    };
 
         // Define the theme names
         List<string> themeNames = new List<string>
-        {
-          "Paris",
-          "Egypt",
-          "New York",
-          "Tokyo",
-         };
+    {
+        "Paris",
+        "Egypt",
+        "London",
+        "Tokyo",
+        "San Francisco",
+        "Los Angeles",
+        "Toronto",
+        "Dubai",
+        "New York",
+        "Berlin",
+        "Barcelona",
+        "Bangkok",
+        "Mexico City",
+        "Kuala Lumpur",
+        "Shanghai",
+        "Rome",
+        "Mumbai",
+        "São Paulo",
+        "Istanbul",
+        "Cape Town"
+    };
 
-        // Determine the cyclic theme index
         int themeIndex = ((level_No - 1) / 20) % themes.Count;
+
+        // Calculate the color code based on theme index
+        int ColorCode = themeIndex / 5;  // Each block of 5 themes has the same color code
+
+        // Ensure ColorCode stays within 0-4 range (if there are exactly 5 color codes)
+        ColorCode = ColorCode % 5;
 
         // Get the active theme
         Sprite[] activeTheme = themes[themeIndex];
 
         // Change the color based on the theme index
-        ChangeColr(ColorCodes[themeIndex]);
+        ChangeColr(ColorCodes[ColorCode]);
 
         // Set the place text to the current theme's name
         Place_Text.text = themeNames[themeIndex];
 
-
         // Calculate the relative level within the 20-level block
-         relativeLevel = (level_No - 1) % 20 + 1;
+        int relativeLevel = (level_No - 1) % 20;
 
         // Determine which sprite to use based on 5-level sub-blocks
-        if (relativeLevel >= 1 && relativeLevel <= 5)
+        if (relativeLevel < 5)
         {
             bg.sprite = activeTheme[0];
         }
-        else if (relativeLevel >= 6 && relativeLevel <= 10)
+        else if (relativeLevel < 10)
         {
             bg.sprite = activeTheme[1];
         }
-        else if (relativeLevel >= 11 && relativeLevel <= 15)
+        else if (relativeLevel < 15)
         {
             bg.sprite = activeTheme[2];
         }
@@ -343,6 +446,8 @@ public class Game : MonoBehaviour
             bg.sprite = activeTheme[3];
         }
     }
+
+    #endregion
 
     void ChangeColr(string newColor)
     {

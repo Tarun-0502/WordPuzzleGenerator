@@ -80,6 +80,7 @@ public class Cell : MonoBehaviour
             Text.transform.localScale = Vector3.zero;
             //coin.localScale = Vector3.zero;
             hint.localScale = Vector3.zero;
+            ChangeColor(Game.Instance.colorCode);
         }
     }
 

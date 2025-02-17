@@ -7,6 +7,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.IO;
+using System.Collections;
+using static DG.DemiLib.External.DeHierarchyComponent;
 
 [System.Serializable]
 public class StorePanel
@@ -127,8 +130,7 @@ public class Game : MonoBehaviour
     private Transform CurrentLevelCircle;
 
     [SerializeField] private int Total_Coins,Total_Gems;
-    //[SerializeField] private TextMeshProUGUI coinsText,GemsText,LevelCompleteCoins_Text,LevelCompleteGems_Text;
-    //[SerializeField] private TextMeshProUGUI ExtraCoins_text, ExtraGems_Text;
+    
     public Transform CoinPosition;
     
 
@@ -208,6 +210,8 @@ public class Game : MonoBehaviour
 
     [SerializeField] RectTransform LevelTextBg_;
 
+    [SerializeField] GameObject LoadingScreen;
+
     #region METHODS
 
     void Start()
@@ -235,17 +239,18 @@ public class Game : MonoBehaviour
         Total_Gems = PlayerPrefs.GetInt("Gems");
 
         mainCamera = Camera.main;
+
         GameObject lineRe = Instantiate(linePrefab, Vector3.zero, Quaternion.identity, LineParent);
         lineRenderer = lineRe.GetComponent<LineRenderer>();
         lineRenderer.gameObject.SetActive(false);
 
         UpdateFont();
 
-        LoadAllCitySprites();
+        //LoadAllCitySprites();
 
         if (!DailyChallenges)
         {
-            ThemeSelection();
+            //ThemeSelection();
         }
 
         LoadSavedData();
@@ -311,47 +316,218 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void LoadAllCitySprites()
+    public void LoadAllCitySprites()
     {
-        Paris = LoadSpritesFromResources("Paris");
-        Egypt = LoadSpritesFromResources("Egypt");
-        London = LoadSpritesFromResources("London");
-        Tokyo = LoadSpritesFromResources("Tokyo");
-        SanFrancisco = LoadSpritesFromResources("SanFrancisco");
-        LosAngeles = LoadSpritesFromResources("LosAngeles");
-        Toronto = LoadSpritesFromResources("Toronto");
-        Dubai = LoadSpritesFromResources("Dubai");
-        NewYork = LoadSpritesFromResources("NewYork");
-        Berlin = LoadSpritesFromResources("Berlin");
-        Barcelona = LoadSpritesFromResources("Barcelona");
-        Bangkok = LoadSpritesFromResources("Bangkok");
-        MexicoCity = LoadSpritesFromResources("MexicoCity");
-        KualaLumpur = LoadSpritesFromResources("KualaLumpur");
-        Shanghai = LoadSpritesFromResources("Shanghai");
-        Rome = LoadSpritesFromResources("Rome");
-        Mumbai = LoadSpritesFromResources("Mumbai");
-        SaoPaulo = LoadSpritesFromResources("SaoPaulo");
-        Istanbul = LoadSpritesFromResources("Istanbul");
-        CapeTown = LoadSpritesFromResources("CapeTown");
+        StartCoroutine(LoadCitySpritesForLevel(PlayerPrefs.GetInt("SelectedLevel"), () =>
+        {
+            // Once the necessary city sprites are loaded, call ThemeSelection
+            ThemeSelection();
+        }));
     }
 
-    private Sprite[] LoadSpritesFromResources(string cityName)
+    // Coroutine to load all city sprites
+    private IEnumerator LoadCitySpritesForLevel(int selectedLevel, System.Action onComplete)
     {
-        // Try to load the sprites from the folder with the exact city name
-        Sprite[] sprites = Resources.LoadAll<Sprite>("Themes/" + cityName);
+        // Define the cities to load
+        string[] cities = new string[] {
+        "Paris", "Egypt", "London", "Tokyo", "SanFrancisco", "LosAngeles", "Toronto", "Dubai", "NewYork",
+        "Berlin", "Barcelona", "Bangkok", "MexicoCity", "KualaLumpur", "Shanghai", "Rome", "Mumbai",
+        "SaoPaulo", "Istanbul", "CapeTown"
+    };
 
-        if (sprites.Length == 0)
+        yield return new WaitForSeconds(5f);
+
+        // Define the base path to the extracted folder
+        string basePath = DownLoadThemes.instance.ExtractedPath;
+
+        // Calculate the city index based on the level
+        int cityIndex = (selectedLevel - 1) / 20; // Each city is associated with 20 levels
+
+        // Ensure cityIndex stays within the bounds of available cities
+        if (cityIndex >= cities.Length)
         {
-            // If not found, try with lowercase city name
-            sprites = Resources.LoadAll<Sprite>("Themes/" + cityName.ToLower());
+            cityIndex = cities.Length - 1;
         }
 
-        if (sprites.Length == 0)
+        // Determine the city based on the level range
+        string selectedCity = cities[cityIndex];
+
+        // Wait for a moment before loading the sprites (simulate loading time if needed)
+        yield return new WaitForSeconds(1f);
+
+        // Load sprites for the selected city
+        Sprite[] sprites = LoadSpritesFromPath(selectedCity, basePath);
+
+        // Assign the loaded sprites to the respective city variable
+        AssignCitySprites(selectedCity, sprites);
+
+        Debug.Log("Sprites loaded for city: " + selectedCity);
+
+        // Call the onComplete action after loading the necessary sprites
+        if (onComplete != null)
         {
-            Debug.LogError("No sprites found for city: " + cityName);
+            onComplete.Invoke();
+        }
+    }
+
+    public Sprite[] LoadSpritesFromResources(string cityName)
+    {
+        // Path inside the Resources folder
+        string resourcePath = $"Themes/{cityName}";
+
+        Debug.Log("Loading sprites from Resources path: " + resourcePath);
+
+        // Load all sprites from the specified path
+        Sprite[] sprites = Resources.LoadAll<Sprite>(resourcePath);
+
+        if (sprites == null || sprites.Length == 0)
+        {
+            Debug.LogError("No sprites found in Resources at path: " + resourcePath);
+            return null;
+        }
+
+        Debug.Log($"Loaded {sprites.Length} sprites from {resourcePath}");
+
+        return sprites;
+    }
+
+    // Load sprites from the path for a given city
+    private Sprite[] LoadSpritesFromPath(string cityName, string basePath)
+    {
+        // Ensure basePath does not end with a separator
+        if (basePath.EndsWith(Path.DirectorySeparatorChar.ToString()))
+        {
+            basePath = basePath.TrimEnd(Path.DirectorySeparatorChar);
+        }
+
+        Debug.LogWarning("BasePath : "+ basePath);
+
+        // Use Path.Combine to correctly build the directory path
+        string directoryPath = Path.Combine(basePath, "Themes", cityName); // Full path for city
+
+        // Debug log the directory path
+        Debug.Log("Checking directory path: " + directoryPath);
+
+        // If directory doesn't exist, try lowercase city name
+        if (!Directory.Exists(directoryPath))
+        {
+            directoryPath = Path.Combine(basePath, "Themes", cityName.ToLower());
+            Debug.Log("Directory not found. Trying lowercase path: " + directoryPath);
+        }
+
+        // Check if directory exists after both attempts
+        if (!Directory.Exists(directoryPath))
+        {
+            Debug.LogError("Directory not found: " + directoryPath);
+            return null;
+        }
+
+        // Get all PNG and JPG files in the directory
+        string[] pngFiles = Directory.GetFiles(directoryPath, "*.png");
+        string[] jpgFiles = Directory.GetFiles(directoryPath, "*.jpg");
+
+        // Combine both arrays
+        string[] filePaths = pngFiles.Concat(jpgFiles).ToArray();
+        if (filePaths.Length == 0)
+        {
+            Debug.LogError("No PNG files found in directory: " + directoryPath);
+        }
+        else
+        {
+            foreach (string filePath in filePaths)
+            {
+                //Debug.Log(filePath);
+            }
+        }
+
+        // Load sprites from the files
+        Sprite[] sprites = new Sprite[filePaths.Length];
+        for (int i = 0; i < filePaths.Length; i++)
+        {
+            byte[] imageData = File.ReadAllBytes(filePaths[i]);
+            Texture2D texture = new Texture2D(2, 2);
+            if (texture.LoadImage(imageData))
+            {
+                sprites[i] = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            }
+            else
+            {
+                Debug.LogError("Failed to load texture: " + filePaths[i]);
+            }
         }
 
         return sprites;
+    }
+
+    // Assign sprites to respective city variables
+    private void AssignCitySprites(string cityName, Sprite[] sprites)
+    {
+        switch (cityName)
+        {
+            case "Paris":
+                Paris = sprites;
+                break;
+            case "Egypt":
+                Egypt = sprites;
+                break;
+            case "London":
+                London = sprites;
+                break;
+            case "Tokyo":
+                Tokyo = sprites;
+                break;
+            case "SanFrancisco":
+                SanFrancisco = sprites;
+                break;
+            case "LosAngeles":
+                LosAngeles = sprites;
+                break;
+            case "Toronto":
+                Toronto = sprites;
+                break;
+            case "Dubai":
+                Dubai = sprites;
+                break;
+            case "NewYork":
+                NewYork = sprites;
+                break;
+            case "Berlin":
+                Berlin = sprites;
+                break;
+            case "Barcelona":
+                Barcelona = sprites;
+                break;
+            case "Bangkok":
+                Bangkok = sprites;
+                break;
+            case "MexicoCity":
+                MexicoCity = sprites;
+                break;
+            case "KualaLumpur":
+                KualaLumpur = sprites;
+                break;
+            case "Shanghai":
+                Shanghai = sprites;
+                break;
+            case "Rome":
+                Rome = sprites;
+                break;
+            case "Mumbai":
+                Mumbai = sprites;
+                break;
+            case "SaoPaulo":
+                SaoPaulo = sprites;
+                break;
+            case "Istanbul":
+                Istanbul = sprites;
+                break;
+            case "CapeTown":
+                CapeTown = sprites;
+                break;
+            default:
+                Debug.LogError("City not found in switch: " + cityName);
+                break;
+        }
     }
 
     public void ThemeSelection()
@@ -410,17 +586,8 @@ public class Game : MonoBehaviour
 
         int themeIndex = ((level_No - 1) / 20) % themes.Count;
 
-        // Calculate the color code based on theme index
-        int ColorCode = themeIndex / 5;  // Each block of 5 themes has the same color code
-
-        // Ensure ColorCode stays within 0-4 range (if there are exactly 5 color codes)
-        ColorCode = ColorCode % 5;
-
         // Get the active theme
         Sprite[] activeTheme = themes[themeIndex];
-
-        // Change the color based on the theme index
-        ChangeColr(ColorCodes[ColorCode]);
 
         // Set the place text to the current theme's name
         Place_Text.text = themeNames[themeIndex];
@@ -445,15 +612,45 @@ public class Game : MonoBehaviour
         {
             bg.sprite = activeTheme[3];
         }
+        LoadingScreen.SetActive(false);
     }
 
     #endregion
+
+    public void SetColor(int Level)
+    {
+        // Calculate the color code based on theme index
+        int ColorCode = (((Level - 1) / 20) % 20) / 5;  // Each block of 5 themes has the same color code
+
+        // Ensure ColorCode stays within 0-4 range (if there are exactly 5 color codes)
+        ColorCode = ColorCode % 5;
+
+        colorCode = ColorCodes[ColorCode];
+
+        // Change the color based on the theme index
+        ChangeColr(colorCode);
+
+    }
 
     void ChangeColr(string newColor)
     {
         colorCode = newColor;
         SetLineColor(colorCode);
         ChangeDotColor(colorCode);
+        SetTextColor(colorCode);
+    }
+
+    public void SetTextColor(string hexColor)
+    {
+        if (ColorUtility.TryParseHtmlString(hexColor, out Color colorCode))
+        {
+            TextPreview.color = colorCode;
+            Debug.Log($"Text color successfully set to {hexColor}");
+        }
+        else
+        {
+            Debug.LogError($"Invalid hex color: {hexColor}");
+        }
     }
 
     public void CurrentLevelButton(int Level,List<char> characters)
@@ -517,6 +714,7 @@ public class Game : MonoBehaviour
         LoadGame();
         InstiateDots();
         maxLetters = characters.Count;
+
     }
 
     void Update()
@@ -537,7 +735,6 @@ public class Game : MonoBehaviour
                 }
             }
         }
-        
     }
 
     bool Screens_Active(List<GameObject> Screens)
@@ -656,6 +853,7 @@ public class Game : MonoBehaviour
                 {
                     // Apply the new color to the material
                     dot.GetComponent<Image>().color = newColor;
+                    //Debug.LogError($"{hexColorCode}" + "DOTCOLOR");
                 }
                 else
                 {
@@ -720,9 +918,16 @@ public class Game : MonoBehaviour
 
     public void SetLineColor(string hexColor)
     {
+        if (lineRenderer == null)
+        {
+            Debug.LogError("LineRenderer component is not assigned!");
+            return;
+        }
+
+        Debug.Log($"Received Hex Color: {hexColor}");
+
         if (ColorUtility.TryParseHtmlString(hexColor, out Color color))
         {
-            // Assign the parsed color to the LineRenderer
             lineRenderer.startColor = color;
             lineRenderer.endColor = color;
 
@@ -803,7 +1008,7 @@ public class Game : MonoBehaviour
                     HighestLevel = PlayerPrefs.GetInt("SelectedLevel");
 
                     PlayerPrefs.SetInt("HighestLevel", PlayerPrefs.GetInt("HighestLevel") + 1);
-                    AddCoins(50);
+                    AddCoins(20);
                     if (relativeLevel == 20)
                     {
                         AddGems(5);
@@ -819,8 +1024,6 @@ public class Game : MonoBehaviour
             LevelComplete_Level_No.text = relativeLevel + "/20";
             LevelComplete_FillingBar.fillAmount += (float)relativeLevel / 20;
             
-
-            
             //extraWords.SaveData();
             Coins_Gems_Text_Update(true);
             PlaySound(LevelComplete);
@@ -831,7 +1034,7 @@ public class Game : MonoBehaviour
     {
         PlaySound(tap);
 
-        if (Game_) // Ensure Game_ is correctly defined elsewhere
+        if (Game_)
         {
             // Initialize "Count" if not already set
             if (!PlayerPrefs.HasKey("Count"))

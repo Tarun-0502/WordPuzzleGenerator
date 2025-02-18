@@ -107,7 +107,7 @@ public class DownLoadThemes : MonoBehaviour
                 ExtractedPath = extractPath;
             });
             unzipThread.Start();
-            Game.Instance.LoadAllCitySprites();
+            //Game.Instance.LoadAllCitySprites();
         }
         catch (System.Exception e)
         {

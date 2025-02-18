@@ -107,7 +107,7 @@ public class GeneratePattern : MonoBehaviour
             Chooselevel(PlayerPrefs.GetInt("DailyLevel", 1));
             //Chooselevel(CurrentLevel);
         }
-        Game.Instance.SetColor(PlayerPrefs.GetInt("SelectedLevel", 1));
+       
     }
 
     #region LevelSelectionScreen

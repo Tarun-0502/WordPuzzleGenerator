@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using TMPro;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -34,13 +33,13 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Transform Content;
     [SerializeField] GameObject LoadingScreen,MainScreen,LevelSelectionScreen;
-    [SerializeField] Image Bar;
+    [SerializeField] Image Bar,LevelBg;
     [SerializeField] List<Transform> levels;
 
     [SerializeField] int Highestlevel;
     [SerializeField] float position;
 
-    [SerializeField] Sprite Filled, Opacity;
+    [SerializeField] Sprite Unlocked, Locked,LockPng;
     [SerializeField] TextMeshProUGUI ThemeName,Left_arrow,Right_Arrow;
     [SerializeField] List<string> ThemeNames;
     [SerializeField] int ThemeIndex;
@@ -62,6 +61,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] Transform Stamps;
     [SerializeField] List<Transform> StampPages;
     [SerializeField] int CurrentPage,previousPage,NextPage;
+
+    [SerializeField] List<Sprite> Level_bg_Sprites;
+
 
     #endregion
 
@@ -120,6 +122,8 @@ public class UIManager : MonoBehaviour
 
         Coins_Gems_Text_Update(false);
 
+        currentTheme = 0;
+        LevelBg.sprite = Level_bg_Sprites[currentTheme];
     }
 
     void Facts_()
@@ -152,171 +156,58 @@ public class UIManager : MonoBehaviour
 
     public void Play()
     {
-        //LevelWasLoaded(Highestlevel + 1);
+        LevelWasLoaded(Highestlevel + 1);
         Button_Sound();
-        LevelWasLoaded(400);
+        //LevelWasLoaded(400);
     }
-
-    //public void SetLevels(Transform levelsParent)
-    //{
-    //    int levelIndex = 1;
-    //   /* for (int i = 0; i < levelsParent.childCount; i++)
-    //    {
-    //        Transform Level = levelsParent.GetChild(i);
-    //        if (Level != null)
-    //        {
-    //            for (int j = 0; j < Level.childCount; j++)
-    //            {
-    //                Transform Theme = Level.GetChild(j);
-    //                if (Theme != null)
-    //                {
-    //                    for (int k = 0; k < Theme.childCount; k++)
-    //                    {
-    //                        Transform Line = Theme.GetChild(k);
-    //                        if (Line != null)
-    //                        {
-    //                            for (int l = 0; l < Line.childCount; l++)
-    //                            {
-    //                                Transform child = Line.GetChild(l);
-    //                                child.localScale = Vector3.zero;
-    //                                levels.Add(child);
-    //                                if (child != null)
-    //                                {
-    //                                    // Set the name of the GameObject
-    //                                    child.gameObject.name = "Level" + levelIndex;
-
-    //                                    // Capture the current levelIndex in a local variable
-    //                                    int currentLevelIndex = levelIndex;
-
-    //                                    // Set the button's onClick listener
-    //                                    Button button = child.GetComponent<Button>();
-    //                                    if (button != null)
-    //                                    {
-    //                                        button.onClick.AddListener(() => Chooselevel(currentLevelIndex));
-    //                                    }
-
-    //                                    // Set the text of the child
-    //                                    TextMeshProUGUI text = child.GetChild(0).GetComponent<TextMeshProUGUI>();
-    //                                    if (text != null)
-    //                                    {
-    //                                        text.text = levelIndex.ToString();
-    //                                    }
-
-    //                                    // Increment the levelIndex
-    //                                    levelIndex++;
-    //                                }
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }*/
-
-    //    for (int i = 0;i < levelsParent.childCount; i++) 
-    //    {
-    //        Transform transform = levelsParent.GetChild(i).transform;
-    //        if (transform != null)
-    //        {
-    //            for (int j = 0; j < transform.childCount; j++)
-    //            {
-    //                Transform child = transform.GetChild(j);
-    //                child.localScale = Vector3.zero;
-    //                levels.Add(child);
-    //                if (child != null)
-    //                {
-    //                    // Set the name of the GameObject
-    //                    child.gameObject.name = "Level" + levelIndex;
-
-    //                    // Capture the current levelIndex in a local variable
-    //                    int currentLevelIndex = levelIndex;
-
-    //                    // Set the button's onClick listener
-    //                    Button button = child.GetComponent<Button>();
-    //                    if (button != null)
-    //                    {
-    //                        button.onClick.AddListener(() => Chooselevel(currentLevelIndex));
-    //                    }
-
-    //                    // Set the text of the child
-    //                    TextMeshProUGUI text = child.GetChild(1).GetComponent<TextMeshProUGUI>();
-    //                    if (text != null)
-    //                    {
-    //                        text.text = levelIndex.ToString();
-    //                    }
-
-    //                    // Increment the levelIndex
-    //                    levelIndex++;
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //}
 
     #region LEVELS_SELECTION
 
     public void SetLevels(Transform levelsParent)
     {
+        if (levelsParent == null)
+        {
+            Debug.LogError("levelsParent is null!");
+            return;
+        }
+
         int levelIndex = 1;
+        levels.Clear();  // Clear any existing levels
 
         for (int i = 0; i < levelsParent.childCount; i++)
         {
-            Transform transform = levelsParent.GetChild(i).transform;
-            if (transform != null)
+            Transform levelContainer = levelsParent.GetChild(i);
+            if (levelContainer == null) continue;
+
+            for (int j = 0; j < levelContainer.childCount; j++)
             {
-                for (int j = 0; j < transform.childCount; j++)
+                Transform child = levelContainer.GetChild(j);
+                if (child == null) continue;
+
+                child.localScale = Vector3.zero;  // Optionally, set to active instead of scale
+                levels.Add(child);
+
+                // Set GameObject name
+                child.gameObject.name = "Level" + levelIndex;
+
+                // Add button click listener
+                Button button = child.GetComponent<Button>();
+                if (button != null)
                 {
-                    int currentLevelIndex = levelIndex;
-                    Transform child = transform.GetChild(j);
-                    levels.Add(child);
-                    child.name = "Level" + levelIndex;
-                    // Set the button's onClick listener
-                    Button button = child.GetComponent<Button>();
-                    if (button != null)
-                    {
-                        button.onClick.AddListener(() => Chooselevel(currentLevelIndex));
-                    }
-                    child.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = levelIndex.ToString();
-                    levelIndex++;
+                    int currentLevel = levelIndex;  // Capture current index for closure
+                    button.onClick.AddListener(() => Chooselevel(currentLevel));
                 }
+
+                // Set text to show the level index
+                TextMeshProUGUI text = child.GetComponentInChildren<TextMeshProUGUI>();
+                if (text != null)
+                {
+                    text.text = levelIndex.ToString();
+                }
+
+                levelIndex++;
             }
-            //if (transform != null)
-            //{
-            //    for (int j = 0; j < transform.childCount; j++)
-            //    {
-            //        Transform child = transform.GetChild(j);
-            //        child.localScale = Vector3.zero;
-            //        levels.Add(child);
-            //        if (child != null)
-            //        {
-            //            // Set the name of the GameObject
-            //            child.gameObject.name = "Level" + levelIndex;
-
-            //            // Capture the current levelIndex in a local variable
-            //            int currentLevelIndex = levelIndex;
-
-            //            // Set the button's onClick listener
-            //            Button button = child.GetComponent<Button>();
-            //            if (button != null)
-            //            {
-            //                button.onClick.AddListener(() => Chooselevel(currentLevelIndex));
-            //            }
-
-            //            // Set the text of the child
-            //            TextMeshProUGUI text = child.GetChild(1).GetComponent<TextMeshProUGUI>();
-            //            if (text != null)
-            //            {
-            //                text.text = levelIndex.ToString();
-            //            }
-
-            //            // Increment the levelIndex
-            //            levelIndex++;
-            //        }
-            //    }
-            //}
         }
-
     }
 
     private void LevelWasLoaded(int level_)
@@ -326,7 +217,21 @@ public class UIManager : MonoBehaviour
             var level = levels[i];
             bool isUnlocked = i < level_;
 
+            level.GetComponent<Image>().sprite = isUnlocked ? Unlocked : Locked;
             level.GetComponent<Button>().interactable = isUnlocked;
+            level.GetChild(1).GetComponent<Image>().sprite = LockPng;
+            level.GetChild(1).GetComponent<Image>().SetNativeSize();
+            level.GetChild(1).gameObject.SetActive(!isUnlocked);
+            level.GetChild(0).gameObject.SetActive(isUnlocked);
+
+
+
+            // Animate the scale smoothly with DoTween
+            level.transform.localScale = Vector3.zero; // Start from zero
+            DOVirtual.DelayedCall(0.09f * i, () =>
+            {
+                level.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+            });
         }
     }
 
@@ -335,10 +240,58 @@ public class UIManager : MonoBehaviour
         Button_Sound();
         Debug.LogWarning("SELECTED LEVEL - "+ current);
         PlayerPrefs.SetInt("SelectedLevel", current);
+        LevelSelectionScreen.SetActive(false);
         LoadingScreen.SetActive(true);
         Facts_();
         LoadSceneWithProgress("GameScene");
         //SceneManager.LoadScene(1);   
+    }
+
+    int currentTheme = 0;
+    [SerializeField] float[] Contentpositions;
+    [SerializeField]RectTransform contentTransform;
+
+    public void Right(bool right)
+    {
+        if (right)
+        {
+            if (currentTheme < Level_bg_Sprites.Count - 1)
+            {
+                currentTheme++;
+                position = Contentpositions[currentTheme];
+                LevelBg.sprite = Level_bg_Sprites[currentTheme];
+                contentTransform.DOAnchorPos(new Vector2(-position, contentTransform.anchoredPosition.y), 0.5f)
+                                .SetEase(Ease.OutCubic); // Smooth easing
+
+                AnimateThemeChildren(currentTheme);
+            }
+        }
+        else
+        {
+            if (currentTheme > 0)
+            {
+                currentTheme--;
+                position = Contentpositions[currentTheme];
+                LevelBg.sprite = Level_bg_Sprites[currentTheme];
+                contentTransform.DOAnchorPos(new Vector2(-position, contentTransform.anchoredPosition.y), 0.5f)
+                                .SetEase(Ease.OutCubic); // Smooth easing
+
+                AnimateThemeChildren(currentTheme);
+            }
+        }
+    }
+
+    private void AnimateThemeChildren(int themeIndex)
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            Transform levelTransform = Content.GetChild(themeIndex).GetChild(i);
+            levelTransform.localScale = Vector3.zero;  // Start from zero scale
+
+            levelTransform.DOScale(Vector3.one, 0.3f)  // Animate to full scale
+                          .SetEase(Ease.OutBack)
+                          .SetDelay(0.05f * i);  // Add staggered delay for each child
+        }
     }
 
     #endregion
@@ -376,12 +329,6 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
-
-    private void Update()
-    {
-        RectTransform rectTransform = Content.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = Vector2.Lerp(rectTransform.anchoredPosition,new Vector2(position,rectTransform.anchoredPosition.y),2.5f*Time.deltaTime);
-    }
 
     void Button_Sound()
     {

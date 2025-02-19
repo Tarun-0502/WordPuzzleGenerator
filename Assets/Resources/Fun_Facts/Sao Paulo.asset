@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634fccd9793b85748ac680e0d25b485d, type: 3}
+  m_Name: Sao Paulo
+  m_EditorClassIdentifier: 
+  CityName: Sao Paulo
+  Facts:
+  - 'Sao Paulo has the largest Japanese population outside of Japan. '
+  - 'The city banned outdoor advertising, meaning no billboards on streets. '
+  - "The S\xE3o Paulo Art Museum (MASP) has paintings suspended from glass panels. "
+  - "The city\u2019s annual carnival parade is the largest in Brazil after Rio de
+    Janeiro\u2019s. "

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634fccd9793b85748ac680e0d25b485d, type: 3}
+  m_Name: Shanghai
+  m_EditorClassIdentifier: 
+  CityName: Shanghai
+  Facts:
+  - 'The Bund has buildings in multiple European architectural styles. '
+  - 'The Maglev train is the fastest commercial train, reaching speeds of 431 km/h
+    (267 mph). '
+  - 'Shanghai Tower is the second-tallest building in the world. '
+  - "Shanghai is home to China\u2019s first Starbucks Reserve Roastery, the biggest
+    Starbucks in the world when it opened. "

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634fccd9793b85748ac680e0d25b485d, type: 3}
+  m_Name: Bangkok
+  m_EditorClassIdentifier: 
+  CityName: Bangkok
+  Facts:
+  - 'The real name of Bangkok is the longest city name in the world, with 169 letters! '
+  - 'Floating markets are a major tourist attraction. '
+  - 'The Grand Palace houses the sacred Emerald Buddha, carved from a single block
+    of jade. '
+  - "Bangkok is home to the world\u2019s largest golden Buddha statue, weighing over
+    5 tons. "

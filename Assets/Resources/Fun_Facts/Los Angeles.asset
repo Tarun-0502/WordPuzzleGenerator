@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634fccd9793b85748ac680e0d25b485d, type: 3}
+  m_Name: Los Angeles
+  m_EditorClassIdentifier: 
+  CityName: Los Angeles
+  Facts:
+  - 'The Hollywood Sign originally read "Hollywoodland" as an advertisement for a
+    real estate project. '
+  - 'LA is home to the largest number of Mexican restaurants in the U.S. '
+  - 'The Getty Museum is one of the richest art institutions in the world. '
+  - 'You can find hidden underground tunnels used during Prohibition under downtown
+    LA. '

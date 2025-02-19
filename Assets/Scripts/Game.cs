@@ -12,19 +12,23 @@ using System.Collections;
 using static DG.DemiLib.External.DeHierarchyComponent;
 using UnityEngine.XR;
 
-[System.Serializable]
-public class StorePanel
-{
+
+   #region USER-DEFINED-CLASS
+
+
+   [System.Serializable]
+   public class StorePanel
+   {
     public GameObject Root;
-    public List<GameObject> Coins,Gems;
+    public List<GameObject> Coins, Gems;
     public RectTransform Coins_Btn, Gems_Btn;
     public Transform coin_pos, coin_rot;
-    public Transform gem_pos,gem_rot;
-}
+    public Transform gem_pos, gem_rot;
+   }
 
-[System.Serializable]
-public class Power_up
-{
+   [System.Serializable]
+   public class Power_up
+   {
     public Transform hintPosition;
     public Transform hintParent;
     public Transform MultiHintPosition;
@@ -33,11 +37,11 @@ public class Power_up
     public Transform SpotLightParent;
     public Transform WordChainPosition;
     public Transform WordChainParent;
-}
+   }
 
-[System.Serializable]
-public class Coins_Gems_Text
-{
+   [System.Serializable]
+   public class Coins_Gems_Text
+   {
     public TextMeshProUGUI coinsText;
     public TextMeshProUGUI coinsText_LevelComplete;
     public TextMeshProUGUI coinsText_Store;
@@ -46,7 +50,22 @@ public class Coins_Gems_Text
     public TextMeshProUGUI gemsText_LevelComplete;
     public TextMeshProUGUI gemsText_Store;
     public TextMeshProUGUI gemsText_Extra;
-}
+   }
+
+   [System.Serializable]
+   public class powerUpImage
+   {
+    public Transform PowerUp_Pop, Bg;
+    public Image BaseImage;
+    public TextMeshProUGUI textPreview;
+    public Sprite Hint;
+    public Sprite MultipleHints;
+    public Sprite SpotLight;
+    public Sprite WordChain;
+    public Transform hint, multiHint, spotLight, wordChain, extraWords;
+   }
+
+#endregion
 
 public class Game : MonoBehaviour
 {
@@ -86,7 +105,7 @@ public class Game : MonoBehaviour
     [HideInInspector]
     [SerializeField] List<Transform> LettersUsedInLevel = new List<Transform>();
 
-    [HideInInspector]
+    //[HideInInspector]
     [SerializeField] internal int CompletedWords;
 
     [HideInInspector]
@@ -247,18 +266,18 @@ public class Game : MonoBehaviour
 
         UpdateFont();
 
-        //LoadAllCitySprites();
-
         ThemeSelection(DailyChallenges);
 
-        //if (!DailyChallenges)
-        //{
-            
-        //}
+        if (!DailyChallenges)
+        {
+            PowerUpUnlock(PlayerPrefs.GetInt("SelectedLevel"));
+            if (PlayerPrefs.GetInt("SelectedLevel")>6)
+            {
+                powerUpImage.extraWords.gameObject.SetActive(true);
+            }
+        }
 
         LoadSavedData();
-
-        //Coins_Gems_Text_Update();
 
         if (!Game_)
         {
@@ -377,7 +396,6 @@ public class Game : MonoBehaviour
         LoadingScreen.SetActive(false);
         SetColor(level_No, dailychallenges);
     }
-
 
     #endregion
 
@@ -570,6 +588,13 @@ public class Game : MonoBehaviour
         {
             word.GetComponent<LineWord>().CheckAnswer(currentWord);
         }
+        DOVirtual.DelayedCall(2f, () =>
+        {
+            foreach (Transform word in LineWords)
+            {
+                word.GetComponent<LineWord>().CheckAllCellsFilled();
+            }
+        });
 
         //if (!gameLevelWords.Words.Contains(currentWord) && extraWords.extraWordsFromFile.Contains(currentWord))
         //{
@@ -740,15 +765,17 @@ public class Game : MonoBehaviour
 
         DOVirtual.DelayedCall(0.5f, () =>
         {
-            if (Game.Instance.DailyChallenges)
+            if (DailyChallenges)
             {
-                Game.Instance.DailyChallenge1();
+                DailyChallenge1();
             }
         });
     }
     #endregion
 
     #region LEVEL COMPLETE
+
+    [SerializeField] Transform FillingBarFrame;
 
     // Stores unlocked bonuses to ensure bonus levels are not repeated
     public HashSet<int> unlockedBonuses = new HashSet<int>();
@@ -765,6 +792,7 @@ public class Game : MonoBehaviour
                 // Increment daily level and reset if it exceeds 70
                 PlayerPrefs.SetInt("DailyLevel", PlayerPrefs.GetInt("DailyLevel") + 1);
                 PlayerPrefs.SetInt("DailyChallengeComplete", 1);
+                AddCoins(50);
                 if (PlayerPrefs.GetInt("DailyLevel") > 70)
                 {
                     PlayerPrefs.SetInt("DailyLevel", 1);
@@ -854,7 +882,11 @@ public class Game : MonoBehaviour
     // Handles logic after a bonus level is completed
     private void BonusLevelCompleted(int bonus)
     {
-        Debug.Log("Bonus Level Completed!"); // Log completion
+        //Debug.LogError("Bonus Level Completed!"); // Log completion
+        if (FillingBarFrame !=null)
+        {
+            FillingBarFrame.gameObject.SetActive(false);
+        }
         PlayerPrefs.SetInt("Bonus", bonus + 1); // Increment bonus count
         PlayerPrefs.SetInt("Count", 1); // Reset level count
         PlayerPrefs.SetInt("BonusLevel", 0); // Reset bonus level flag
@@ -866,7 +898,6 @@ public class Game : MonoBehaviour
 
         SceneManager.LoadScene(0); // Load main menu after bonus completion
     }
-
 
     #endregion
 
@@ -1274,28 +1305,36 @@ public class Game : MonoBehaviour
     {
         //Debug.LogError("COINS " + Count);
         PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") + Count);
+        Coins_Gems_Text_Update(true);
     }
 
     public void AddGems(int Count)
     {
         //Debug.LogError("GEMS " + Count);
         PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") + Count);
+        Coins_Gems_Text_Update(true);
     }
 
-    public void RemoveCoins(int Count)
+    public bool RemoveCoins(int Count)
     {
-        if (PlayerPrefs.GetInt("Coins") > 0)
+        if (PlayerPrefs.GetInt("Coins") >= Count)
         {
             PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") - Count);
+            Coins_Gems_Text_Update(true);
+            return true;
         }
+        return false;
     }
 
-    public void RemoveGems(int Count)
+    public bool RemoveGems(int Count)
     {
-        if (PlayerPrefs.GetInt("Gems") > 0)
+        if (PlayerPrefs.GetInt("Gems") >= Count)
         {
             PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") - Count);
+            Coins_Gems_Text_Update(true);
+            return true;
         }
+        return false;
     }
 
     #endregion
@@ -1431,9 +1470,185 @@ public class Game : MonoBehaviour
         }
     }
 
-    #endregion
+    public void BuyCoinsWithGems(int gems)
+    {
+        if (RemoveGems(gems))
+        {
+            switch (gems)
+            {
+                case 15:
+                    AddCoins(100);
+                    Move_Coins(StorePanel_.Coins[0].transform.GetChild(0));
+                    break;
+                case 25:
+                    AddCoins(250);
+                    Move_Coins(StorePanel_.Coins[1].transform.GetChild(0));
+                    break;
+                case 75:
+                    AddCoins(500);
+                    Move_Coins(StorePanel_.Coins[2].transform.GetChild(0));
+                    break;
+                case 150:
+                    AddCoins(1000);
+                    Move_Coins(StorePanel_.Coins[3].transform.GetChild(0));
+                    break;
+            }
+        }
+    }
+
+    public void BuyCoins(int coins)
+    {
+        switch (coins)
+        {
+            case 100:
+                AddCoins(100);
+                Move_Coins(StorePanel_.Coins[0].transform.GetChild(0));
+                break;
+            case 250:
+                AddCoins(250);
+                Move_Coins(StorePanel_.Coins[1].transform.GetChild(0));
+                break;
+            case 500:
+                AddCoins(500);
+                Move_Coins(StorePanel_.Coins[2].transform.GetChild(0));
+                break;
+            case 1000:
+                AddCoins(1000);
+                Move_Coins(StorePanel_.Coins[3].transform.GetChild(0));
+                break;
+        }
+    }
+
+    public void BuyGems(int gems)
+    {
+        switch (gems)
+        {
+            case 25:
+                AddGems(25);
+                Move_Gems(StorePanel_.Gems[0].transform.GetChild(0));
+                break;
+            case 50:
+                AddGems(50);
+                Move_Gems(StorePanel_.Gems[1].transform.GetChild(0));
+                break;
+            case 100:
+                AddGems(100);
+                Move_Gems(StorePanel_.Gems[2].transform.GetChild(0));
+                break;
+            case 500:
+                AddGems(500);
+                Move_Gems(StorePanel_.Gems[3].transform.GetChild(0));
+                break;
+        }
+    }
 
     #endregion
 
+    #region POWERUP_UNLOCK
+
+    [SerializeField] powerUpImage powerUpImage;
+
+    void PowerUpUnlock(int level)
+    {
+        // Safety check to avoid null reference errors
+        if (powerUpImage == null)
+        {
+            Debug.LogError("PowerUpUnlock: Missing powerUpImage reference.");
+            return;
+        }
+
+        // Dictionary storing power-up unlock levels, descriptions, sprites, and associated transforms
+        Dictionary<int, (string description, Sprite sprite, Transform powerUpTransform)> powerUpData = new Dictionary<int, (string, Sprite, Transform)>
+    {
+        { 3, ("Reveals a random letter in multiple words", powerUpImage.Hint, powerUpImage.hint) },
+        { 5, ("Reveals multiple letters across different words", powerUpImage.MultipleHints, powerUpImage.multiHint) },
+        { 7, ("Highlights a single word in the puzzle", powerUpImage.SpotLight, powerUpImage.spotLight) },
+        { 9, ("Reveals the first letter of connected words", powerUpImage.WordChain, powerUpImage.wordChain) }
+    };
+
+        // If level > 9, ensure all power-ups are permanently active
+        if (level > 9)
+        {
+            ActivatePowerUp(powerUpImage.hint);
+            ActivatePowerUp(powerUpImage.multiHint);
+            ActivatePowerUp(powerUpImage.spotLight);
+            ActivatePowerUp(powerUpImage.wordChain);
+        }
+        else
+        {
+            // Activate all previously unlocked power-ups
+            foreach (var entry in powerUpData)
+            {
+                if (entry.Key <= level) // Ensure that once unlocked, it stays active
+                {
+                    ActivatePowerUp(entry.Value.powerUpTransform);
+                }
+            }
+
+            // Show pop-up only if it's the first time unlocking this power-up
+            if (powerUpData.TryGetValue(level, out var data))
+            {
+                string key = "PowerUpShown_" + level; // Unique key for PlayerPrefs
+                if (PlayerPrefs.GetInt(key, 0) == 0) // Check if pop-up was already shown
+                {
+                    ApplyPowerUp(data.description, data.sprite);
+                    PlayerPrefs.SetInt(key, 1); // Mark pop-up as shown
+                    PlayerPrefs.Save(); // Save changes to PlayerPrefs
+                }
+            }
+        }
+    }
+
+    /**
+     * Displays the power-up pop-up only once when first unlocked.
+     * @param text - Description of the power-up.
+     * @param sprite - Icon representing the power-up.
+     */
+    void ApplyPowerUp(string text, Sprite sprite)
+    {
+        // Update power-up description and sprite icon
+        powerUpImage.textPreview.text = text;
+        powerUpImage.BaseImage.sprite = sprite;
+
+        // Animate the power-up pop-up
+        powerUpImage.PowerUp_Pop.transform.localScale = Vector3.zero;
+        powerUpImage.Bg.gameObject.SetActive(true);
+        powerUpImage.PowerUp_Pop.gameObject.SetActive(true);
+        powerUpImage.PowerUp_Pop.DOScale(Vector3.one, 0.2f);
+
+        // Auto-hide pop-up after 2 seconds
+        DOVirtual.DelayedCall(2f, () =>
+        {
+            powerUpImage.PowerUp_Pop.DOScale(Vector3.zero, 0.2f).OnComplete(() =>
+            {
+                powerUpImage.Bg.gameObject.SetActive(false);
+                powerUpImage.PowerUp_Pop.gameObject.SetActive(false);
+            });
+        });
+    }
+
+    /**
+     * Ensures the specified power-up remains active once unlocked.
+     * @param powerUp - The transform of the power-up to activate.
+     */
+    void ActivatePowerUp(Transform powerUp)
+    {
+        if (powerUp != null && !powerUp.gameObject.activeSelf) // Activate only if not already active
+        {
+            powerUp.gameObject.SetActive(true);
+        }
+    }
+
+
+
+
+    #endregion
+
+
+    #endregion //MethodsEnd
 
 }
+
+
+
+

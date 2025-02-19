@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634fccd9793b85748ac680e0d25b485d, type: 3}
+  m_Name: London
+  m_EditorClassIdentifier: 
+  CityName: 'London '
+  Facts:
+  - 'The London Underground is the oldest metro system in the world, opening in 1863. '
+  - 'More than 300 languages are spoken in London, making it one of the most linguistically
+    diverse cities. '
+  - "There\u2019s a fake house at 23 & 24 Leinster Gardens\u2014it's just a facade
+    hiding railway tracks. "
+  - 'Big Ben is actually the name of the bell, not the clock tower. '

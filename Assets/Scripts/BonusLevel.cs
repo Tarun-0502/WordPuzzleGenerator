@@ -68,6 +68,9 @@ public class BonusLevel : MonoBehaviour
         int themeIndex = ((bonusLevel - 1) / 4) % 20; // Change theme every 4 levels
         int spriteIndex = (bonusLevel - 1) % 4 + 1;    // Select sprite for current level
 
+        PlayerPrefs.SetInt("Theme", themeIndex);
+        PlayerPrefs.SetInt("Theme"+themeIndex, spriteIndex);
+
         ThemePuzzle selectedTheme = null;
 
         switch (themeIndex)
@@ -94,48 +97,37 @@ public class BonusLevel : MonoBehaviour
             case 19: selectedTheme = CapeTown; Preview.MainImage = CapeTown.MainImage; break;
         }
 
-        Sprite selectedSprite = null;
-        switch (spriteIndex)
-        {
-            case 1: selectedSprite = selectedTheme._1; break;
-            case 2: selectedSprite = selectedTheme._2; break;
-            case 3: selectedSprite = selectedTheme._3; break;
-            case 4: selectedSprite = selectedTheme._4; break;
-        }
-
-        Preview._1 = selectedSprite;
+        Preview._1 = selectedTheme._1;
+        Preview._2 = selectedTheme._2;
+        Preview._3 = selectedTheme._3;
+        Preview._4 = selectedTheme._4;
         // Perform additional logic after bonus level completion
         MainMenu(spriteIndex);
     }
 
     private void MainMenu(int spriteIndex)
     {
-        MainImage.sprite= Preview.MainImage;
-        MainImage.gameObject.SetActive(true);
-        // Logic to load main menu
-        switch (spriteIndex)
+        if (Preview == null)
         {
-            case 1:
-                _1.sprite = Preview._1;
-                _1.gameObject.SetActive(true);
-                break;
+            Debug.LogError("Preview is null! Cannot load images.");
+            return;
+        }
 
-            case 2:
-                _2.sprite = Preview._2;
-                _2.gameObject.SetActive(true);
-                break;
+        MainImage.sprite = Preview.MainImage;
+        MainImage.gameObject.SetActive(true);
 
-            case 3:
-                _3.sprite = Preview._3;
-                _3.gameObject.SetActive(true);
-                break;
+        // Store references in an array for cleaner code
+        Image[] images = { _1, _2, _3, _4 };
+        Sprite[] previewSprites = { Preview._1, Preview._2, Preview._3, Preview._4 };
 
-            case 4:
-                _4.sprite = Preview._4;
-                _4.gameObject.SetActive(true);
-                break;
+        // Assign sprites and toggle visibility
+        for (int i = 0; i < images.Length; i++)
+        {
+            images[i].sprite = previewSprites[i];
+            images[i].gameObject.SetActive(i < spriteIndex);
         }
     }
+
 
     public void LoadLevelData( string levelName)
     {

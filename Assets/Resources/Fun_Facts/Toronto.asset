@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634fccd9793b85748ac680e0d25b485d, type: 3}
+  m_Name: Toronto
+  m_EditorClassIdentifier: 
+  CityName: Toronto
+  Facts:
+  - 'The CN Tower was once the tallest free-standing structure in the world. '
+  - "Toronto\u2019s PATH system is the world's largest underground shopping complex. "
+  - "The city\u2019s name originates from a Mohawk word meaning \"place where trees
+    stand in water.\" "
+  - 'Drake popularized the nickname "The 6ix" for Toronto, referring to its six boroughs. '

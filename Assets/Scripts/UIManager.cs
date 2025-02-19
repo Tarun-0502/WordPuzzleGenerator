@@ -48,6 +48,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] AudioClip buttonSound;
 
     [SerializeField] int FactsIndex;
+    [SerializeField] List<NewFacts> Cityfacts;
 
     [SerializeField] StorePanel StorePanel_;
     [SerializeField] List<TextMeshProUGUI> CoinsText;
@@ -55,11 +56,12 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] int Total_Coins, Total_Gems;
 
-    [SerializeField] NewFacts Paris, NewYork, Tokyo, Egypt;
+    [SerializeField] NewFacts Paris, Egypt, London, Tokyo, SanFrancisco,LosAngeles, Toronto, Dubai, NewYork, Berlin, Barcelona,
+        Bangkok, MexicoCity, KualaLumpur, Shanghai, Rome, Mumbai, SaoPaulo, Istanbul, CapeTown;
+    
+
     [SerializeField] TextMeshProUGUI Cityname, CityFact;
 
-    [SerializeField] Transform Stamps;
-    [SerializeField] List<Transform> StampPages;
     [SerializeField] int CurrentPage,previousPage,NextPage;
 
     [SerializeField] List<Sprite> Level_bg_Sprites;
@@ -95,7 +97,7 @@ public class UIManager : MonoBehaviour
 
         if (!PlayerPrefs.HasKey("Coins"))
         {
-            PlayerPrefs.SetInt("Coins", 50);
+            PlayerPrefs.SetInt("Coins", 100);
         }
 
         if (!PlayerPrefs.HasKey("Gems"))
@@ -108,12 +110,13 @@ public class UIManager : MonoBehaviour
             SaveExtraWords.ClearData();
             PlayerPrefs.SetInt("Bonus", 1);
         }
-        SetLevels(Content);
+        //SetLevels(Content);
         Highestlevel = PlayerPrefs.GetInt("HighestLevel");
         if (PlayerPrefs.GetInt("Count")==1)
         {
-            LevelSelectionScreen.SetActive(true);
-            Play();
+            //LevelSelectionScreen.SetActive(true);
+            MainScreen.SetActive(true);
+            //Play();
         }
         else
         {
@@ -124,27 +127,46 @@ public class UIManager : MonoBehaviour
 
         currentTheme = 0;
         LevelBg.sprite = Level_bg_Sprites[currentTheme];
+
+        getStamps();
+        Stamps_Display(PlayerPrefs.GetInt("Theme"));
     }
 
-    void Facts_()
+    void Facts_(int Level_No)
     {
-        int level_No = PlayerPrefs.GetInt("SelectedLevel", 1);
-
         // List of theme objects (cyclic order)
-        List<NewFacts> themes = new List<NewFacts> { Paris, Egypt, NewYork, Tokyo };
+        List<NewFacts> themes = new List<NewFacts>
+    {
+        Paris, Egypt, London, Tokyo, SanFrancisco, LosAngeles,
+        Toronto, Dubai, NewYork, Berlin, Barcelona, Bangkok,
+        MexicoCity, KualaLumpur, Shanghai, Rome, Mumbai,
+        SaoPaulo, Istanbul, CapeTown
+    };
+
+        if (themes.Count == 0)
+        {
+            Debug.LogError("Themes list is empty!");
+            return;
+        }
 
         // Determine the cyclic theme index (every 20 levels)
-        int themeIndex = ((level_No - 1) / 20) % themes.Count;
+        int themeIndex = ((Level_No - 1) / 20) % themes.Count;
         NewFacts activeTheme = themes[themeIndex];
+
+        if (activeTheme == null)
+        {
+            Debug.LogError("Active theme is null!");
+            return;
+        }
 
         // Update city name
         Cityname.text = activeTheme.CityName;
 
         // Determine fact index within the 20-level block
-        int factIndex = ((level_No - 1) % 20) / 5;
+        int factIndex = ((Level_No - 1) % 20) / 5;
 
         // Ensure the fact index is within bounds
-        if (factIndex < activeTheme.Facts.Count)
+        if (activeTheme.Facts != null && factIndex < activeTheme.Facts.Count)
         {
             CityFact.text = activeTheme.Facts[factIndex];
         }
@@ -159,6 +181,7 @@ public class UIManager : MonoBehaviour
         LevelWasLoaded(Highestlevel + 1);
         Button_Sound();
         //LevelWasLoaded(400);
+        Chooselevel(Highestlevel+1);
     }
 
     #region LEVELS_SELECTION
@@ -195,7 +218,7 @@ public class UIManager : MonoBehaviour
                 if (button != null)
                 {
                     int currentLevel = levelIndex;  // Capture current index for closure
-                    button.onClick.AddListener(() => Chooselevel(currentLevel));
+                    //button.onClick.AddListener(() => Chooselevel(currentLevel));
                 }
 
                 // Set text to show the level index
@@ -242,7 +265,7 @@ public class UIManager : MonoBehaviour
         PlayerPrefs.SetInt("SelectedLevel", current);
         LevelSelectionScreen.SetActive(false);
         LoadingScreen.SetActive(true);
-        Facts_();
+        Facts_(current);
         LoadSceneWithProgress("GameScene");
         //SceneManager.LoadScene(1);   
     }
@@ -429,22 +452,26 @@ public class UIManager : MonoBehaviour
         Coins_Gems_Text_Update(true);
     }
 
-    public void RemoveCoins(int Count)
+    public bool RemoveCoins(int Count)
     {
-        if (PlayerPrefs.GetInt("Coins") > Count)
+        if (PlayerPrefs.GetInt("Coins") >= Count)
         {
             PlayerPrefs.SetInt("Coins", PlayerPrefs.GetInt("Coins") - Count);
+            Coins_Gems_Text_Update(true);
+            return true;
         }
-        Coins_Gems_Text_Update(true);
+        return false;
     }
 
-    public void RemoveGems(int Count)
+    public bool RemoveGems(int Count)
     {
-        if (PlayerPrefs.GetInt("Gems") > Count)
+        if (PlayerPrefs.GetInt("Gems") >= Count)
         {
             PlayerPrefs.SetInt("Gems", PlayerPrefs.GetInt("Gems") - Count);
+            Coins_Gems_Text_Update(true);
+            return true;
         }
-        Coins_Gems_Text_Update(true);
+        return false;
     }
 
     #endregion
@@ -563,88 +590,226 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void BuyCoinsWithGems(int gems)
+    {
+        if (RemoveGems(gems))
+        {
+            switch (gems)
+            {
+                case 15:
+                    AddCoins(100);
+                    Move_Coins(StorePanel_.Coins[0].transform.GetChild(0));
+                    break;
+                case 25:
+                    AddCoins(250);
+                    Move_Coins(StorePanel_.Coins[1].transform.GetChild(0));
+                    break;
+                case 75:
+                    AddCoins(500);
+                    Move_Coins(StorePanel_.Coins[2].transform.GetChild(0));
+                    break;
+                case 150:
+                    AddCoins(1000);
+                    Move_Coins(StorePanel_.Coins[3].transform.GetChild(0));
+                    break;
+            }
+        }
+    }
+
+    public void BuyCoins(int coins)
+    {
+        switch (coins)
+        {
+            case 100:
+                AddCoins(100);
+                Move_Coins(StorePanel_.Coins[0].transform.GetChild(0));
+                break;
+            case 250:
+                AddCoins(250);
+                Move_Coins(StorePanel_.Coins[1].transform.GetChild(0));
+                break;
+            case 500:
+                AddCoins(500);
+                Move_Coins(StorePanel_.Coins[2].transform.GetChild(0));
+                break;
+            case 1000:
+                AddCoins(1000);
+                Move_Coins(StorePanel_.Coins[3].transform.GetChild(0));
+                break;
+        }
+    }
+
+    public void BuyGems(int gems)
+    {
+        switch (gems)
+        {
+            case 25:
+                AddGems(25);
+                Move_Gems(StorePanel_.Gems[0].transform.GetChild(0));
+                break;
+            case 50:
+                AddGems(50);
+                Move_Gems(StorePanel_.Gems[1].transform.GetChild(0));
+                break;
+            case 100:
+                AddGems(100);
+                Move_Gems(StorePanel_.Gems[2].transform.GetChild(0));
+                break;
+            case 500:
+                AddGems(500);
+                Move_Gems(StorePanel_.Gems[3].transform.GetChild(0));
+                break;
+        }
+    }
+
     #endregion
 
     #endregion
 
     #region STAMPS
 
-    [SerializeField] private List<Transform> Stamps_;
     [SerializeField] private List<CityStamp> stamps;
+    [SerializeField] private List<Transform> Stamps_;
+    [SerializeField] List<Transform> StampPages;
+    [SerializeField] Transform child;
 
     void getStamps()
     {
-        for (int i = 0; i < Stamps.childCount; i++)
+        stamps.Clear(); // Clear previous data if needed
+        Stamps_.Clear();
+
+        for (int i=0;i<StampPages.Count;i++)
+        {
+            child = StampPages[i].GetChild(0);
+            for (int j = 0; j < child.childCount; j++)
+            {
+                Stamps_.Add(child.GetChild(j));
+            }
+        }
+
+        for (int i = 0; i < Stamps_.Count; i++)
         {
             CityStamp newStamp = new CityStamp();
-            newStamp.Stamp = new Stamps();  // Initialize the Stamps object
+            newStamp.Stamp = new Stamps();  // Ensure `Stamps` is a valid class
 
-            newStamp.Stamp.Puzzle1 = Stamps_[i].Find("Puzzle_1");
-            newStamp.Stamp.Puzzle2 = Stamps_[i].Find("Puzzle_2");
-            newStamp.Stamp.Puzzle3 = Stamps_[i].Find("Puzzle_3");
-            newStamp.Stamp.Puzzle4 = Stamps_[i].Find("Puzzle_4");
+            if (Stamps_[i] != null)
+            {
+                newStamp.Stamp.Puzzle1 = Stamps_[i].Find("Puzzle_1");
+                newStamp.Stamp.Puzzle2 = Stamps_[i].Find("Puzzle_2");
+                newStamp.Stamp.Puzzle3 = Stamps_[i].Find("Puzzle_3");
+                newStamp.Stamp.Puzzle4 = Stamps_[i].Find("Puzzle_4");
 
-            newStamp.Stamp.MainImage = Stamps_[i].Find("Main_");
-            newStamp.Stamp.cityName = Stamps_[i].GetComponentInChildren<TextMeshProUGUI>();
+                newStamp.Stamp.MainImage = Stamps_[i].Find("Main_");
+                newStamp.Stamp.cityName = Stamps_[i].GetComponentInChildren<TextMeshProUGUI>();
+                newStamp.Stamp.cityName.text = ThemeNames[i];
 
-            stamps.Add(newStamp);  // Add after setting up newStamp
+                stamps.Add(newStamp);
+            }
+            else
+            {
+                Debug.LogWarning($"Stamps_[{i}] is null!");
+            }
         }
     }
 
-    public void Stamps_Display()
+    public void Stamps_Display(int Theme)
     {
-
+        for (int i = 0;i < stamps.Count; i++)
+        {
+            if (i<=Theme)
+            {
+                ShowPuzzle(stamps[i], PlayerPrefs.GetInt("Theme" + i));
+            }
+        }
     }
 
-    private bool isAnimating = false;  // Animation lock
-
-    public void Stamps_Update(bool Left)
+    void ShowPuzzle(CityStamp currentStamp, int count)
     {
-        if (isAnimating) return;  // Prevent multiple clicks during animation
-        isAnimating = true;        // Lock animation
+        // Store the puzzles in an array for easy access
+        GameObject[] puzzles = new GameObject[]
+        {
+        currentStamp.Stamp.Puzzle1.gameObject,
+        currentStamp.Stamp.Puzzle2.gameObject,
+        currentStamp.Stamp.Puzzle3.gameObject,
+        currentStamp.Stamp.Puzzle4.gameObject
+        };
 
-        if (Left)
+        // Loop through all puzzles and activate only up to 'count'
+        for (int i = 0; i < puzzles.Length; i++)
+        {
+            puzzles[i].SetActive(i < count);
+        }
+    }
+
+
+    [SerializeField] private Vector2 startPosition;
+    [SerializeField] private Vector2 endPosition;
+    private bool isAnimating = false;
+    private float swipeThreshold = 50f;  // Minimum swipe distance to trigger
+
+    void Update()
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Began)
+            {
+                startPosition = touch.position;
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                endPosition = touch.position;
+                float swipeDistance = endPosition.x - startPosition.x;
+
+                if (Mathf.Abs(swipeDistance) > swipeThreshold)  // Prevent small movements from triggering
+                {
+                    if (swipeDistance < 0)
+                        Stamps_Update(false);  // Swipe left
+                    else
+                        Stamps_Update(true); // Swipe right
+                }
+            }
+        }
+    }
+
+    public void Stamps_Update(bool left)
+    {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        if (left) // Swipe left (go to the previous page)
         {
             if (CurrentPage > 0)
             {
                 previousPage = CurrentPage - 1;
-
-                StampPages[previousPage].transform.DOScale(0.8f, 0.25f).SetEase(Ease.InOutSine)
-                    .OnComplete(() => StampPages[previousPage].transform.DOScale(1f, 0.25f).SetEase(Ease.InOutSine));
-
-                StampPages[previousPage].transform.DORotate(new Vector3(0, 0, 0), 0.5f, RotateMode.FastBeyond360)
-                    .OnComplete(() =>
-                    {
-                        CurrentPage--;
-                        isAnimating = false;  // Unlock after animation completes
-                    });
-            }
-            else
-            {
-                isAnimating = false;  // Unlock if no page flip happens
+                AnimatePage(previousPage, 0);
+                CurrentPage--;
             }
         }
-        else
+        else // Swipe right (go to the next page)
         {
             if (CurrentPage < StampPages.Count - 1)
             {
                 previousPage = CurrentPage;
-
-                StampPages[CurrentPage].transform.DOScale(0.8f, 0.25f).SetEase(Ease.InOutSine)
-                    .OnComplete(() => StampPages[CurrentPage].transform.DOScale(1f, 0.25f).SetEase(Ease.InOutSine));
-
-                StampPages[CurrentPage].transform.DORotate(new Vector3(0, 180, 0), 0.5f, RotateMode.FastBeyond360)
-                    .OnComplete(() =>
-                    {
-                        CurrentPage++;
-                        isAnimating = false;  // Unlock after animation completes
-                    });
-            }
-            else
-            {
-                isAnimating = false;  // Unlock if no page flip happens
+                AnimatePage(CurrentPage, 180);
+                CurrentPage++;
             }
         }
+
+        isAnimating = false; // Unlock after animation
+    }
+
+    private void AnimatePage(int pageIndex, float targetRotation)
+    {
+        StampPages[pageIndex].transform.DOComplete(); // Cancel any ongoing animations
+        StampPages[pageIndex].transform.DOScale(0.8f, 0.25f).SetEase(Ease.InOutSine)
+            .OnComplete(() =>
+            {
+                StampPages[pageIndex].transform.DOScale(1f, 0.25f).SetEase(Ease.InOutSine);
+            });
+
+        StampPages[pageIndex].transform.DORotate(new Vector3(0, targetRotation, 0), 0.5f, RotateMode.FastBeyond360);
     }
 
     #endregion

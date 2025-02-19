@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634fccd9793b85748ac680e0d25b485d, type: 3}
+  m_Name: Dubai
+  m_EditorClassIdentifier: 
+  CityName: Dubai
+  Facts:
+  - 'The Burj Khalifa is the tallest building in the world at 828 meters (2,717 feet). '
+  - 'The city has robot jockeys for camel racing instead of human riders. '
+  - 'The Dubai Mall has an ice-skating rink and a massive indoor aquarium. '
+  - 'Palm Jumeirah, an artificial island, is shaped like a palm tree and visible
+    from space. '

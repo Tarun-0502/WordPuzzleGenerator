@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 634fccd9793b85748ac680e0d25b485d, type: 3}
+  m_Name: Cape Town
+  m_EditorClassIdentifier: 
+  CityName: Cape Town
+  Facts:
+  - "Table Mountain is one of the world\u2019s oldest mountains, estimated to be
+    600 million years old. "
+  - 'Cape Town was the first city outside Europe to get blue flag beaches (indicating
+    cleanliness and safety). '
+  - 'The Cape of Good Hope was originally called the Cape of Storms by explorers. '
+  - Nelson Mandela was imprisoned on Robben Island just off the coast of Cape Town
+    for 18 years.

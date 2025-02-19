@@ -61,6 +61,7 @@ public class LineWord : MonoBehaviour
         }
         else
         {
+            //CheckAllCellsFilled();
             if (Answer==CurrentText)
             {
                 foreach (Transform t in Cells)
@@ -99,30 +100,35 @@ public class LineWord : MonoBehaviour
 
     public void CheckAllCellsFilled()
     {
-        // Ensure the filled cell count is accurate
-        Filled_Cells_Count = 0;
-
-        foreach (Transform t in Cells)
+        if (!AnswerChecked)
         {
-            if (t.GetComponent<Cell>().showText)
-            {
-                Filled_Cells_Count++;
-            }
-        }
+            // Ensure the filled cell count is accurate
+            Filled_Cells_Count = 0;
 
-        // Mark the answer as checked if all cells are filled
-        if (Filled_Cells_Count == Cells.Count)
-        {
-            AnswerChecked = true;
-            Game.Instance.CompletedWords--;
-
-            // Trigger level completion if all words are completed
-            if (Game.Instance.CompletedWords == 0)
+            foreach (Transform t in Cells)
             {
-                DOVirtual.DelayedCall(0.75f, () =>
+                if (t.GetComponent<Cell>().showText)
                 {
-                    Game.Instance.LevelCompleted();
-                });
+                    Filled_Cells_Count++;
+                }
+            }
+
+            //Debug.LogError(Answer + Filled_Cells_Count);
+
+            // Mark the answer as checked if all cells are filled
+            if (Filled_Cells_Count == Cells.Count)
+            {
+                AnswerChecked = true;
+                Game.Instance.CompletedWords--;
+
+                // Trigger level completion if all words are completed
+                if (Game.Instance.CompletedWords == 0)
+                {
+                    DOVirtual.DelayedCall(0.75f, () =>
+                    {
+                        Game.Instance.LevelCompleted();
+                    });
+                }
             }
         }
     }

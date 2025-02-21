@@ -80,6 +80,8 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
+    [SerializeField] TextMeshProUGUI spintext;
+
     #region METHODS
 
     void Start()
@@ -130,6 +132,15 @@ public class UIManager : MonoBehaviour
 
         getStamps();
         Stamps_Display(PlayerPrefs.GetInt("Theme"));
+
+        if (!PlayerPrefs.HasKey("lastSpin"))
+        {
+            PlayerPrefs.SetInt("lastSpin", DateTime.Now.DayOfYear);
+            PlayerPrefs.SetInt("SpinCount", 1);
+            PlayerPrefs.Save();
+        }
+        spintext.text = PlayerPrefs.GetInt("SpinCount").ToString();
+
     }
 
     void Facts_(int Level_No)
@@ -742,8 +753,8 @@ public class UIManager : MonoBehaviour
     }
 
 
-    [SerializeField] private Vector2 startPosition;
-    [SerializeField] private Vector2 endPosition;
+     private Vector2 startPosition;
+     private Vector2 endPosition;
     private bool isAnimating = false;
     private float swipeThreshold = 50f;  // Minimum swipe distance to trigger
 

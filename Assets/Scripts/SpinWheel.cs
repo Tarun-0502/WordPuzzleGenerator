@@ -1,12 +1,14 @@
 using DG.Tweening;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SpinWheel : MonoBehaviour
 {
+    [SerializeField] List<float> RotatePowers;
     public float RotatePower; // Power applied to rotate the wheel
     public float StopPower; // Deceleration rate
 
@@ -16,7 +18,7 @@ public class SpinWheel : MonoBehaviour
 
     [SerializeField] GameObject Rewards_Screen;
     [SerializeField] Image Rewards;
-    [SerializeField] Sprite Coins_50, Coins_100, Coins_150, Gems,Power;
+    [SerializeField] Sprite Coins_50, Coins_100, Coins_150, Gems, Power;
     [SerializeField] TextMeshProUGUI Count;
 
     [SerializeField] Transform coin_pos, coin_rot;
@@ -32,6 +34,7 @@ public class SpinWheel : MonoBehaviour
     {
         rbody = GetComponent<Rigidbody2D>();
         LastSpin();
+        SpinCount=PlayerPrefs.GetInt("SpinCount");
     }
 
     private void Update()
@@ -62,17 +65,24 @@ public class SpinWheel : MonoBehaviour
     // Method to start spinning the wheel
     public void Spin()
     {
-        if (inRotate == 0 && SpinCount>0)
+        if (inRotate == 0 && SpinCount > 0)
         {
             PlayerPrefs.SetInt("lastSpin", DateTime.Now.DayOfYear);
             PlayerPrefs.Save();
+
+            // Pick a random rotation power from the predefined list
+            RotatePower = RotatePowers[UnityEngine.Random.Range(0, RotatePowers.Count)];
+
+            // Apply the selected power
             rbody.AddTorque(RotatePower);
+
             inRotate = 1;
             SpinCount--;
+            PlayerPrefs.SetInt("SpinCount", SpinCount);
+            PlayerPrefs.Save();
         }
     }
 
-    // Determine the reward based on final rotation
     void GetReward()
     {
         float rot = transform.eulerAngles.z;
@@ -118,45 +128,57 @@ public class SpinWheel : MonoBehaviour
         switch (Score)
         {
             case 1:
-                ShowRewardsScreen("50",Coins_50,true);
+                ShowRewardsScreen("50", Coins_50, true);
                 break;
 
             case 2:
-                GetSpin("+1 Spin",Power);
+                GetSpin("+1 Spin", Power);
                 break;
 
             case 3:
-                ShowRewardsScreen("100",Coins_100, true);
+                ShowRewardsScreen("100", Coins_100, true);
                 break;
 
             case 4:
-                ShowRewardsScreen("10",Gems);
+                ShowRewardsScreen("10", Gems);
                 break;
 
             case 5:
-                ShowRewardsScreen("150",Coins_150, true);
+                ShowRewardsScreen("150", Coins_150, true);
                 break;
 
             case 6:
-                GetSpin("+1 Spin",Power);
+                GetSpin("+1 Spin", Power);
                 break;
 
             case 7:
-                ShowRewardsScreen("5",Gems);
+                ShowRewardsScreen("5", Gems);
+                break;
+            case 8:
+                ShowRewardsScreen("200", Coins_150, true);
                 break;
         }
     }
 
-    void GetSpin(string text,Sprite _2D)
+    void GetSpin(string text, Sprite _2D)
     {
+        SpinCount++;
+        PlayerPrefs.SetInt("SpinCount", SpinCount);
         Rewards_Screen.SetActive(true);
         Count.text = text;
         Rewards.sprite = _2D;
         Rewards.SetNativeSize();
-        Rewards.transform.DOScale(Vector3.one,0.25f);
+        Rewards.transform.DOScale(Vector3.one, 0.35f);
+        DOVirtual.DelayedCall(0.35f, () =>
+        {
+            Rewards.transform.DOScale(Vector3.one, 0.35f).OnComplete(() =>
+            {
+                Rewards_Screen.SetActive(false);
+            });
+        });
     }
 
-    void ShowRewardsScreen(string text,Sprite _2D, bool Coins = false)
+    void ShowRewardsScreen(string text, Sprite _2D, bool Coins = false)
     {
         Rewards_Screen.SetActive(true);
         Count.text = text;
@@ -282,6 +304,7 @@ public class SpinWheel : MonoBehaviour
         if (PlayerPrefs.GetInt("lastSpin") != DateTime.Now.DayOfYear)
         {
             SpinCount++;
+            PlayerPrefs.SetInt("SpinCount", SpinCount);
         }
     }
 

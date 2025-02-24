@@ -29,6 +29,7 @@ public class SpinWheel : MonoBehaviour
     [SerializeField] int SpinCount;
 
     [SerializeField] TextMeshProUGUI SpinText;
+    [SerializeField] Transform ExtraSpin;
 
     private void Start()
     {
@@ -58,7 +59,7 @@ public class SpinWheel : MonoBehaviour
             }
         }
 
-        SpinText.text = SpinCount.ToString();
+        SpinText.text =  SpinCount.ToString();
 
     }
 

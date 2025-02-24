@@ -40,7 +40,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] float position;
 
     [SerializeField] Sprite Unlocked, Locked,LockPng;
-    [SerializeField] TextMeshProUGUI ThemeName,Left_arrow,Right_Arrow;
     [SerializeField] List<string> ThemeNames;
     [SerializeField] int ThemeIndex;
 
@@ -81,6 +80,7 @@ public class UIManager : MonoBehaviour
     #endregion
 
     [SerializeField] TextMeshProUGUI spintext;
+    [SerializeField] GameObject DailyPuzzle,RemoveAds,Play_Btn;
 
     #region METHODS
 
@@ -140,6 +140,19 @@ public class UIManager : MonoBehaviour
             PlayerPrefs.Save();
         }
         spintext.text = PlayerPrefs.GetInt("SpinCount").ToString();
+        if (Highestlevel>25)
+        {
+            DailyPuzzle.SetActive(true);
+            Play_Btn.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 677), 0.5f).SetEase(Ease.OutQuad);
+            DailyPuzzle.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 461), 0.5f).SetEase(Ease.OutQuad);
+            RemoveAds.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 255), 0.5f).SetEase(Ease.OutQuad);
+        }
+        else
+        {
+            DailyPuzzle.SetActive(false);
+            Play_Btn.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 677), 0.5f).SetEase(Ease.OutQuad);
+            RemoveAds.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 428), 0.5f).SetEase(Ease.OutQuad);
+        }
 
     }
 
@@ -364,7 +377,7 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-    void Button_Sound()
+    public void Button_Sound()
     {
         AudioSource.clip = buttonSound;
         AudioSource.Play();
@@ -517,6 +530,7 @@ public class UIManager : MonoBehaviour
 
     public void Store_Btn(bool Gems)
     {
+        Button_Sound();
         if (Gems)
         {
             // Animate position of Coins_Btn
@@ -603,6 +617,7 @@ public class UIManager : MonoBehaviour
 
     public void BuyCoinsWithGems(int gems)
     {
+        Button_Sound();
         if (RemoveGems(gems))
         {
             switch (gems)
@@ -629,6 +644,7 @@ public class UIManager : MonoBehaviour
 
     public void BuyCoins(int coins)
     {
+        Button_Sound();
         switch (coins)
         {
             case 100:
@@ -652,6 +668,7 @@ public class UIManager : MonoBehaviour
 
     public void BuyGems(int gems)
     {
+        Button_Sound();
         switch (gems)
         {
             case 25:
@@ -755,8 +772,8 @@ public class UIManager : MonoBehaviour
 
      private Vector2 startPosition;
      private Vector2 endPosition;
-    private bool isAnimating = false;
-    private float swipeThreshold = 50f;  // Minimum swipe distance to trigger
+     private bool isAnimating = false;
+     private float swipeThreshold = 50f;  // Minimum swipe distance to trigger
 
     void Update()
     {
@@ -789,6 +806,7 @@ public class UIManager : MonoBehaviour
         if (isAnimating) return;
         isAnimating = true;
 
+        Button_Sound();
         if (left) // Swipe left (go to the previous page)
         {
             if (CurrentPage > 0)

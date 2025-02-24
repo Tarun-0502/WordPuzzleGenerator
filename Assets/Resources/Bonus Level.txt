@@ -7,7 +7,7 @@ ARCH, CAR, CHAR
 Level-3
 EIFFEL, FILE, LIFE
 
-Level-4:
+Level-4
 MUSE, USE, SUM
 
 Level-5

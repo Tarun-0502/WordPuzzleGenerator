@@ -490,6 +490,7 @@ public class Game : MonoBehaviour
         {
             levelText.text = "BonusLevel";
             Level_Text_Settings.text = "BonusLevel";
+            Place_Text.text = "BonusLevel";
         }
 
         for (int i = 0; i < characters.Count; i++)
@@ -812,7 +813,7 @@ public class Game : MonoBehaviour
                     {
                         HighestLevel = selectedLevel;
                         PlayerPrefs.SetInt("HighestLevel", PlayerPrefs.GetInt("HighestLevel") + 1);
-                        AddCoins(20);
+                        AddCoins(5);//Level Win Rewards...
 
                         if (relativeLevel == 20)
                         {
@@ -1560,14 +1561,14 @@ public class Game : MonoBehaviour
         // Dictionary storing power-up unlock levels, descriptions, sprites, and associated transforms
         Dictionary<int, (string description, Sprite sprite, Transform powerUpTransform)> powerUpData = new Dictionary<int, (string, Sprite, Transform)>
     {
-        { 3, ("Reveals a random letter in multiple words", powerUpImage.Hint, powerUpImage.hint) },
-        { 5, ("Reveals multiple letters across different words", powerUpImage.MultipleHints, powerUpImage.multiHint) },
-        { 7, ("Highlights a single word in the puzzle", powerUpImage.SpotLight, powerUpImage.spotLight) },
-        { 9, ("Reveals the first letter of connected words", powerUpImage.WordChain, powerUpImage.wordChain) }
+        { 1, ("Reveals a random letter in multiple words", powerUpImage.Hint, powerUpImage.hint) },
+        { 15, ("Reveals multiple letters across different words", powerUpImage.MultipleHints, powerUpImage.multiHint) },
+        { 30, ("Highlights a single word in the puzzle", powerUpImage.SpotLight, powerUpImage.spotLight) },
+        { 45, ("Reveals the first letter of connected words", powerUpImage.WordChain, powerUpImage.wordChain) }
     };
 
-        // If level > 9, ensure all power-ups are permanently active
-        if (level > 9)
+        // If level > 45, ensure all power-ups are permanently active
+        if (level > 45)
         {
             ActivatePowerUp(powerUpImage.hint);
             ActivatePowerUp(powerUpImage.multiHint);
@@ -1638,9 +1639,6 @@ public class Game : MonoBehaviour
             powerUp.gameObject.SetActive(true);
         }
     }
-
-
-
 
     #endregion
 

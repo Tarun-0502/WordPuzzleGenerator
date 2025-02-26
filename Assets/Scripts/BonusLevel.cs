@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,13 +59,19 @@ public class BonusLevel : MonoBehaviour
     public TextAsset levelText;
 
     public ThemePuzzle Preview;
+    private string defaultColorCode = "#6A6565";
+    private string CompleteColorCode = "#FFFFFF";
 
     [SerializeField] Image MainImage, _1, _2, _3, _4;
 
     #endregion
 
+    [SerializeField] Transform NextButton;
+    [SerializeField] Image puzzleImage;
+    [SerializeField] Transform FillingBar;
     public void BounusLevelCompleted(int bonusLevel)
     {
+        FillingBar.gameObject.SetActive(false);
         int themeIndex = ((bonusLevel - 1) / 4) % 20; // Change theme every 4 levels
         int spriteIndex = (bonusLevel - 1) % 4 + 1;    // Select sprite for current level
 
@@ -103,6 +110,7 @@ public class BonusLevel : MonoBehaviour
         Preview._4 = selectedTheme._4;
         // Perform additional logic after bonus level completion
         MainMenu(spriteIndex);
+        puzzleImage.sprite = selectedTheme.MainImage;
     }
 
     private void MainMenu(int spriteIndex)
@@ -125,6 +133,26 @@ public class BonusLevel : MonoBehaviour
         {
             images[i].sprite = previewSprites[i];
             images[i].gameObject.SetActive(i < spriteIndex);
+        }
+        if (spriteIndex==4) // All Sprites Collected
+        {
+            NextButton.gameObject.SetActive(false);
+            puzzleImage.gameObject.SetActive(true);
+            DOVirtual.DelayedCall(0.3f, () =>
+            {
+                puzzleImage.transform.localScale = Vector3.zero;
+                puzzleImage.transform.DOScale(Vector3.one, 0.35f)
+                    .SetEase(Ease.OutBack) // Makes the scaling smoother with a bounce
+                      .OnComplete(() =>
+                      {
+                          NextButton.gameObject.SetActive(true);
+                      });
+
+            });
+        }
+        else
+        {
+            NextButton.gameObject.SetActive(true);
         }
     }
 

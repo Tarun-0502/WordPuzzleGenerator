@@ -114,17 +114,9 @@ public class UIManager : MonoBehaviour
         }
         //SetLevels(Content);
         Highestlevel = PlayerPrefs.GetInt("HighestLevel");
-        if (PlayerPrefs.GetInt("Count")==1)
-        {
-            //LevelSelectionScreen.SetActive(true);
-            MainScreen.SetActive(true);
-            //Play();
-        }
-        else
-        {
-            MainScreen.SetActive(true);
-        }
-
+        
+        MainScreen.SetActive(true);
+        
         Coins_Gems_Text_Update(false);
 
         currentTheme = 0;
@@ -688,6 +680,29 @@ public class UIManager : MonoBehaviour
                 Move_Gems(StorePanel_.Gems[3].transform.GetChild(0));
                 break;
         }
+    }
+
+    public void BuySpecialpack(bool Pack1)
+    {
+        if (Pack1)
+        {
+            AddCoins(500);
+            AddGems(100);
+            PlayerPrefs.SetInt("SpinCount", PlayerPrefs.GetInt("SpinCount") + 1);
+        }
+        else
+        {
+            AddCoins(1000);
+            AddGems(2500);
+            PlayerPrefs.SetInt("SpinCount", PlayerPrefs.GetInt("SpinCount") + 5);
+        }
+    }
+
+    public void BuySpins()
+    {
+        PlayerPrefs.SetInt("SpinCount", PlayerPrefs.GetInt("SpinCount") + 5);
+        PlayerPrefs.Save();
+        spintext.text = PlayerPrefs.GetInt("SpinCount").ToString();
     }
 
     #endregion

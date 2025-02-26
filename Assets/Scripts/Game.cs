@@ -852,7 +852,7 @@ public class Game : MonoBehaviour
             int count = PlayerPrefs.GetInt("Count"); // Get the current count
             int bonus = PlayerPrefs.GetInt("Bonus", 0); // Get the bonus count
             int selectedLevel = PlayerPrefs.GetInt("SelectedLevel"); // Get the current level
-
+           
             if (count < 5) // Check if 5 levels have not been completed yet
             {
                 PlayerPrefs.SetInt("SelectedLevel", selectedLevel + 1); // Move to the next level
@@ -896,7 +896,6 @@ public class Game : MonoBehaviour
         {
             PlayerPrefs.SetInt("Bonus", 0);
         }
-
         SceneManager.LoadScene(0); // Load main menu after bonus completion
     }
 
@@ -1542,6 +1541,23 @@ public class Game : MonoBehaviour
                 break;
         }
     }
+
+    public void BuySpecialpack(bool Pack1)
+    {
+        if (Pack1)
+        {
+            AddCoins(500);
+            AddGems(100);
+            PlayerPrefs.SetInt("SpinCount", PlayerPrefs.GetInt("SpinCount") + 1);
+        }
+        else
+        {
+            AddCoins(1000);
+            AddGems(2500);
+            PlayerPrefs.SetInt("SpinCount", PlayerPrefs.GetInt("SpinCount") + 5);
+        }
+    }
+
 
     #endregion
 

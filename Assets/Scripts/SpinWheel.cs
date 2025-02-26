@@ -58,7 +58,7 @@ public class SpinWheel : MonoBehaviour
                 t = 0;
             }
         }
-
+        SpinCount = PlayerPrefs.GetInt("SpinCount");
         SpinText.text =  SpinCount.ToString();
 
     }

@@ -236,6 +236,19 @@ public class Game : MonoBehaviour
 
     void Start()
     {
+
+        if (PlayerPrefs.GetInt("AdWatch") == 1)
+        {
+            PlayerPrefs.SetInt("AdWatch", 1);
+            Ad_button.SetActive(false);
+            buy_button.SetActive(true);
+        }
+        else
+        {
+            Ad_button.SetActive(true);
+            buy_button.SetActive(false);
+        }
+
         if (gameLevelWords==null)
         {
             gameLevelWords = FindObjectOfType<GameLevelWords>();
@@ -1555,6 +1568,18 @@ public class Game : MonoBehaviour
             AddCoins(1000);
             AddGems(2500);
             PlayerPrefs.SetInt("SpinCount", PlayerPrefs.GetInt("SpinCount") + 5);
+        }
+    }
+
+    public GameObject Ad_button, buy_button;
+    public void Ad_100()
+    {
+        if (PlayerPrefs.GetInt("AdWatch") == 0)
+        {
+            PlayerPrefs.SetInt("AdWatch", 1);
+            BuyCoins(100);
+            Ad_button.SetActive(false);
+            buy_button.SetActive(true);
         }
     }
 

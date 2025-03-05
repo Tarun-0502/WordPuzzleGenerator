@@ -244,24 +244,21 @@ public class ExtraWords : MonoBehaviour
 
     }
 
-    void ExtraWords_Collected(List<string> words,int count)
+    void ExtraWords_Collected()
     {
-        if (words.Count==count)
-        {
-            SaveExtraWords.ClearData();
-            Game.Instance.AddCoins(10);
-            FoundedExtraWords.Clear();
-            WordsList.text= string.Empty;
-            Game.Instance.Coins_Gems_Text_Update(true);
-        }
+        SaveExtraWords.ClearData();
+        Game.Instance.AddCoins(10);
+        FoundedExtraWords.Clear();
+        WordsList.text = string.Empty;
+        fillBar.fillAmount = (float)FoundedExtraWords.Count / ExtraWordsCollected;
+        CurrentWords_Collected.text = FoundedExtraWords.Count + "/" + ExtraWordsCollected;
     }
 
     public void Move_Coins(Transform parent)
     {
-        ExtraWords_Collected(FoundedExtraWords, ExtraWordsCollected);
-
-        if (FoundedExtraWords.Count==ExtraWordsCollected)
+        if (FoundedExtraWords.Count>=ExtraWordsCollected)
         {
+            ExtraWords_Collected();
             float delayIncrement = 0.2f; // Adjust for desired spacing
             float duration = 0.5f;
 
@@ -287,6 +284,7 @@ public class ExtraWords : MonoBehaviour
                         coin.localPosition = Vector3.zero;
                     });
             }
+            Game.Instance.Coins_Gems_Text_Update(true);
         }
     }
 

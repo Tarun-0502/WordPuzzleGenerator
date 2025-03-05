@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "473838883234",
+    "project_id": "word-city-2f1c0",
+    "storage_bucket": "word-city-2f1c0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473838883234:android:96a76e6aac97628c5062fb",
+        "android_client_info": {
+          "package_name": "com.amplegames.freewordgame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuRksnCWBAplHHYNxH_MGne9H-l1ZUPjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

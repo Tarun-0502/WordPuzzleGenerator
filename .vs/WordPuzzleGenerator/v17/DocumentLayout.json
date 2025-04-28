@@ -3,15 +3,15 @@
   "WorkspaceRootPath": "D:\\WordPuzzleGenerator\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\extrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\extrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\firebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\firebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|d:\\wordpuzzlegenerator\\assets\\scripts\\bonuslevel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|d:\\wordpuzzlegenerator\\assets\\scripts\\extrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\extrawords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|D:\\WordPuzzleGenerator\\assets\\scripts\\bonuslevel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{02CF888B-560C-E58C-1EDA-B8DE07700442}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\bonuslevel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -117,7 +117,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 17,
           "Children": [
             {
               "$type": "Document",
@@ -145,13 +145,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "ExtraWords.cs",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\ExtraWords.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ExtraWords.cs",
               "ToolTip": "D:\\WordPuzzleGenerator\\Assets\\Scripts\\ExtraWords.cs",
               "RelativeToolTip": "Assets\\Scripts\\ExtraWords.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAmwAABAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAAAABAAAAAAAAAAAxwAABAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-18T09:56:56.446Z",
               "EditorCaption": ""
@@ -262,8 +262,7 @@
               "RelativeToolTip": "Assets\\Scripts\\BonusLevel.cs",
               "ViewState": "AgIAAIUAAAAAAAAAAABRwIgAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-10T07:08:43.793Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-10T07:08:43.793Z"
             },
             {
               "$type": "Document",
@@ -327,13 +326,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "FireBase.cs",
               "DocumentMoniker": "D:\\WordPuzzleGenerator\\Assets\\FireBase.cs",
               "RelativeDocumentMoniker": "Assets\\FireBase.cs",
               "ToolTip": "D:\\WordPuzzleGenerator\\Assets\\FireBase.cs",
               "RelativeToolTip": "Assets\\FireBase.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAgwBgAAABZAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-05T05:11:51.56Z",
               "EditorCaption": ""
